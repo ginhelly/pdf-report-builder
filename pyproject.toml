@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "pdf-report-builder"
+version = "0.1.0"
+description = ""
+authors = ["karav-n <karav-n@mail.ru>"]
+readme = "README.md"
+packages = [{include = "pdf_report_builder"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pypdf2 = "^3.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
