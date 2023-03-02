@@ -25,3 +25,6 @@ class PDFFile:
                 subset,
                 max_page_num=self.pages
             )
+    
+    def change_subset(self, subset: str | PagesSubset):
+        self._parse_subset(subset)

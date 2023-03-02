@@ -20,7 +20,7 @@ class TestInputPDF(unittest.TestCase):
         path = self.survey_net
         self.assertListEqual(
             list(PDFFile(path, '3-5,10').subset),
-            [3,4,5,10]
+            [2,3,4,9]
         )
     
     def test_subset_raises_value_error(self):

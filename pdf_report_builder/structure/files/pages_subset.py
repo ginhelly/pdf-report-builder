@@ -76,7 +76,7 @@ class SubsetChunk:
             else self.start + self.counter > self.stop
         if stop_iteration:
             raise StopIteration
-        return self.start + self.counter
+        return self.start + self.counter - 1
     
     @property
     def range(self):

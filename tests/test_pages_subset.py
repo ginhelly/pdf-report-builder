@@ -41,17 +41,17 @@ class TestPagesSubset(unittest.TestCase):
     
     def test_chunk_iter(self):
         chunk = SubsetChunk(2,5)
-        self.assertListEqual(list(chunk), [2,3,4,5])
+        self.assertListEqual(list(chunk), [1,2,3,4])
     
     def test_chunk_iter2(self):
         chunk = SubsetChunk(2)
-        self.assertListEqual(list(chunk), [2])
+        self.assertListEqual(list(chunk), [1])
     
     def test_subset_iter(self):
         subset = PagesSubset.from_string('23,27-28')
         self.assertListEqual(
             list(subset), 
-            [23,27,28]
+            [22,26,27]
         )
     
     def test_wrong_subset(self):
