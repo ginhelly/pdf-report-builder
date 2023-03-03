@@ -128,6 +128,10 @@ class PagesSubset:
             input_string: str,
             max_page_num: int | None = None
         ):
+        if '.' in input_string:
+            if max_page_num is None:
+                raise ValueError('Число страниц не определено')
+            input_string = input_string.replace('.', str(max_page_num))
         chunk_strings = input_string.strip().split(',')
         chunks = []
         kwargs = {"max_page_num": max_page_num} \

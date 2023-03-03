@@ -8,6 +8,7 @@ from pdf_report_builder.structure.files.pages_subset import PagesSubset
 class TestMerge(unittest.TestCase):
     cwd = Path(os.getcwd())
     report_113pages = cwd / 'tests' / 'sample_pdf' / 'sample_report.pdf'
+    report2 = cwd / 'tests' / 'sample_pdf' / 'report2.pdf'
     survey_net = cwd / 'tests' / 'sample_pdf' / 'sample_survey_net.pdf'
     ktgi = cwd / 'tests' / 'sample_pdf' / 'sample_ktgi.pdf'
     res_dir = cwd / 'tests' / 'sample_pdf' / 'res'
@@ -15,11 +16,11 @@ class TestMerge(unittest.TestCase):
     def test_merge_pdfs(self):
         merger = PdfWriter()
 
-        input1 = open(self.survey_net, 'rb')
+        input1 = open(self.report2, 'rb')
         input2 = open(self.ktgi, 'rb')
 
         subset1 = list(PagesSubset.from_string('3-5,10'))
-        merger.append(fileobj=input1, pages=subset1)
+        merger.append(fileobj=input1) #, pages=subset1)
 
         merger.append(fileobj=input2)
 

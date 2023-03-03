@@ -61,6 +61,13 @@ class TestPagesSubset(unittest.TestCase):
     def test_max_page_num(self):
         x = lambda: PagesSubset.from_string('50-60', max_page_num=10)
         self.assertRaises(ValueError, x)
+    
+    def test_string_with_dot(self):
+        subset = PagesSubset.from_string('23,27-.', 30)
+        self.assertListEqual(
+            list(subset), 
+            [22,26,27,28,29]
+        )
 
 if __name__ == '__main__':
     unittest.main()
