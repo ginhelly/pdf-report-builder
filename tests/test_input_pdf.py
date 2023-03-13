@@ -12,7 +12,7 @@ class TestInputPDF(unittest.TestCase):
     def test_init(self):
         path = self.report_113pages
         self.assertEqual(
-            PDFFile(path).pages,
+            PDFFile(path).pages_number,
             113
         )
     
@@ -30,7 +30,7 @@ class TestInputPDF(unittest.TestCase):
     
     def test_single_page(self):
         f = PDFFile(self.ktgi, '1')
-        self.assertEqual(f.pages, 1)
+        self.assertEqual(f.pages_number, 1)
     
     def test_single_page_raises_value_error(self):
         x = lambda: PDFFile(self.ktgi, '1-2')

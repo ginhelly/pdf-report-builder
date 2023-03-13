@@ -123,6 +123,9 @@ class PagesSubset:
         chunk_strings = [str(chunk) for chunk in self.chunks]
         return ','.join(chunk_strings)
     
+    def __len__(self):
+        return sum(len(chunk) for chunk in self.chunks)
+    
     @staticmethod
     def from_string(
             input_string: str,

@@ -20,7 +20,7 @@ class TestMerge(unittest.TestCase):
         input2 = open(self.ktgi, 'rb')
 
         subset1 = list(PagesSubset.from_string('3-5,10'))
-        merger.append(fileobj=input1) #, pages=subset1)
+        merger.append(fileobj=input1, pages=subset1)
 
         merger.append(fileobj=input2)
 
