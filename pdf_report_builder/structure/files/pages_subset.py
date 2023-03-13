@@ -147,3 +147,4 @@ class PagesSubset:
             else:
                 chunks.append(SubsetChunk(int(s), **kwargs))
         return PagesSubset(chunks, max_page_num)
+

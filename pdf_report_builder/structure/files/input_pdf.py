@@ -1,7 +1,10 @@
+from dataclasses import dataclass, field
+from typing import List
 from pathlib import Path
 from PyPDF2 import PdfReader
 from .pages_subset import PagesSubset
 
+@dataclass
 class PDFFile:
     """
     Класс для работы с PDF-файлом на диске.
@@ -13,21 +16,26 @@ class PDFFile:
     pdf_reader - PyPDF2.PdfReader
     subset - подмножество страниц файла (PagesSubset)
     """
-    def __init__(self, path: Path, subset: str | PagesSubset = '', instant_read: bool = True) -> None:
-        if not path.exists():
+    path: Path
+    subset: str | PagesSubset = '',
+    instant_read: bool = True
+
+    def __post_init__(self) -> None:
+        if not self.path.exists():
             raise FileNotFoundError()
-        if not (path.is_file() and path.suffix == '.pdf'):
+        if not (self.path.is_file() and self.path.suffix == '.pdf'):
             raise ValueError('Поддерживаются только PDF-файлы')
-        self.path = path
-        self._subset_str = subset
-        if instant_read:
+        
+        if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):
+            self.subset = ''
+        if self.instant_read:
             self.read_file()
     
     def read_file(self):
         with open(self.path, 'rb') as file:
             self.pdf_reader = PdfReader(file)
             self.pages_number = len(self.pdf_reader.pages)
-        self._parse_subset(self._subset_str)
+        self._parse_subset(self.subset)
     
     def _parse_subset(self, subset: str | PagesSubset):
         if isinstance(subset, PagesSubset):

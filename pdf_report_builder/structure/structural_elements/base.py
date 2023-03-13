@@ -1,7 +1,7 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 from pathlib import Path
 from typing import NamedTuple
-from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 
 class FileDescription(NamedTuple):
@@ -13,10 +13,9 @@ class StructuralElement:
     name: str
     official: bool
     code_attr: str
-    tome: Tome | None = None
-
-    def __post_init__(self):
-        self.files = []
+    files: List[PDFFile] = field(
+        default_factory=lambda: []
+    )
     
     def add_file(
             self,
