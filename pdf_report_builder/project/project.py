@@ -3,9 +3,10 @@ from pathlib import Path
 import json
 from pdf_report_builder.structure.version import Version
 from pdf_report_builder.project.settings import ProjectSettings
+from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file
 
-class ReportProject:
+class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
 
     def __init__(
