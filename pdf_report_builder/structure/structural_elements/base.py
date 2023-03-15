@@ -16,7 +16,7 @@ class StructuralElement:
     files: List[PDFFile] = field(
         default_factory=lambda: []
     )
-    
+
     def add_file(
             self,
             file_description: FileDescription | None = None,

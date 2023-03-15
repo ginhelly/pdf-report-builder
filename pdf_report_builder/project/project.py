@@ -4,7 +4,7 @@ import json
 from pdf_report_builder.structure.version import Version
 from pdf_report_builder.project.settings import ProjectSettings
 from pdf_report_builder.project.base_project import BaseReportProject
-from pdf_report_builder.project.io.serializer import write_to_file
+from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
@@ -31,3 +31,8 @@ class ReportProject(BaseReportProject):
     def save_as(self, new_path: Path):
         self.settings.savepath = new_path
         self.save()
+    
+    @staticmethod
+    def open(path: Path):
+        project = read_from_file(path)
+        project.savepath = path

@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
-from typing import List
 from pathlib import Path
+from typing import List
+
 from PyPDF2 import PdfReader
+
 from .pages_subset import PagesSubset
 
 @dataclass
