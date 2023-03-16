@@ -45,7 +45,6 @@ class Tome:
         d['structural_elements'] = [
             StructuralElement.from_dict(el) for el in d['structural_elements']
         ]
-        print('INSIDE TOME CREATE ', d)
         return Tome(**d)
     
 

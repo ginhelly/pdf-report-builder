@@ -16,9 +16,7 @@ class Version:
     )
 
     def __post_init__(self):
-        print("WHAT THE FUCK", self, end='\n\n')
         for tome in self.tomes:
-            print("FUCK YOU", tome.savepath)
             if tome.savepath.parent == Path(expanduser('~/Documents')):
                 tome_filename = tome.savepath.name
                 tome.savepath = self.default_folder / tome_filename
