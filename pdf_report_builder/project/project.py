@@ -20,8 +20,10 @@ class ReportProject(BaseReportProject):
         -versions: список версий структуры проекта
         -settings: датакласс ProjectSettings
         """
-        self.versions = versions or [Version()]
         self.settings = settings or ProjectSettings()
+        self.versions = versions or [
+            Version(default_folder=self.settings.savepath.parent)
+        ]
 
     def save(self):
         write_to_file(self)

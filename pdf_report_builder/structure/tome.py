@@ -1,7 +1,15 @@
 from dataclasses import dataclass, field
+from datetime import datetime
+from os.path import expanduser
+from pathlib import Path
 from typing import List
-from pdf_report_builder.structure.structural_elements.base import StructuralElement
+
+from pdf_report_builder.structure.structural_elements.base import \
+    StructuralElement
 from pdf_report_builder.utils.parsing import continue_on_key_error
+
+def _default_savepath():
+    return Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
 
 @dataclass
 class Tome:
@@ -10,6 +18,7 @@ class Tome:
     """
     basename: str
     human_readable_name: str = 'Новый том'
+    savepath: Path = Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
     structural_elements: List[StructuralElement] = field(
         default_factory=lambda: []
     )
@@ -32,9 +41,11 @@ class Tome:
     @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
+        d['savepath'] = Path(d['savepath'])
         d['structural_elements'] = [
             StructuralElement.from_dict(el) for el in d['structural_elements']
         ]
+        print('INSIDE TOME CREATE ', d)
         return Tome(**d)
     
 

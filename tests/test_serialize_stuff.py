@@ -17,29 +17,6 @@ from pdf_report_builder.structure.version import Version
 from pdf_report_builder.project.io.json_serializer import *
 
 class TestPagesSubset(unittest.TestCase):
-    subset = PagesSubset.from_string('10-15,18,20-22')
-    file = PDFFile(
-        Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_report.pdf',
-        '10-12,15,110-.'
-    )
-    el = StructuralElement(
-        'Картограмма',
-        False,
-        'КТГИ',
-        [file]
-    )
-    tome = Tome(
-        'ИГДИ1-Т',
-        'Текстовая часть',
-        [el]
-    )
-    ver = Version(
-        'Версия для промгаза',
-        [tome]
-    )
-    project = ReportProject(
-        [ver]
-    )
     """
     def test_serialize_level_subset(self):
         print('=====> SUBSET: ', type(serialize_level(self.subset)))
@@ -61,14 +38,16 @@ class TestPagesSubset(unittest.TestCase):
     
     def test_write_to_file(self):
         self.project.save()
+        
     
     def test_saveas(self):
         new_path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project.json'
         self.project.save_as(new_path)
-"""
-    
+
+"""    
     def test_parse_settings(self):
         project2path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.json'
         project3path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project3.json'
-        project = ReportProject.open(project2path)
-        project.save_as(project3path)
+        proj = ReportProject.open(project2path)
+        print(list(proj.versions[0].tomes[0].structural_elements[0].files[0].subset))
+        proj.save_as(project3path)

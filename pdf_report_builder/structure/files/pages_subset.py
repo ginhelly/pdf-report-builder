@@ -18,6 +18,10 @@ class SubsetChunk:
                 self.start = s
                 self.stop = None
                 return
+            elif type(s) == str:
+                self.start = int(s)
+                self.stop = None
+                return
             elif isinstance(s, Sequence):
                 for i in range(len(s)):
                     if type(s[i]) == str and '.' in s[i]:
