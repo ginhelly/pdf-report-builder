@@ -41,3 +41,5 @@ pip-wheel-metadata
 poetry/core/*
 
 /tests/sample_pdf/res/*
+
+*.json
