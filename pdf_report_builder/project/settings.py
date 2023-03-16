@@ -16,6 +16,7 @@ class ProjectSettings:
     savepath: Path = WORKING_DIR / (_default_name() + '.json')
     name: str = _default_name()
     save_format: saveformats = saveformats.JSON_V01
+    default_version_id: int = 0
 
     @continue_on_key_error
     @staticmethod

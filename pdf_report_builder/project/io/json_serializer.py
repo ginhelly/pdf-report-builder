@@ -19,7 +19,8 @@ CUSTOM_STRING_ENCODERS = {
     # PagesSubset: lambda x: str(x)
     list: lambda elements: [serialize_level(el) for el in elements],
     ProjectSettings: lambda settings: serialize_level(settings),
-    saveformats: lambda save_format: save_format.value
+    saveformats: lambda save_format: save_format.value,
+    int: lambda i: i
 }
 
 def ensure_strings_in_dict(d: dict):

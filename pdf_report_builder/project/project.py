@@ -20,7 +20,7 @@ class ReportProject(BaseReportProject):
         -versions: список версий структуры проекта
         -settings: датакласс ProjectSettings
         """
-        self.versions = versions or []
+        self.versions = versions or [Version()]
         self.settings = settings or ProjectSettings()
 
     def save(self):
@@ -32,6 +32,12 @@ class ReportProject(BaseReportProject):
     def save_as(self, new_path: Path):
         self.settings.savepath = new_path
         self.save()
+    
+    def set_default_version_id(self, id: int):
+        self.settings.default_version_id = id
+    
+    def get_default_version(self):
+        return self.versions[self.settings.default_version_id]
     
     @staticmethod
     def open(path: Path):
