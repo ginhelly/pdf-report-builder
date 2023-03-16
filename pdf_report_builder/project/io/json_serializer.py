@@ -49,5 +49,5 @@ class JsonProjectSerializer(BaseSerializer):
         output.write(dumps)
 
     def deserialize(self, file: io.TextIOWrapper) -> BaseReportProject:
-        project_as_dict = json.load(file)
+        return json.load(file)
         

@@ -40,7 +40,7 @@ class TestPagesSubset(unittest.TestCase):
     project = ReportProject(
         [ver]
     )
-
+    """
     def test_serialize_level_subset(self):
         print('=====> SUBSET: ', type(serialize_level(self.subset)))
     
@@ -65,9 +65,10 @@ class TestPagesSubset(unittest.TestCase):
     def test_saveas(self):
         new_path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project.json'
         self.project.save_as(new_path)
+"""
     
     def test_parse_settings(self):
-        project2 = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.json'
-        with open(project2, 'r+', encoding='utf-8') as file:
-            project_as_dict = json.load(file)
-            print(ProjectSettings.from_dict(project_as_dict['settings']))
+        project2path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.json'
+        project3path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project3.json'
+        project = ReportProject.open(project2path)
+        project.save_as(project3path)

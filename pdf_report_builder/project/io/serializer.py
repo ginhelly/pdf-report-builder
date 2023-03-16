@@ -17,12 +17,13 @@ def write_to_file(project: BaseReportProject):
     with open(project.settings.savepath, 'w+', encoding='utf-8') as output:
         serializer.serialize(output, project)
 
-def read_from_file(path: Path) -> BaseReportProject:
+def read_from_file(path: Path):
     if (not path.exists) or (not path.is_file()):
         raise FileNotFoundError('Не найден файл проекта!')
-    if not path.suffix.upper() in FILE_EXTENSIONS:
+    suffix = path.suffix[1:].upper()
+    if not suffix in FILE_EXTENSIONS:
         raise TypeError('Файл не может быть обработан!')
-    save_format = FILE_EXTENSIONS[path.suffix.upper()]
+    save_format = FILE_EXTENSIONS[suffix]
     serializer = get_serializer(save_format)
     with open(path, 'r+', encoding='utf-8') as input_file:
         return serializer.deserialize(input_file)

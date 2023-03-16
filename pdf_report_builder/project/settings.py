@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 from pdf_report_builder.project.io.saveformats import saveformats
+from pdf_report_builder.utils.parsing import continue_on_key_error
 
 WORKING_DIR = Path(os.getenv('APPDATA')) / 'PDF_Report_Builder'
 
@@ -16,6 +17,7 @@ class ProjectSettings:
     name: str = _default_name()
     save_format: saveformats = saveformats.JSON_V01
 
+    @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
         d['savepath'] = Path(d['savepath'])
