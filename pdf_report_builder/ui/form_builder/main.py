@@ -21,6 +21,7 @@ class MainFrame ( wx.Frame ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 942,756 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHTTEXT ) )
 
         self.m_menubar1 = wx.MenuBar( 0 )
         self.menu_project = wx.Menu()
@@ -48,6 +49,20 @@ class MainFrame ( wx.Frame ):
         self.menu_project.Append( self.m_close )
 
         self.m_menubar1.Append( self.menu_project, u"&Проект" )
+
+        self.menu_versions = wx.Menu()
+        self.menu_versions_new = wx.MenuItem( self.menu_versions, wx.ID_ANY, u"Новая версия", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_versions.Append( self.menu_versions_new )
+
+        self.m_menuItem18 = wx.MenuItem( self.menu_versions, wx.ID_ANY, u"Клонировать текущую", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_versions.Append( self.m_menuItem18 )
+
+        self.menu_versions.AppendSeparator()
+
+        self.m_menuItem19 = wx.MenuItem( self.menu_versions, wx.ID_ANY, u"Удалить...", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_versions.Append( self.m_menuItem19 )
+
+        self.m_menubar1.Append( self.menu_versions, u"&Версии" )
 
         self.menu_about = wx.Menu()
         self.menu_about_about = wx.MenuItem( self.menu_about, wx.ID_ANY, u"О программе", wx.EmptyString, wx.ITEM_NORMAL )
@@ -80,6 +95,63 @@ class MainFrame ( wx.Frame ):
 
         self.SetMenuBar( self.m_menubar1 )
 
+        bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer3 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.lbl_project_name = wx.StaticText( self, wx.ID_ANY, u"Название проекта", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_project_name.SetLabelMarkup( u"Название проекта" )
+        self.lbl_project_name.Wrap( -1 )
+
+        self.lbl_project_name.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer4.Add( self.lbl_project_name, 0, wx.ALL, 5 )
+
+
+        bSizer4.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_bpButton2 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.m_bpButton2.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_EDIT, wx.ART_BUTTON ) )
+        bSizer4.Add( self.m_bpButton2, 0, wx.ALL, 5 )
+
+
+        bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
+
+        bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3.Wrap( -1 )
+
+        bSizer5.Add( self.m_staticText3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        m_choice1Choices = []
+        self.m_choice1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice1Choices, 0 )
+        self.m_choice1.SetSelection( 0 )
+        bSizer5.Add( self.m_choice1, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        self.m_bpButton1 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.m_bpButton1.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_COPY, wx.ART_BUTTON ) )
+        bSizer5.Add( self.m_bpButton1, 0, wx.ALL, 5 )
+
+
+        bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
+
+        self.m_treeCtrl1 = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
+        bSizer3.Add( self.m_treeCtrl1, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button2 = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer3.Add( self.m_button2, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer2 )
+        self.Layout()
 
         self.Centre( wx.BOTH )
 
