@@ -41,13 +41,13 @@ class TestPagesSubset(unittest.TestCase):
         
     
     def test_saveas(self):
-        new_path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project.json'
+        new_path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project.reportprj'
         self.project.save_as(new_path)
 
 """    
     def test_parse_settings(self):
-        project2path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.json'
-        project3path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project3.json'
+        project2path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.reportprj'
+        project3path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project3.reportprj'
         proj = ReportProject.open(project2path)
         print(list(proj.versions[0].tomes[0].structural_elements[0].files[0].subset))
         proj.save_as(project3path)

@@ -12,7 +12,7 @@ def _default_name():
 
 @dataclass
 class ProjectSettings:
-    savepath: Path = WORKING_DIR / (_default_name() + '.json')
+    savepath: Path = WORKING_DIR / (_default_name() + '.reportprj')
     name: str = _default_name()
     save_format: saveformats = saveformats.JSON_V01
     default_version_id: int = 0
