@@ -5,7 +5,6 @@ from typing import List
 from pypdf import PdfReader
 
 from .pages_subset import PagesSubset
-from pdf_report_builder.utils.parsing import continue_on_key_error
 
 @dataclass
 class PDFFile:
@@ -59,13 +58,19 @@ class PDFFile:
     def subset_pages_number(self):
         return len(self.subset)
     
-    @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
-        d['path'] = Path(d['path'])
-        subset = d['subset']
-        del d['subset']
-        d['instant_read'] = True if d['instant_read'] == 'True' else False
+        if 'path' in d:
+            d['path'] = Path(d['path'])
+        change_subset = False
+        if 'subset' in d:
+            subset = d['subset']
+            del d['subset']
+            change_subset = True
+        d['instant_read'] = True \
+            if not 'instant_read' in d or d['instant_read'] == 'True' \
+            else False
         file = PDFFile(**d)
-        file.change_subset(subset)
+        if change_subset:
+            file.change_subset(subset)
         return file

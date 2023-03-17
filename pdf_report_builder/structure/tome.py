@@ -6,7 +6,6 @@ from typing import List
 
 from pdf_report_builder.structure.structural_elements.base import \
     StructuralElement
-from pdf_report_builder.utils.parsing import continue_on_key_error
 
 def _default_savepath():
     return Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
@@ -38,13 +37,14 @@ class Tome:
     def pages_number(self):
         return sum(element.pages_number for element in self.structural_elements)
 
-    @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
-        d['savepath'] = Path(d['savepath'])
-        d['structural_elements'] = [
-            StructuralElement.from_dict(el) for el in d['structural_elements']
-        ]
+        if 'savepath' in d:
+            d['savepath'] = Path(d['savepath'])
+        if 'structural_elements' in d:
+            d['structural_elements'] = [
+                StructuralElement.from_dict(el) for el in d['structural_elements']
+            ]
         return Tome(**d)
     
 

@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 
 from pdf_report_builder.project.io.saveformats import saveformats
-from pdf_report_builder.utils.parsing import continue_on_key_error
 
 WORKING_DIR = Path(os.getenv('APPDATA')) / 'PDF_Report_Builder'
 
@@ -18,13 +17,14 @@ class ProjectSettings:
     save_format: saveformats = saveformats.JSON_V01
     default_version_id: int = 0
 
-    @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
-        d['savepath'] = Path(d['savepath'])
-        save_format = int(d['save_format'])
-        try:
-            d['save_format'] = saveformats(save_format)
-        except ValueError:
-            raise IOError('Неизвестный формат')
+        if 'savepath' in d:
+            d['savepath'] = Path(d['savepath'])
+        if 'save_format' in d:
+            save_format = int(d['save_format'])
+            try:
+                d['save_format'] = saveformats(save_format)
+            except ValueError:
+                raise IOError('Неизвестный формат')
         return ProjectSettings(**d)

@@ -3,7 +3,6 @@ from typing import List
 from pathlib import Path
 from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
-from pdf_report_builder.utils.parsing import continue_on_key_error
 
 class FileDescription(NamedTuple):
     path: Path
@@ -38,10 +37,12 @@ class StructuralElement:
     def pages_number(self):
         return sum(file.subset_pages_number for file in self.files)
     
-    @continue_on_key_error
     @staticmethod
     def from_dict(d: dict):
-        d['official'] = True if d['official'] == 'True' else False
-        d['files'] = [PDFFile.from_dict(file) for file in d['files']]
+        d['official'] = True \
+            if not 'official' in d or d['official'] == 'True' \
+            else False
+        if 'files' in d:
+            d['files'] = [PDFFile.from_dict(file) for file in d['files']]
         return StructuralElement(**d)
 
