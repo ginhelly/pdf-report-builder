@@ -44,10 +44,10 @@
             <property name="hidden">0</property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
-            <property name="minimum_size"></property>
+            <property name="minimum_size">500,450</property>
             <property name="name">MainFrame</property>
             <property name="pos"></property>
-            <property name="size">942,756</property>
+            <property name="size">800,700</property>
             <property name="style">wxDEFAULT_FRAME_STYLE|wxSYSTEM_MENU</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title">PDF Report Builder</property>
@@ -334,7 +334,7 @@
                                 <property name="permission">none</property>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
-                                    <property name="flag">wxALL</property>
+                                    <property name="flag">wxALIGN_CENTER|wxLEFT</property>
                                     <property name="proportion">0</property>
                                     <object class="wxStaticText" expanded="1">
                                         <property name="BottomDockable">1</property>
@@ -360,7 +360,7 @@
                                         <property name="enabled">1</property>
                                         <property name="fg"></property>
                                         <property name="floatable">1</property>
-                                        <property name="font">,93,700,12,70,0</property>
+                                        <property name="font">,90,700,12,70,0</property>
                                         <property name="gripper">0</property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
@@ -451,7 +451,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_bpButton2</property>
+                                        <property name="name">btn_open_project_settings</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -528,7 +528,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_staticText3</property>
+                                        <property name="name">lbl_version</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -588,7 +588,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_choice1</property>
+                                        <property name="name">choice_current_version</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -627,7 +627,7 @@
                                         <property name="aui_row"></property>
                                         <property name="auth_needed">0</property>
                                         <property name="best_size"></property>
-                                        <property name="bg"></property>
+                                        <property name="bg">wxSYS_COLOUR_3DDKSHADOW</property>
                                         <property name="bitmap">Load From Art Provider; wxART_COPY; wxART_BUTTON</property>
                                         <property name="caption"></property>
                                         <property name="caption_visible">1</property>
@@ -660,7 +660,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_bpButton1</property>
+                                        <property name="name">btn_clone_version</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -726,7 +726,7 @@
                                 <property name="minimize_button">0</property>
                                 <property name="minimum_size"></property>
                                 <property name="moveable">1</property>
-                                <property name="name">m_treeCtrl1</property>
+                                <property name="name">tree</property>
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>
@@ -793,7 +793,7 @@
                                 <property name="minimize_button">0</property>
                                 <property name="minimum_size"></property>
                                 <property name="moveable">1</property>
-                                <property name="name">m_button2</property>
+                                <property name="name">btn_merge</property>
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>

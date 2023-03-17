@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import List
 
 from pdf_report_builder.structure.tome import Tome
+from pdf_report_builder.structure.level import BaseLevel
 
 
 @dataclass
-class Version:
+class Version(BaseLevel):
     name: str = "По умолчанию"
     default_folder: Path = Path(expanduser('~/Documents'))
     tomes: List = field(

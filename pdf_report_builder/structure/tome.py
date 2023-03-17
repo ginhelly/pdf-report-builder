@@ -6,12 +6,13 @@ from typing import List
 
 from pdf_report_builder.structure.structural_elements.base import \
     StructuralElement
+from pdf_report_builder.structure.level import BaseLevel
 
 def _default_savepath():
     return Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
 
 @dataclass
-class Tome:
+class Tome(BaseLevel):
     """
     Том техотчета
     """

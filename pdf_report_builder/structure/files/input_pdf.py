@@ -5,9 +5,10 @@ from typing import List
 from pypdf import PdfReader
 
 from .pages_subset import PagesSubset
+from pdf_report_builder.structure.level import BaseLevel
 
 @dataclass
-class PDFFile:
+class PDFFile(BaseLevel):
     """
     Класс для работы с PDF-файлом на диске.
     По умолчанию при создании читает файл через PyPDF.PdfReader

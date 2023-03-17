@@ -5,6 +5,7 @@ from pdf_report_builder.structure.version import Version
 from pdf_report_builder.project.settings import ProjectSettings
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
+from pdf_report_builder.project.event_channel import EventChannel
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
@@ -23,9 +24,22 @@ class ReportProject(BaseReportProject):
         self.versions = versions or [
             Version(default_folder=self.settings.savepath.parent)
         ]
+        self.modified = False
+        self.event_channel = EventChannel()
+        self.event_channel.subscribe('modified', self.set_modified)
+    
+    def set_modified(self):
+        self.modified = True
+    
+    def close(self):
+        self.event_channel.unsubscribe('modified', self.set_modified)
+    
+    def __del__(self):
+        self.close()
 
     def save(self):
         write_to_file(self)
+        self.modified = False
     
     def rename(self, new_name: str):
         self.settings.name = new_name
@@ -45,6 +59,7 @@ class ReportProject(BaseReportProject):
         project_as_dict = read_from_file(path)
         project = ReportProject.from_dict(project_as_dict)
         project.settings.savepath = path
+        project.modified = False
         return project
     
     @staticmethod

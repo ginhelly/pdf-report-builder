@@ -18,9 +18,9 @@ import wx.richtext
 class MainFrame ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 942,756 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 800,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
-        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        self.SetSizeHints( wx.Size( 500,450 ), wx.DefaultSize )
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHTTEXT ) )
 
         self.m_menubar1 = wx.MenuBar( 0 )
@@ -105,46 +105,48 @@ class MainFrame ( wx.Frame ):
         self.lbl_project_name.SetLabelMarkup( u"Название проекта" )
         self.lbl_project_name.Wrap( -1 )
 
-        self.lbl_project_name.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+        self.lbl_project_name.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
-        bSizer4.Add( self.lbl_project_name, 0, wx.ALL, 5 )
+        bSizer4.Add( self.lbl_project_name, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
 
         bSizer4.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_bpButton2 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+        self.btn_open_project_settings = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
 
-        self.m_bpButton2.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_EDIT, wx.ART_BUTTON ) )
-        bSizer4.Add( self.m_bpButton2, 0, wx.ALL, 5 )
+        self.btn_open_project_settings.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_EDIT, wx.ART_BUTTON ) )
+        bSizer4.Add( self.btn_open_project_settings, 0, wx.ALL, 5 )
 
 
         bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
 
         bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText3.Wrap( -1 )
+        self.lbl_version = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_version.Wrap( -1 )
 
-        bSizer5.Add( self.m_staticText3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        bSizer5.Add( self.lbl_version, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-        m_choice1Choices = []
-        self.m_choice1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice1Choices, 0 )
-        self.m_choice1.SetSelection( 0 )
-        bSizer5.Add( self.m_choice1, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+        choice_current_versionChoices = []
+        self.choice_current_version = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choice_current_versionChoices, 0 )
+        self.choice_current_version.SetSelection( 0 )
+        bSizer5.Add( self.choice_current_version, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-        self.m_bpButton1 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+        self.btn_clone_version = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
 
-        self.m_bpButton1.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_COPY, wx.ART_BUTTON ) )
-        bSizer5.Add( self.m_bpButton1, 0, wx.ALL, 5 )
+        self.btn_clone_version.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_COPY, wx.ART_BUTTON ) )
+        self.btn_clone_version.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DDKSHADOW ) )
+
+        bSizer5.Add( self.btn_clone_version, 0, wx.ALL, 5 )
 
 
         bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
 
-        self.m_treeCtrl1 = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
-        bSizer3.Add( self.m_treeCtrl1, 1, wx.ALL|wx.EXPAND, 5 )
+        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
+        bSizer3.Add( self.tree, 1, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_button2 = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer3.Add( self.m_button2, 0, wx.ALL|wx.EXPAND, 5 )
+        self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
 
 
         bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )

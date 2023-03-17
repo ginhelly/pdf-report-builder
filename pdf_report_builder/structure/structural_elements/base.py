@@ -3,13 +3,14 @@ from typing import List
 from pathlib import Path
 from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
+from pdf_report_builder.structure.level import BaseLevel
 
 class FileDescription(NamedTuple):
     path: Path
     subset: str
 
 @dataclass
-class StructuralElement:
+class StructuralElement(BaseLevel):
     name: str
     official: bool
     code_attr: str
