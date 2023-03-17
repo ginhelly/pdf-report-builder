@@ -9,7 +9,10 @@ packages = [{include = "pdf_report_builder"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 pypdf = "^3.5.2"
+wxpython = "^4.2.0"
 
+[tool.poetry.scripts]
+main = "pdf_report_builder.main.py"
 
 [build-system]
 requires = ["poetry-core"]
