@@ -42,6 +42,6 @@ poetry/core/*
 
 /tests/sample_pdf/res/*
 
-*.json
 *.reportprj
 /pdf_report_builder/data/*
+/output/*
