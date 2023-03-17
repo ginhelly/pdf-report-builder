@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from .pages_subset import PagesSubset
 from pdf_report_builder.utils.parsing import continue_on_key_error
@@ -11,12 +11,12 @@ from pdf_report_builder.utils.parsing import continue_on_key_error
 class PDFFile:
     """
     Класс для работы с PDF-файлом на диске.
-    По умолчанию при создании читает файл через PyPDF2.PdfReader
+    По умолчанию при создании читает файл через PyPDF.PdfReader
     
     Свойства:
     path - путь до файла (pathlib.Path)
     pages_number - число страниц в файле
-    pdf_reader - PyPDF2.PdfReader
+    pdf_reader - PyPDF.PdfReader
     subset - подмножество страниц файла (PagesSubset)
     """
     path: Path

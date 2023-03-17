@@ -1,7 +1,7 @@
 import unittest
 import os
 from pathlib import Path
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.files.pages_subset import PagesSubset
 

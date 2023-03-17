@@ -1,4 +1,4 @@
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.files.input_pdf import PDFFile

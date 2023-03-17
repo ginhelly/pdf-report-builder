@@ -8,7 +8,7 @@ packages = [{include = "pdf_report_builder"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pypdf2 = "^3.0.1"
+pypdf = "^3.5.2"
 
 
 [build-system]

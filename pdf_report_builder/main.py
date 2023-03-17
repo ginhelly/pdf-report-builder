@@ -1,3 +1,3 @@
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 print('fuck')
