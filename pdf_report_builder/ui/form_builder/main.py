@@ -86,6 +86,11 @@ class MainFrame ( wx.Frame ):
         # Connect Events
         self.Bind( wx.EVT_MENU, self.onExit, id = self.m_close.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
+        self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
+        self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
+        self.Bind( wx.EVT_MENU, self.onDocsOpen105, id = self.menu_about_gost105.GetId() )
+        self.Bind( wx.EVT_MENU, self.onDocsOpen47, id = self.menu_about_sp47.GetId() )
+        self.Bind( wx.EVT_MENU, self.onDocsOpen317, id = self.menu_about_sp317.GetId() )
 
     def __del__( self ):
         pass
@@ -96,6 +101,21 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
     def onAbout( self, event ):
+        event.Skip()
+
+    def onDocsOpen101( self, event ):
+        event.Skip()
+
+    def onDocsOpen301( self, event ):
+        event.Skip()
+
+    def onDocsOpen105( self, event ):
+        event.Skip()
+
+    def onDocsOpen47( self, event ):
+        event.Skip()
+
+    def onDocsOpen317( self, event ):
         event.Skip()
 
 

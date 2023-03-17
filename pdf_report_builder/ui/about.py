@@ -7,7 +7,7 @@ class PRBAboutDialog(AboutDialog):
         self.rt_about.BeginBold()
         self.rt_about.WriteText('PDF Report Builder')
         self.rt_about.EndBold()
-        self.rt_about.WriteText(' – программа для формирования техотчетов')
+        self.rt_about.WriteText(' – программа для сборки техотчетов по ИГДИ из нескольких разных pdf-файлов')
         self.rt_about.AddParagraph('E-mail: ')
         self.rt_about.MoveEnd()
         self.rt_about.BeginURL('mailto:info@gkurg.ru')

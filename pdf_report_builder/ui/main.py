@@ -1,5 +1,6 @@
 from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.about import PRBAboutDialog
+from pdf_report_builder.utils.docs import open_docs
 
 class PDFReportBuilderFrame(MainFrame):
     def __init__(self, parent):
@@ -12,3 +13,18 @@ class PDFReportBuilderFrame(MainFrame):
         about = PRBAboutDialog(self)
         about.ShowModal()
         about.Destroy()
+    
+    def onDocsOpen101(self, event):
+        open_docs('GOST101')
+    
+    def onDocsOpen105(self, event):
+        open_docs('GOST105')
+    
+    def onDocsOpen301(self, event):
+        open_docs('GOST301')
+    
+    def onDocsOpen47(self, event):
+        open_docs('SP47')
+    
+    def onDocsOpen317(self, event):
+        open_docs('SP317')

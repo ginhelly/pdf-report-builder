@@ -196,6 +196,7 @@
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">onDocsOpen101</event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
@@ -209,6 +210,7 @@
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">onDocsOpen301</event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
@@ -222,6 +224,7 @@
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">onDocsOpen105</event>
                         </object>
                         <object class="separator" expanded="1">
                             <property name="name">m_separator5</property>
@@ -239,6 +242,7 @@
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">onDocsOpen47</event>
                         </object>
                         <object class="wxMenuItem" expanded="1">
                             <property name="bitmap"></property>
@@ -252,6 +256,7 @@
                             <property name="permission">none</property>
                             <property name="shortcut"></property>
                             <property name="unchecked_bitmap"></property>
+                            <event name="OnMenuSelection">onDocsOpen317</event>
                         </object>
                     </object>
                 </object>

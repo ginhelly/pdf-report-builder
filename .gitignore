@@ -44,3 +44,4 @@ poetry/core/*
 
 *.json
 *.reportprj
+/pdf_report_builder/data/*
