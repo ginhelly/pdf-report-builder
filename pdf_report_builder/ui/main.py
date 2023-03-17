@@ -1,3 +1,5 @@
+import wx
+
 from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.utils.docs import open_docs
@@ -9,7 +11,17 @@ class PDFReportBuilderFrame(MainFrame):
         self.create_new_project()
     
     def onExit(self, event):
-        self.Close(True)
+        if self.project.modified:
+            if wx.MessageBox(
+                "Всё равно закрыть?",
+                "Проект был изменен",
+                wx.ICON_WARNING | wx.YES_NO
+            ) != wx.YES:
+                if isinstance(event, wx.CloseEvent) and event.CanVeto():
+                    event.Veto()
+                return
+        self.project.close()
+        self.Destroy()
     
     def onAbout(self, event):
         about = PRBAboutDialog(self)

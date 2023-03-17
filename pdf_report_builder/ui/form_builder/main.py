@@ -158,6 +158,7 @@ class MainFrame ( wx.Frame ):
         self.Centre( wx.BOTH )
 
         # Connect Events
+        self.Bind( wx.EVT_CLOSE, self.onExit )
         self.Bind( wx.EVT_MENU, self.onExit, id = self.m_close.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
@@ -173,6 +174,7 @@ class MainFrame ( wx.Frame ):
     # Virtual event handlers, override them in your derived class
     def onExit( self, event ):
         event.Skip()
+
 
     def onAbout( self, event ):
         event.Skip()
