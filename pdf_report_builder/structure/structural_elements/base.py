@@ -11,9 +11,9 @@ class FileDescription(NamedTuple):
 
 @dataclass
 class StructuralElement(BaseLevel):
-    name: str
-    official: bool
-    code_attr: str
+    name: str = "Структурный элемент"
+    official: bool = False
+    code_attr: str = ""
     files: List[PDFFile] = field(
         default_factory=lambda: []
     )

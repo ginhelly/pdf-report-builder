@@ -159,13 +159,21 @@ class MainFrame ( wx.Frame ):
 
         # Connect Events
         self.Bind( wx.EVT_CLOSE, self.onExit )
+        self.Bind( wx.EVT_MENU, self.create_new_project, id = self.menu_project_new.GetId() )
+        self.Bind( wx.EVT_MENU, self.open_project, id = self.menu_project_open.GetId() )
+        self.Bind( wx.EVT_MENU, self.save_project, id = self.menu_project_save.GetId() )
+        self.Bind( wx.EVT_MENU, self.save_project_as, id = self.menu_project_save_as.GetId() )
         self.Bind( wx.EVT_MENU, self.onExit, id = self.m_close.GetId() )
+        self.Bind( wx.EVT_MENU, self.create_new_version, id = self.menu_versions_new.GetId() )
+        self.Bind( wx.EVT_MENU, self.clone_current_version, id = self.m_menuItem18.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen105, id = self.menu_about_gost105.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen47, id = self.menu_about_sp47.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen317, id = self.menu_about_sp317.GetId() )
+        self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
+        self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
 
     def __del__( self ):
         pass
@@ -175,6 +183,24 @@ class MainFrame ( wx.Frame ):
     def onExit( self, event ):
         event.Skip()
 
+    def create_new_project( self, event ):
+        event.Skip()
+
+    def open_project( self, event ):
+        event.Skip()
+
+    def save_project( self, event ):
+        event.Skip()
+
+    def save_project_as( self, event ):
+        event.Skip()
+
+
+    def create_new_version( self, event ):
+        event.Skip()
+
+    def clone_current_version( self, event ):
+        event.Skip()
 
     def onAbout( self, event ):
         event.Skip()
@@ -193,6 +219,10 @@ class MainFrame ( wx.Frame ):
 
     def onDocsOpen317( self, event ):
         event.Skip()
+
+    def set_current_version( self, event ):
+        event.Skip()
+
 
 
 ###########################################################################

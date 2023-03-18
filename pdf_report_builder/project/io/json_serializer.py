@@ -2,6 +2,7 @@ import io
 import json
 from dataclasses import asdict
 from pathlib import Path
+from copy import copy
 
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.base_serializer import BaseSerializer
@@ -39,7 +40,12 @@ def serialize_level(level):
         try:
             as_dict = asdict(level)
         except Exception:
-            as_dict = level.__dict__
+            as_dict = copy(level.__dict__)
+    if hasattr(level, 'for_save'):
+        for key in list(as_dict.keys()):
+            if not key in level.for_save:
+                del(as_dict[key])
+
     res = ensure_strings_in_dict(as_dict)
     return res
 

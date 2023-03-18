@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from copy import deepcopy
 from pathlib import Path
 import json
 from pdf_report_builder.structure.version import Version
@@ -9,6 +10,7 @@ from pdf_report_builder.project.event_channel import EventChannel
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
+    for_save = ['versions', 'settings']
 
     def __init__(
             self,
@@ -48,11 +50,25 @@ class ReportProject(BaseReportProject):
         self.settings.savepath = new_path
         self.save()
     
-    def set_default_version_id(self, id: int):
-        self.settings.default_version_id = id
+    def set_current_version_id(self, id: int):
+        self.settings.current_version_id = id
     
-    def get_default_version(self):
-        return self.versions[self.settings.default_version_id]
+    def get_current_version(self):
+        return self.versions[self.settings.current_version_id]
+    
+    def create_new_version(self, name: str):
+        ver = Version(
+            name,
+            self.settings.savepath.parent
+        )
+        self.versions.append(ver)
+        self.set_current_version_id(len(self.versions) - 1)
+    
+    def clone_current_version(self, name: str):
+        ver = deepcopy(self.get_current_version())
+        ver.name = name
+        self.versions.append(ver)
+        self.set_current_version_id(len(self.versions) - 1)
     
     @staticmethod
     def open(path: Path):

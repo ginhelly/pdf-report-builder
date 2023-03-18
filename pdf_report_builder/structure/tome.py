@@ -9,7 +9,7 @@ from pdf_report_builder.structure.structural_elements.base import \
 from pdf_report_builder.structure.level import BaseLevel
 
 def _default_savepath():
-    return Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
+    return Path(expanduser('~/Documents')) / f'Новый том {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
 
 @dataclass
 class Tome(BaseLevel):
@@ -18,7 +18,7 @@ class Tome(BaseLevel):
     """
     basename: str
     human_readable_name: str = 'Новый том'
-    savepath: Path = Path(expanduser('~/Documents')) / f'New Tome {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
+    savepath: Path = field(default_factory=_default_savepath)
     structural_elements: List[StructuralElement] = field(
         default_factory=lambda: []
     )

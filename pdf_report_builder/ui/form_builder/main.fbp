@@ -95,6 +95,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap">Load From Art Provider; wxART_NEW_DIR; wxART_MENU</property>
+                        <event name="OnMenuSelection">create_new_project</event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap">Load From Art Provider; wxART_FILE_OPEN; wxART_MENU</property>
@@ -108,6 +109,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">open_project</event>
                     </object>
                     <object class="separator" expanded="1">
                         <property name="name">m_separator1</property>
@@ -125,6 +127,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">save_project</event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap">Load From Art Provider; wxART_FILE_SAVE_AS; wxART_MENU</property>
@@ -138,6 +141,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">save_project_as</event>
                     </object>
                     <object class="separator" expanded="1">
                         <property name="name">m_separator2</property>
@@ -174,6 +178,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">create_new_version</event>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
@@ -187,6 +192,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">clone_current_version</event>
                     </object>
                     <object class="separator" expanded="1">
                         <property name="name">m_separator6</property>
@@ -611,6 +617,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnChoice">set_current_version</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -684,6 +691,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">clone_current_version</event>
                                     </object>
                                 </object>
                             </object>

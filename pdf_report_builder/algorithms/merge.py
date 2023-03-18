@@ -25,6 +25,6 @@ def _merge_one_tome(tome: Tome):
 
 def merge(project: ReportProject):
     """Самое-самое главное, ради чего всё это затевалось"""
-    ver = project.get_default_version()
+    ver = project.get_current_version()
     for tome in ver.tomes:
         _merge_one_tome(tome)
