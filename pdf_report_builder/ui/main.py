@@ -7,6 +7,7 @@ from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.ui.tree import Tree
 
 def on_exception(exception_type, text: str = ""):
     msg = text or "Произошла ошибка.\n\n"
@@ -23,6 +24,7 @@ class PDFReportBuilderFrame(MainFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.create_new_project()
+        self.tree_component = Tree(self.tree, self.project)
     
     def onExit(self, event):
         if self.project.modified:
@@ -75,6 +77,8 @@ class PDFReportBuilderFrame(MainFrame):
         self.project = ReportProject()
         self.lbl_project_name.SetLabelText(self.project.settings.name)
         self.populate_choice_current_version()
+        if hasattr(self, 'tree_component'):
+            self.tree_component.redraw_tree(self.project)
     
     def open_project(self, event):
         if hasattr(self, 'project'):
@@ -94,8 +98,10 @@ class PDFReportBuilderFrame(MainFrame):
                 self.project = ReportProject.open(path)
             except Exception as e:
                 on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
+                return
             self.lbl_project_name.SetLabelText(self.project.settings.name)
             self.populate_choice_current_version()
+            self.tree_component.redraw_tree(self.project)
         
     def save_project(self, event):
         try:
@@ -139,6 +145,7 @@ class PDFReportBuilderFrame(MainFrame):
     def set_current_version(self, event):
         new_ver_id = self.choice_current_version.GetCurrentSelection()
         self.project.set_current_version_id(new_ver_id)
+        self.tree_component.redraw_tree(self.project)
 
     def clone_current_version(self, event):
         with wx.TextEntryDialog(

@@ -25,19 +25,20 @@ class PDFFile(BaseLevel):
 
     def __post_init__(self) -> None:
         if not self.path.exists():
-            raise FileNotFoundError()
-        if not (self.path.is_file() and self.path.suffix == '.pdf'):
-            raise ValueError('Поддерживаются только PDF-файлы')
-        
+            self.valid = False
+        elif not (self.path.is_file() and self.path.suffix == '.pdf'):
+            self.valid = False
+        else:
+            self.valid = True
         if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):
             self.subset = ''
-        if self.instant_read:
+        if self.instant_read and self.valid:
             self.read_file()
     
     def read_file(self):
         with open(self.path, 'rb') as file:
-            self.pdf_reader = PdfReader(file)
-            self.pages_number = len(self.pdf_reader.pages)
+            pdf_reader = PdfReader(file)
+            self.pages_number = len(pdf_reader.pages)
         self._parse_subset(self.subset)
     
     def _parse_subset(self, subset: str | PagesSubset):
