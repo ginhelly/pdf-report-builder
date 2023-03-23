@@ -7,7 +7,7 @@ from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.project import ReportProject
-from pdf_report_builder.ui.tree import Tree
+from pdf_report_builder.ui.tree.tree import Tree
 
 def on_exception(exception_type, text: str = ""):
     msg = text or "Произошла ошибка.\n\n"
