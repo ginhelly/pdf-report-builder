@@ -142,7 +142,7 @@ class MainFrame ( wx.Frame ):
 
         bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
 
-        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE|wx.TR_HAS_BUTTONS )
+        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
         bSizer3.Add( self.tree, 1, wx.ALL|wx.EXPAND, 5 )
 
         self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -183,6 +183,7 @@ class MainFrame ( wx.Frame ):
         self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
+        self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
 
     def __del__( self ):
         pass
@@ -235,6 +236,9 @@ class MainFrame ( wx.Frame ):
     def set_current_version( self, event ):
         event.Skip()
 
+
+    def make_reports( self, event ):
+        event.Skip()
 
 
 ###########################################################################

@@ -8,6 +8,9 @@ from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.ui.tree.tree import Tree
+from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+
+from pdf_report_builder.algorithms.merge import merge
 
 def on_exception(exception_type, text: str = ""):
     msg = text or "Произошла ошибка.\n\n"
@@ -97,6 +100,7 @@ class PDFReportBuilderFrame(MainFrame):
             try:
                 self.project = ReportProject.open(path)
             except Exception as e:
+                print(e)
                 on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
                 return
             self.lbl_project_name.SetLabelText(self.project.settings.name)
@@ -141,6 +145,7 @@ class PDFReportBuilderFrame(MainFrame):
                 return
             self.project.create_new_version(dlg.GetValue())
             self.populate_choice_current_version()
+            self.tree_component.redraw_tree(self.project)
     
     def set_current_version(self, event):
         new_ver_id = self.choice_current_version.GetCurrentSelection()
@@ -156,3 +161,30 @@ class PDFReportBuilderFrame(MainFrame):
                 return
             self.project.clone_current_version(dlg.GetValue())
             self.populate_choice_current_version()
+    
+    def on_project_name_change(self, event):
+        with wx.TextEntryDialog(
+            self,
+            "Новое название проекта"
+        ) as dlg:
+            dlg.SetValue(self.project.settings.name)
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                return
+            self.project.settings.name = dlg.GetValue()
+            self.lbl_project_name.SetLabelText(self.project.settings.name)
+        
+    def make_reports(self, event):
+        try:
+            merge(self.project)
+            dlg = wx.MessageDialog(
+                None,
+                'Успешно сформировано!',
+                'Успех!',
+                wx.OK | wx.ICON_EXCLAMATION
+            )
+            dlg.ShowModal()
+            dlg.Destroy()
+        except Exception as e:
+            dlg = ErrorDialog(None, str(e))
+            dlg.ShowModal()
+            dlg.Destroy()
