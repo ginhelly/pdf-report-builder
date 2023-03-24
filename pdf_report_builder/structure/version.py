@@ -14,12 +14,22 @@ class Version(BaseLevel):
     tomes: List = field(
         default_factory=lambda: [Tome('ИГДИ')]
     )
+    code: str = '0000.000.КИИ.0/0.0000'
 
     def __post_init__(self):
         for tome in self.tomes:
             if tome.savepath.parent == Path(expanduser('~/Documents')):
                 tome_filename = tome.savepath.name
-                tome.savepath = self.default_folder / tome_filename
+                tome.savepath = Path(self.default_folder) / tome_filename
+    
+    def create_tome(
+        self,
+        basename: str,
+        human_readable_name: str,
+        savepath: Path
+    ):
+        new_tome = Tome(basename, human_readable_name, savepath)
+        self.append_tome(new_tome)
 
     def append_tome(self, tome: Tome):
         self.tomes.append(tome)

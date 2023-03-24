@@ -5,6 +5,7 @@ from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.ui.tree.tree_icons import get_tree_images
 from .context_menu_factory import get_context_menu
+from pdf_report_builder.project.event_channel import EventChannel
 
 class Tree:
     def __init__(self, base: wx.TreeCtrl, project: ReportProject | None = None):
@@ -12,13 +13,16 @@ class Tree:
         self.base.AssignImageList(get_tree_images())
         self.base.Bind(wx.EVT_TREE_ITEM_MENU, self.on_context_menu)
         if not project is None:
-            self.project = ReportProject
-            self.parse_project_structure(project)
+            self.redraw_tree(project)
+            EventChannel().subscribe(
+                'tree_update',
+                lambda: self.redraw_tree(self.project)
+            )
     
     def parse_project_structure(self, project: ReportProject):
         self._item_ids = {}
         self.root = self.base.AddRoot(
-            'Проект'
+            'rpfrfrpf'
         )
         self._item_ids[self.root] = get_context_menu(self.base, project)
         self.base.SetItemImage(self.root, 0, wx.TreeItemIcon_Normal)
