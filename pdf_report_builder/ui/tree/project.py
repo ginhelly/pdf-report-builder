@@ -1,17 +1,17 @@
 import wx
 from pathlib import Path
 from pdf_report_builder.project.base_project import BaseReportProject
-from .base_context_menu import TreeContextMenu
+from .base_context_menu import *
 from pdf_report_builder.project.event_channel import EventChannel
 
 class ProjectContextMenu(TreeContextMenu):
     def __init__(self, tree: wx.TreeCtrl, project: BaseReportProject) -> None:
         super().__init__(tree)
         self.project = project
-        self.OPTIONS = {
-            'Добавить том...': self.add_tome
-        }
-
+        self.OPTIONS = [
+            MenuOption('Добавить том...', self.add_tome)
+        ]
+    
     def add_tome(self):
         ver = self.project.get_current_version()
         with wx.TextEntryDialog(

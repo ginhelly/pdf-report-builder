@@ -23,6 +23,22 @@ class Tome(BaseLevel):
         default_factory=lambda: []
     )
 
+    def create_element(
+        self,
+        name: str,
+        official: bool,
+        code_attr: str = None
+    ):
+        new_element = StructuralElement(
+            name, official,
+            code_attr=code_attr
+        )
+        self.add_element(new_element)
+    
+    def create_empty_element(self):
+        new_element = StructuralElement()
+        self.add_element(new_element)
+
     def add_element(self, element: StructuralElement):
         self.structural_elements.append(element)
     

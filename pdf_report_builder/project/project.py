@@ -29,6 +29,10 @@ class ReportProject(BaseReportProject):
         self.modified = False
         self.event_channel = EventChannel()
         self.event_channel.subscribe('modified', self.set_modified)
+        self.event_channel.subscribe(
+            'remove_tome',
+            self.handle_tome_remove
+        )
     
     def set_modified(self):
         self.modified = True
@@ -52,6 +56,7 @@ class ReportProject(BaseReportProject):
     
     def set_current_version_id(self, id: int):
         self.settings.current_version_id = id
+        self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
     
     def get_current_version(self):
         return self.versions[self.settings.current_version_id]
@@ -63,6 +68,9 @@ class ReportProject(BaseReportProject):
         )
         self.versions.append(ver)
         self.set_current_version_id(len(self.versions) - 1)
+    
+    def handle_tome_remove(self, payload):
+        self.get_current_version().remove_tome(payload[0])    
     
     def clone_current_version(self, name: str):
         ver = deepcopy(self.get_current_version())

@@ -142,7 +142,7 @@ class MainFrame ( wx.Frame ):
 
         bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
 
-        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
+        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE|wx.TR_HAS_BUTTONS )
         bSizer3.Add( self.tree, 1, wx.ALL|wx.EXPAND, 5 )
 
         self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -150,6 +150,14 @@ class MainFrame ( wx.Frame ):
 
 
         bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )
+
+        bSizer6 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_panel1 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer6.Add( self.m_panel1, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        bSizer2.Add( bSizer6, 1, wx.EXPAND, 5 )
 
 
         self.SetSizer( bSizer2 )
@@ -172,6 +180,7 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.onDocsOpen105, id = self.menu_about_gost105.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen47, id = self.menu_about_sp47.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen317, id = self.menu_about_sp317.GetId() )
+        self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
 
@@ -220,6 +229,9 @@ class MainFrame ( wx.Frame ):
     def onDocsOpen317( self, event ):
         event.Skip()
 
+    def on_project_name_change( self, event ):
+        event.Skip()
+
     def set_current_version( self, event ):
         event.Skip()
 
@@ -238,11 +250,79 @@ class AboutDialog ( wx.Dialog ):
 
         bSizer1 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.rt_about = wx.richtext.RichTextCtrl( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, wx.TE_AUTO_URL|wx.TE_READONLY|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
+        self.rt_about = wx.richtext.RichTextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_AUTO_URL|wx.TE_READONLY|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
         bSizer1.Add( self.rt_about, 1, wx.EXPAND |wx.ALL, 5 )
 
 
         self.SetSizer( bSizer1 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+    def __del__( self ):
+        pass
+
+
+###########################################################################
+## Class BaseAddElementDialog
+###########################################################################
+
+class BaseAddElementDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Добавить структурный элемент", pos = wx.DefaultPosition, size = wx.Size( 403,157 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer7 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer9 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Структурный элемент:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3.Wrap( -1 )
+
+        bSizer9.Add( self.m_staticText3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        element_typeChoices = []
+        self.element_type = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, element_typeChoices, 0 )
+        self.element_type.SetSelection( 0 )
+        bSizer9.Add( self.element_type, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer7.Add( bSizer9, 0, wx.EXPAND, 5 )
+
+        bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"Шифр:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText4.Wrap( -1 )
+
+        bSizer8.Add( self.m_staticText4, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer8.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.element_code = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer8.Add( self.element_code, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer7.Add( bSizer8, 0, wx.EXPAND, 5 )
+
+        bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer10.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button2 = wx.Button( self, wx.ID_OK, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer10.Add( self.m_button2, 0, wx.ALL, 5 )
+
+        self.m_button3 = wx.Button( self, wx.ID_CANCEL, u"Отмена", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer10.Add( self.m_button3, 0, wx.ALL, 5 )
+
+
+        bSizer7.Add( bSizer10, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer7 )
         self.Layout()
 
         self.Centre( wx.BOTH )

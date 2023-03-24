@@ -5,6 +5,7 @@ from typing import List
 
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.level import BaseLevel
+from pdf_report_builder.project.event_channel import EventChannel
 
 
 @dataclass
@@ -35,9 +36,9 @@ class Version(BaseLevel):
         self.tomes.append(tome)
     
     def remove_tome(self, tome: Tome | int):
-        if isinstance(tome, Tome):
+        if isinstance(tome, Tome) and tome in self.tomes:
             self.tomes.remove(tome)
-        else:
+        elif type(tome) == int:
             self.tomes.remove(self.tomes[tome])
     
     @staticmethod

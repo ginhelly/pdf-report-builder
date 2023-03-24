@@ -66,5 +66,4 @@ class Tree:
         self.parse_project_structure(project)
     
     def on_context_menu(self, event):
-        print(self._item_ids[event.Item])
         self._item_ids[event.Item].show_menu(event)
