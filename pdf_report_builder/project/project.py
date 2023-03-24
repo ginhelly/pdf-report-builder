@@ -33,12 +33,23 @@ class ReportProject(BaseReportProject):
             'remove_tome',
             self.handle_tome_remove
         )
+        self.event_channel.subscribe(
+            'remove_element',
+            self.handle_element_remove
+        )
+        self.event_channel.subscribe(
+            'remove_file',
+            self.handle_file_remove
+        )
     
     def set_modified(self):
         self.modified = True
     
     def close(self):
         self.event_channel.unsubscribe('modified', self.set_modified)
+        self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
+        self.event_channel.unsubscribe('remove_element', self.handle_element_remove)
+        self.event_channel.unsubscribe('remove_file', self.handle_file_remove)
     
     def __del__(self):
         self.close()
@@ -56,7 +67,7 @@ class ReportProject(BaseReportProject):
     
     def set_current_version_id(self, id: int):
         self.settings.current_version_id = id
-        self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
+        #self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
     
     def get_current_version(self):
         return self.versions[self.settings.current_version_id]
@@ -70,7 +81,20 @@ class ReportProject(BaseReportProject):
         self.set_current_version_id(len(self.versions) - 1)
     
     def handle_tome_remove(self, payload):
-        self.get_current_version().remove_tome(payload[0])    
+        self.get_current_version().remove_tome(payload[0])
+    
+    def handle_element_remove(self, payload):
+        element = payload[0]
+        ver = self.get_current_version()
+        for tome in ver.tomes:
+            tome.remove_element(element)
+    
+    def handle_file_remove(self, payload):
+        file = payload[0]
+        ver = self.get_current_version()
+        for tome in ver.tomes:
+            for el in tome.structural_elements:
+                el.remove_file(file)
     
     def clone_current_version(self, name: str):
         ver = deepcopy(self.get_current_version())

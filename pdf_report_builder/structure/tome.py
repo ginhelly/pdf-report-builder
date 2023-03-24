@@ -44,8 +44,9 @@ class Tome(BaseLevel):
     
     def remove_element(self, element: StructuralElement | int):
         if isinstance(element, StructuralElement):
-            self.structural_elements.remove(element)
-        else:
+            if element in self.structural_elements:
+                self.structural_elements.remove(element)
+        elif isinstance(element, int):
             self.structural_elements.remove(
                 self.structural_elements[element]
             )

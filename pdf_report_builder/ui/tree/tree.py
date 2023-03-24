@@ -33,7 +33,7 @@ class Tree:
         for tome in version.tomes:
             tome_id = self.base.AppendItem(
                 self.root,
-                tome.human_readable_name
+                f'[{tome.basename}] {tome.human_readable_name}'
             )
             self._item_ids[tome_id] = get_context_menu(self.base, tome)
             self._parse_elements(tome_id, tome)
@@ -43,7 +43,7 @@ class Tree:
         for el in tome.structural_elements:
             el_id = self.base.AppendItem(
                 parent,
-                el.name
+                f'[{el.code_attr}] {el.name}'
             )
             self._item_ids[el_id] = get_context_menu(self.base, el)
             self.base.SetItemImage(el_id, 2, wx.TreeItemIcon_Normal)
@@ -52,9 +52,12 @@ class Tree:
     
     def _parse_files(self, parent: wx.TreeItemId, element: StructuralElement):
         for file in element.files:
+            file_name = f'({file.subset}) {file.path.name}' \
+                if len(str(file.subset)) > 0 \
+                else str(file.path.name)
             file_id = self.base.AppendItem(
                 parent,
-                str(file.path.name)
+                file_name
             )
             self._item_ids[file_id] = get_context_menu(self.base, file)
             self.base.SetItemImage(file_id, 3, wx.TreeItemIcon_Normal)

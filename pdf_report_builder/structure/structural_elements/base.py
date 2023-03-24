@@ -34,6 +34,15 @@ class StructuralElement(BaseLevel):
         for file in files:
             self.add_file(file_description=file)
     
+    def remove_file(self, file: PDFFile | int):
+        if isinstance(file, PDFFile):
+            if file in self.files:
+                self.files.remove(file)
+        elif isinstance(file, int):
+            self.structural_elements.remove(
+                self.files[file]
+            )
+    
     @property
     def pages_number(self):
         return sum(file.subset_pages_number for file in self.files)

@@ -22,7 +22,10 @@ class TomeContextMenu(TreeContextMenu):
                 return
             selected_type = dlg.element_type.GetSelection()
             code = dlg.element_code.GetLineText(0)
-        name, official, code2 = ELEMENTS[selected_type - 1]
+        if selected_type == 0:
+            name, official, code2 = 'Структурный элемент', False, ''
+        else:
+            name, official, code2 = ELEMENTS[selected_type - 1]
         if len(code) == 0:
             code = code2
         self.tome.create_element(name, official, code)
