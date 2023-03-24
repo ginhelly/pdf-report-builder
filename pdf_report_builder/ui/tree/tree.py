@@ -20,7 +20,7 @@ class Tree:
         self.root = self.base.AddRoot(
             'Проект'
         )
-        self._item_ids[self.root] = get_context_menu(project)
+        self._item_ids[self.root] = get_context_menu(self.base, project)
         self.base.SetItemImage(self.root, 0, wx.TreeItemIcon_Normal)
         self._parse_tomes(project.get_current_version())
         self.base.ExpandAll()
@@ -31,7 +31,7 @@ class Tree:
                 self.root,
                 tome.human_readable_name
             )
-            self._item_ids[tome_id] = get_context_menu(tome)
+            self._item_ids[tome_id] = get_context_menu(self.base, tome)
             self._parse_elements(tome_id, tome)
             self.base.SetItemImage(tome_id, 1, wx.TreeItemIcon_Normal)
     
@@ -41,7 +41,7 @@ class Tree:
                 parent,
                 el.name
             )
-            self._item_ids[el_id] = get_context_menu(el)
+            self._item_ids[el_id] = get_context_menu(self.base, el)
             self.base.SetItemImage(el_id, 2, wx.TreeItemIcon_Normal)
             self._parse_files(el_id, el)
         return
@@ -52,7 +52,7 @@ class Tree:
                 parent,
                 str(file.path.name)
             )
-            self._item_ids[file_id] = get_context_menu(file)
+            self._item_ids[file_id] = get_context_menu(self.base, file)
             self.base.SetItemImage(file_id, 3, wx.TreeItemIcon_Normal)
         return
     
@@ -63,4 +63,4 @@ class Tree:
     
     def on_context_menu(self, event):
         print(self._item_ids[event.Item])
-        self._item_ids[event.Item].show_menu(event, self.base)
+        self._item_ids[event.Item].show_menu(event)

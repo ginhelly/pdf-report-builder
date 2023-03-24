@@ -3,13 +3,13 @@ from .project import ProjectContextMenu, BaseReportProject
 from .element import ElementContextMenu, StructuralElement
 from .file import FileContextMenu, PDFFile
 
-def get_context_menu(level):
+def get_context_menu(tree, level):
     if isinstance(level, BaseReportProject):
-        return ProjectContextMenu(level)
+        return ProjectContextMenu(tree, level)
     elif isinstance(level, Tome):
-        return TomeContextMenu(level)
+        return TomeContextMenu(tree, level)
     elif isinstance(level, StructuralElement):
-        return ElementContextMenu(level)
+        return ElementContextMenu(tree, level)
     elif isinstance(level, PDFFile):
-        return FileContextMenu(level)
+        return FileContextMenu(tree, level)
     raise TypeError('Unknown context menu target!')
