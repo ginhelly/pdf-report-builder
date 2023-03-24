@@ -42,9 +42,13 @@ class Version(BaseLevel):
     
     @staticmethod
     def from_dict(d: dict):
-        if 'tomes' in d:
+        if 'tomes' in list(d.keys()):
             d['tomes'] = [
                 Tome.from_dict(tome) for tome in d['tomes']
             ]
+        valid = ['name', 'default_folder', 'tomes', 'code']
+        for key in list(d.keys()):
+            if not key in valid:
+                del d[key]
         return Version(**d)
     

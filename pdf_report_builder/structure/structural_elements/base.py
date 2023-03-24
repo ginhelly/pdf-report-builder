@@ -45,5 +45,9 @@ class StructuralElement(BaseLevel):
             else False
         if 'files' in d:
             d['files'] = [PDFFile.from_dict(file) for file in d['files']]
+        valid = ['name', 'official', 'code_attr', 'files']
+        for key in list(d.keys()):
+            if not key in valid:
+                del d[key]
         return StructuralElement(**d)
 

@@ -46,6 +46,11 @@ class Tome(BaseLevel):
             d['structural_elements'] = [
                 StructuralElement.from_dict(el) for el in d['structural_elements']
             ]
+        
+        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements']
+        for key in list(d.keys()):
+            if not key in valid:
+                del d[key]
         return Tome(**d)
     
 

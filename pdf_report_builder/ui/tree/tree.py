@@ -22,7 +22,7 @@ class Tree:
     def parse_project_structure(self, project: ReportProject):
         self._item_ids = {}
         self.root = self.base.AddRoot(
-            'rpfrfrpf'
+            project.get_current_version().code
         )
         self._item_ids[self.root] = get_context_menu(self.base, project)
         self.base.SetItemImage(self.root, 0, wx.TreeItemIcon_Normal)

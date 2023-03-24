@@ -72,6 +72,10 @@ class PDFFile(BaseLevel):
         d['instant_read'] = True \
             if not 'instant_read' in d or d['instant_read'] == 'True' \
             else False
+        valid = ['path', 'subset', 'instant_read']
+        for key in list(d.keys()):
+            if not key in valid:
+                del d[key]
         file = PDFFile(**d)
         if change_subset:
             file.change_subset(subset)

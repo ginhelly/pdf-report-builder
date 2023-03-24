@@ -30,4 +30,9 @@ class ProjectSettings(BaseLevel):
                 d['save_format'] = saveformats(save_format)
             except ValueError:
                 raise IOError('Неизвестный формат')
+        
+        valid = ['savepath', 'name', 'save_format', 'current_version_id']
+        for key in list(d.keys()):
+            if not key in valid:
+                del d[key]
         return ProjectSettings(**d)
