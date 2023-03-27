@@ -102,6 +102,20 @@ class ReportProject(BaseReportProject):
         self.versions.append(ver)
         self.set_current_version_id(len(self.versions) - 1)
     
+    def remove_versions(self, versions: list):
+        remove_counter = 0
+        for ver_id in versions:
+            print('NOW ', ver_id)
+            if isinstance(ver_id, Version):
+                ver = ver_id
+            else:
+                ver = self.versions[ver_id - remove_counter]
+            self.set_current_version_id(self.settings.current_version_id - 1)
+            if ver == self.get_current_version():
+                self.set_current_version_id(len(self.versions) - 1)
+            self.versions.remove(ver)
+            remove_counter += 1
+    
     @staticmethod
     def open(path: Path):
         project_as_dict = read_from_file(path)

@@ -28,6 +28,9 @@ class MainFrame ( wx.Frame ):
         self.menu_project_new = wx.MenuItem( self.menu_project, wx.ID_ANY, u"Новый проект\tCtrl+N", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_project.Append( self.menu_project_new )
 
+        self.menu_open_template = wx.Menu()
+        self.menu_project.AppendSubMenu( self.menu_open_template, u"Открыть из шаблона" )
+
         self.menu_project_open = wx.MenuItem( self.menu_project, wx.ID_ANY, u"Открыть проект...\tCtrl+O", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_project_open.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_OPEN, wx.ART_MENU ) )
         self.menu_project.Append( self.menu_project_open )
@@ -174,6 +177,7 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.onExit, id = self.m_close.GetId() )
         self.Bind( wx.EVT_MENU, self.create_new_version, id = self.menu_versions_new.GetId() )
         self.Bind( wx.EVT_MENU, self.clone_current_version, id = self.m_menuItem18.GetId() )
+        self.Bind( wx.EVT_MENU, self.on_remove_versions, id = self.m_menuItem19.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
@@ -210,6 +214,9 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
     def clone_current_version( self, event ):
+        event.Skip()
+
+    def on_remove_versions( self, event ):
         event.Skip()
 
     def onAbout( self, event ):
@@ -333,5 +340,63 @@ class BaseAddElementDialog ( wx.Dialog ):
 
     def __del__( self ):
         pass
+
+
+###########################################################################
+## Class BaseRemoveVersionsDialog
+###########################################################################
+
+class BaseRemoveVersionsDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Удалить версии проекта...", pos = wx.DefaultPosition, size = wx.Size( 516,251 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer11 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"Список версий:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText5.Wrap( -1 )
+
+        bSizer11.Add( self.m_staticText5, 0, wx.ALL, 5 )
+
+        listbox_versionsChoices = []
+        self.listbox_versions = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listbox_versionsChoices, wx.LB_MULTIPLE )
+        bSizer11.Add( self.listbox_versions, 1, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer12.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_remove_versions = wx.Button( self, wx.ID_ANY, u"Удалить версии", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer12.Add( self.btn_remove_versions, 0, wx.ALL, 5 )
+
+        self.m_button6 = wx.Button( self, wx.ID_CANCEL, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer12.Add( self.m_button6, 0, wx.ALL, 5 )
+
+
+        bSizer11.Add( bSizer12, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer11 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.listbox_versions.Bind( wx.EVT_LISTBOX, self.toggle_remove_button )
+        self.btn_remove_versions.Bind( wx.EVT_BUTTON, self.on_remove_selected )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def toggle_remove_button( self, event ):
+        event.Skip()
+
+    def on_remove_selected( self, event ):
+        event.Skip()
 
 

@@ -9,6 +9,7 @@ from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.ui.tree.tree import Tree
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+from pdf_report_builder.ui.dialogs.remove_versions_dialog import RemoveVersionsDialog
 
 from pdf_report_builder.algorithms.merge import merge
 
@@ -161,6 +162,7 @@ class PDFReportBuilderFrame(MainFrame):
                 return
             self.project.clone_current_version(dlg.GetValue())
             self.populate_choice_current_version()
+            self.tree_component.redraw_tree(self.project)
     
     def on_project_name_change(self, event):
         with wx.TextEntryDialog(
@@ -172,6 +174,13 @@ class PDFReportBuilderFrame(MainFrame):
                 return
             self.project.settings.name = dlg.GetValue()
             self.lbl_project_name.SetLabelText(self.project.settings.name)
+    
+    def on_remove_versions(self, event):
+       dlg = RemoveVersionsDialog(None, self.project)
+       dlg.ShowModal()
+       dlg.Destroy()
+       self.populate_choice_current_version()
+       self.tree_component.redraw_tree(self.project)
         
     def make_reports(self, event):
         try:
