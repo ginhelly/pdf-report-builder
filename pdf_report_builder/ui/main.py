@@ -1,17 +1,17 @@
-import wx
-import sys
-import traceback
 from pathlib import Path
 
-from pdf_report_builder.ui.form_builder.main import MainFrame
-from pdf_report_builder.ui.about import PRBAboutDialog
-from pdf_report_builder.utils.docs import open_docs
-from pdf_report_builder.project.project import ReportProject
-from pdf_report_builder.ui.tree.tree import Tree
-from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
-from pdf_report_builder.ui.dialogs.remove_versions_dialog import RemoveVersionsDialog
+import wx
 
 from pdf_report_builder.algorithms.merge import merge
+from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.ui.about import PRBAboutDialog
+from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+from pdf_report_builder.ui.dialogs.remove_versions_dialog import \
+    RemoveVersionsDialog
+from pdf_report_builder.ui.form_builder.main import MainFrame
+from pdf_report_builder.ui.tree.tree import Tree
+from pdf_report_builder.utils.docs import open_docs
+
 
 def on_exception(exception_type, text: str = ""):
     msg = text or "Произошла ошибка.\n\n"
@@ -28,7 +28,9 @@ class PDFReportBuilderFrame(MainFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.create_new_project()
-        self.tree_component = Tree(self.tree, self.project)
+        self.tree_component = Tree(self.tree_container, self.project)
+        self.tree_container.GetSizer().Add(self.tree_component, 1, wx.ALL|wx.EXPAND)
+        self.tree_component.Bind(wx.EVT_TREE_SEL_CHANGED, self.toggle_up_down_buttons)
     
     def onExit(self, event):
         if self.project.modified:
@@ -181,6 +183,20 @@ class PDFReportBuilderFrame(MainFrame):
        dlg.Destroy()
        self.populate_choice_current_version()
        self.tree_component.redraw_tree(self.project)
+    
+    def toggle_up_down_buttons(self, event):
+        self._toggle_button(event, self.btn_up, 0)
+        self._toggle_button(event, self.btn_down, -1)
+    
+    def _toggle_button(self, event, btn, i):
+        tree_node = self.tree_component.nodes[event.Item]
+        if tree_node.parent is None:
+            btn.Disable()
+            return
+        if tree_node.parent.children[i] == tree_node:
+            btn.Disable()
+            return
+        btn.Enable()
         
     def make_reports(self, event):
         try:

@@ -145,8 +145,36 @@ class MainFrame ( wx.Frame ):
 
         bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
 
-        self.tree = wx.TreeCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TR_DEFAULT_STYLE )
-        bSizer3.Add( self.tree, 1, wx.ALL|wx.EXPAND, 5 )
+        bSizer13 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer13.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_up = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.btn_up.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_UP, wx.ART_BUTTON ) )
+        self.btn_up.Enable( False )
+
+        bSizer13.Add( self.btn_up, 0, wx.ALL, 5 )
+
+        self.btn_down = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.btn_down.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_DOWN, wx.ART_BUTTON ) )
+        self.btn_down.Enable( False )
+
+        bSizer13.Add( self.btn_down, 0, wx.ALL, 5 )
+
+
+        bSizer3.Add( bSizer13, 0, wx.EXPAND, 5 )
+
+        self.tree_container = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        tree_sizer = wx.BoxSizer( wx.VERTICAL )
+
+
+        self.tree_container.SetSizer( tree_sizer )
+        self.tree_container.Layout()
+        tree_sizer.Fit( self.tree_container )
+        bSizer3.Add( self.tree_container, 1, wx.EXPAND |wx.ALL, 5 )
 
         self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
@@ -187,6 +215,8 @@ class MainFrame ( wx.Frame ):
         self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
+        self.btn_up.Bind( wx.EVT_BUTTON, self.emit_up )
+        self.btn_down.Bind( wx.EVT_BUTTON, self.emit_down )
         self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
 
     def __del__( self ):
@@ -243,6 +273,12 @@ class MainFrame ( wx.Frame ):
     def set_current_version( self, event ):
         event.Skip()
 
+
+    def emit_up( self, event ):
+        event.Skip()
+
+    def emit_down( self, event ):
+        event.Skip()
 
     def make_reports( self, event ):
         event.Skip()
