@@ -215,8 +215,8 @@ class MainFrame ( wx.Frame ):
         self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
-        self.btn_up.Bind( wx.EVT_BUTTON, self.emit_up )
-        self.btn_down.Bind( wx.EVT_BUTTON, self.emit_down )
+        self.btn_up.Bind( wx.EVT_BUTTON, self.on_up )
+        self.btn_down.Bind( wx.EVT_BUTTON, self.on_down )
         self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
 
     def __del__( self ):
@@ -274,10 +274,10 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
 
-    def emit_up( self, event ):
+    def on_up( self, event ):
         event.Skip()
 
-    def emit_down( self, event ):
+    def on_down( self, event ):
         event.Skip()
 
     def make_reports( self, event ):

@@ -31,6 +31,7 @@ class PDFReportBuilderFrame(MainFrame):
         self.tree_component = Tree(self.tree_container, self.project)
         self.tree_container.GetSizer().Add(self.tree_component, 1, wx.ALL|wx.EXPAND)
         self.tree_component.Bind(wx.EVT_TREE_SEL_CHANGED, self.toggle_up_down_buttons)
+        #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
     
     def onExit(self, event):
         if self.project.modified:
@@ -197,6 +198,24 @@ class PDFReportBuilderFrame(MainFrame):
             btn.Disable()
             return
         btn.Enable()
+    
+    def on_up(self, event):
+        item_id = self.tree_component.GetSelection()
+        node1 = self.tree_component.nodes[item_id]
+        node2 = node1.prev
+        self.tree_component.swap(node1, node2)
+        self.tree_component.SelectItem(
+            node1.item_id
+        )
+
+    def on_down(self, event):
+        item_id = self.tree_component.GetSelection()
+        node1 = self.tree_component.nodes[item_id]
+        node2 = node1.next
+        self.tree_component.swap(node1, node2)
+        self.tree_component.SelectItem(
+            node1.item_id
+        )
         
     def make_reports(self, event):
         try:
