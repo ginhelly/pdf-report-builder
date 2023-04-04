@@ -104,16 +104,13 @@ class MainFrame ( wx.Frame ):
 
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.lbl_project_name = wx.StaticText( self, wx.ID_ANY, u"Название проекта", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_project_name = wx.StaticText( self, wx.ID_ANY, u"Название проекта", wx.DefaultPosition, wx.DefaultSize, wx.ST_ELLIPSIZE_END|wx.ST_NO_AUTORESIZE )
         self.lbl_project_name.SetLabelMarkup( u"Название проекта" )
         self.lbl_project_name.Wrap( -1 )
 
         self.lbl_project_name.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
-        bSizer4.Add( self.lbl_project_name, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
-
-
-        bSizer4.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+        bSizer4.Add( self.lbl_project_name, 1, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
         self.btn_open_project_settings = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
 
