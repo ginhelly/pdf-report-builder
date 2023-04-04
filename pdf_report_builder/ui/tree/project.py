@@ -1,8 +1,15 @@
-import wx
+import json
 from pathlib import Path
+
+import pyperclip
+import wx
+
 from pdf_report_builder.project.base_project import BaseReportProject
-from .base_context_menu import *
 from pdf_report_builder.project.event_channel import EventChannel
+from pdf_report_builder.structure.tome import Tome
+
+from .base_context_menu import *
+
 
 class ProjectContextMenu(TreeContextMenu):
     def __init__(self, tree: wx.TreeCtrl, project: BaseReportProject) -> None:
@@ -31,4 +38,29 @@ class ProjectContextMenu(TreeContextMenu):
                 return
             path = Path(open_dialog.GetPath())
         ver.create_tome(basename, path.stem, path)
+        EventChannel().publish('tree_update')
+    
+    def populate_menu(self, event):
+        super().populate_menu(event)
+        self.peek_clipboard()
+    
+    def peek_clipboard(self):
+        content = pyperclip.paste()
+        if not (7 < len(content) < 5242880):
+            print('len check')
+            return
+        if not content[:7] == 'LEVEL=1':
+            print('level wrong')
+            return
+        try:
+            self.clipboard_content = json.loads(content[7:])
+        except Exception:
+            print('parse error')
+            return
+        self.popupmenu.Insert(1, -1, 'Вставить')
+        self.OPTIONS.append(MenuOption('Вставить', self.paste))
+    
+    def paste(self):
+        new_tome = Tome.from_dict(self.clipboard_content)
+        self.project.get_current_version().append_tome(new_tome)
         EventChannel().publish('tree_update')

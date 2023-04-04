@@ -20,14 +20,17 @@ class StructuralElement(BaseLevel):
 
     def add_file(
             self,
+            file: PDFFile | None = None,
             file_description: FileDescription | None = None,
             file_path: Path | None = None,
             subset: str | None = None
         ):
-        if file_description is None:
-            new_file = PDFFile(file_path, subset)
-        else:
+        if file is not None:
+            new_file = file
+        elif file_description is not None:
             new_file = PDFFile(*file_description)
+        else:
+            new_file = PDFFile(file_path, subset)
         self.files.append(new_file)
     
     def parse_files(self, files: list[FileDescription]):
