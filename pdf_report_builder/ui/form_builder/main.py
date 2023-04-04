@@ -18,7 +18,7 @@ import wx.richtext
 class MainFrame ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 800,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 900,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.Size( 500,450 ), wx.DefaultSize )
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHTTEXT ) )
@@ -98,9 +98,7 @@ class MainFrame ( wx.Frame ):
 
         self.SetMenuBar( self.m_menubar1 )
 
-        bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-
-        bSizer3 = wx.BoxSizer( wx.VERTICAL )
+        bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -118,7 +116,11 @@ class MainFrame ( wx.Frame ):
         bSizer4.Add( self.btn_open_project_settings, 0, wx.ALL, 5 )
 
 
-        bSizer3.Add( bSizer4, 0, wx.EXPAND, 5 )
+        bSizer2.Add( bSizer4, 0, wx.EXPAND, 5 )
+
+        bSizer20 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -142,6 +144,35 @@ class MainFrame ( wx.Frame ):
 
         bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
 
+        self.m_staticline1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        bSizer3.Add( self.m_staticline1, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Свойства", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText6.SetLabelMarkup( u"Свойства" )
+        self.m_staticText6.Wrap( -1 )
+
+        self.m_staticText6.SetFont( wx.Font( 11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        bSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.properties_panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer18 = wx.BoxSizer( wx.VERTICAL )
+
+
+        self.properties_panel.SetSizer( bSizer18 )
+        self.properties_panel.Layout()
+        bSizer18.Fit( self.properties_panel )
+        bSizer3.Add( self.properties_panel, 1, wx.EXPAND |wx.ALL, 5 )
+
+        self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer20.Add( bSizer3, 1, wx.EXPAND, 5 )
+
+        bSizer6 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer6.SetMinSize( wx.Size( 300,-1 ) )
         bSizer13 = wx.BoxSizer( wx.HORIZONTAL )
 
 
@@ -162,7 +193,7 @@ class MainFrame ( wx.Frame ):
         bSizer13.Add( self.btn_down, 0, wx.ALL, 5 )
 
 
-        bSizer3.Add( bSizer13, 0, wx.EXPAND, 5 )
+        bSizer6.Add( bSizer13, 0, wx.EXPAND, 5 )
 
         self.tree_container = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         tree_sizer = wx.BoxSizer( wx.VERTICAL )
@@ -171,21 +202,13 @@ class MainFrame ( wx.Frame ):
         self.tree_container.SetSizer( tree_sizer )
         self.tree_container.Layout()
         tree_sizer.Fit( self.tree_container )
-        bSizer3.Add( self.tree_container, 1, wx.EXPAND |wx.ALL, 5 )
-
-        self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
+        bSizer6.Add( self.tree_container, 1, wx.EXPAND |wx.ALL, 5 )
 
 
-        bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )
-
-        bSizer6 = wx.BoxSizer( wx.VERTICAL )
-
-        self.m_panel1 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-        bSizer6.Add( self.m_panel1, 1, wx.EXPAND |wx.ALL, 5 )
+        bSizer20.Add( bSizer6, 2, wx.EXPAND, 5 )
 
 
-        bSizer2.Add( bSizer6, 1, wx.EXPAND, 5 )
+        bSizer2.Add( bSizer20, 1, wx.EXPAND, 5 )
 
 
         self.SetSizer( bSizer2 )
@@ -212,9 +235,9 @@ class MainFrame ( wx.Frame ):
         self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
+        self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
         self.btn_up.Bind( wx.EVT_BUTTON, self.on_up )
         self.btn_down.Bind( wx.EVT_BUTTON, self.on_down )
-        self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
 
     def __del__( self ):
         pass
@@ -271,13 +294,13 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
 
+    def make_reports( self, event ):
+        event.Skip()
+
     def on_up( self, event ):
         event.Skip()
 
     def on_down( self, event ):
-        event.Skip()
-
-    def make_reports( self, event ):
         event.Skip()
 
 

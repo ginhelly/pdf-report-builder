@@ -70,15 +70,12 @@ class ElementContextMenu(TreeContextMenu):
     def peek_clipboard(self):
         content = pyperclip.paste()
         if not (7 < len(content) < 5242880):
-            print('len check')
             return
         if not content[:7] == 'LEVEL=3':
-            print('level wrong')
             return
         try:
             self.clipboard_content = json.loads(content[7:])
         except Exception:
-            print('parse error')
             return
         self.popupmenu.Insert(4, -1, 'Вставить')
         self.OPTIONS.append(MenuOption('Вставить', self.paste))
