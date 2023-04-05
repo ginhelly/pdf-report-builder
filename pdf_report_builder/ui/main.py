@@ -10,7 +10,10 @@ from pdf_report_builder.ui.dialogs.remove_versions_dialog import \
     RemoveVersionsDialog
 from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.tree.tree import Tree
+from pdf_report_builder.ui.panels.book import Book
 from pdf_report_builder.utils.docs import open_docs
+from pdf_report_builder.project.event_channel import EventChannel
+from pdf_report_builder.project.storage import ProjectStorage
 
 
 def on_exception(exception_type, text: str = ""):
@@ -28,9 +31,20 @@ class PDFReportBuilderFrame(MainFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.create_new_project()
+        ProjectStorage().set_project(self.project)
         self.tree_component = Tree(self.tree_container, self.project)
         self.tree_container.GetSizer().Add(self.tree_component, 1, wx.ALL|wx.EXPAND)
-        self.tree_component.Bind(wx.EVT_TREE_SEL_CHANGED, self.toggle_up_down_buttons)
+        self.tree_component.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_tree_sel_changed)
+        self.book = Book(
+            self.properties_panel,
+            style=wx.EXPAND
+        )
+        sizer = self.properties_panel.GetSizer()
+        sizer.Add(self.book, 1, wx.EXPAND)
+        self.book.parse_item(self.project)
+        self.populate_choice_current_version()
+        EventChannel().subscribe('version_name_update', self.populate_choice_current_version)
+        EventChannel().subscribe('project_changed', self.on_project_change)
         #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
     
     def onExit(self, event):
@@ -82,10 +96,7 @@ class PDFReportBuilderFrame(MainFrame):
                 return
             self.project.close()
         self.project = ReportProject()
-        self.lbl_project_name.SetLabelText(self.project.settings.name)
-        self.populate_choice_current_version()
-        if hasattr(self, 'tree_component'):
-            self.tree_component.redraw_tree(self.project)
+        EventChannel().publish('project_changed', self.project)
     
     def open_project(self, event):
         if hasattr(self, 'project'):
@@ -107,9 +118,15 @@ class PDFReportBuilderFrame(MainFrame):
                 print(e)
                 on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
                 return
-            self.lbl_project_name.SetLabelText(self.project.settings.name)
-            self.populate_choice_current_version()
-            self.tree_component.redraw_tree(self.project)
+            EventChannel().publish('project_changed', self.project)
+    
+    def on_project_change(self, payload):
+        project = payload[0]
+        self.lbl_project_name.SetLabelText(project.settings.name)
+        self.populate_choice_current_version()
+        if hasattr(self, 'tree_component'):
+            self.tree_component.redraw_tree(project)
+        self.book.parse_item(project)
         
     def save_project(self, event):
         try:
@@ -150,11 +167,13 @@ class PDFReportBuilderFrame(MainFrame):
             self.project.create_new_version(dlg.GetValue())
             self.populate_choice_current_version()
             self.tree_component.redraw_tree(self.project)
+            self.book.parse_item(self.project)
     
     def set_current_version(self, event):
         new_ver_id = self.choice_current_version.GetCurrentSelection()
         self.project.set_current_version_id(new_ver_id)
         self.tree_component.redraw_tree(self.project)
+        self.book.parse_item(self.project)
 
     def clone_current_version(self, event):
         with wx.TextEntryDialog(
@@ -166,6 +185,7 @@ class PDFReportBuilderFrame(MainFrame):
             self.project.clone_current_version(dlg.GetValue())
             self.populate_choice_current_version()
             self.tree_component.redraw_tree(self.project)
+            self.book.parse_item(self.project)
     
     def on_project_name_change(self, event):
         with wx.TextEntryDialog(
@@ -184,6 +204,11 @@ class PDFReportBuilderFrame(MainFrame):
        dlg.Destroy()
        self.populate_choice_current_version()
        self.tree_component.redraw_tree(self.project)
+    
+    def on_tree_sel_changed(self, event):
+        self.toggle_up_down_buttons(event)
+        item = self.tree_component.nodes[event.Item].item
+        self.book.parse_item(item)
     
     def toggle_up_down_buttons(self, event):
         self._toggle_button(event, self.btn_up, 0)

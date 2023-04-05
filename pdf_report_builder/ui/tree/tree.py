@@ -9,6 +9,9 @@ from pdf_report_builder.ui.tree.tree_icons import get_tree_images
 from .tree_node import *
 from pdf_report_builder.project.event_channel import EventChannel
 
+def get_tome_name(tome: Tome):
+    return f'[{tome.basename}] {tome.human_readable_name}'
+
 class Tree(wx.TreeCtrl):
     def __init__(self, parent, project = None):
         super().__init__(
@@ -24,6 +27,7 @@ class Tree(wx.TreeCtrl):
                 'tree_update',
                 lambda: self.redraw_tree(self.project)
             )
+        EventChannel().subscribe('tome_name_update', self.update_selected_tome_name)
     
     def parse_project_structure(self, project: ReportProject):
         self.nodes = {}
@@ -103,7 +107,7 @@ class Tree(wx.TreeCtrl):
         return self.create_item_id(parent_id, previous, el_name, 2)
     
     def create_tome_item_id(self, tome: Tome, parent_id, previous=None):
-        tome_name = f'[{tome.basename}] {tome.human_readable_name}'
+        tome_name = get_tome_name(tome)
         return self.create_item_id(parent_id, previous, tome_name, 1)
     
     def swap(self, node_i: TreeNode, node_j: TreeNode):
@@ -138,3 +142,9 @@ class Tree(wx.TreeCtrl):
                 n.children = []
                 self._parse_elements(n.item_id, n, n.item)
         self.ExpandAll()
+    
+    def update_selected_tome_name(self):
+        item_id = self.GetSelection()
+        tome = self.nodes[item_id].item
+        new_name = get_tome_name(tome)
+        self.SetItemText(item_id, new_name)

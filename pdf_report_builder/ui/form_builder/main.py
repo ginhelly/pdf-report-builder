@@ -122,38 +122,22 @@ class MainFrame ( wx.Frame ):
 
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-        bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
+        bSizer3.SetMinSize( wx.Size( 250,-1 ) )
+        bSizer21 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.lbl_version = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.lbl_version.Wrap( -1 )
+        bSizer21.SetMinSize( wx.Size( -1,33 ) )
+        self.lbl_version1 = wx.StaticText( self, wx.ID_ANY, u"Свойства", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_version1.Wrap( -1 )
 
-        bSizer5.Add( self.lbl_version, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.lbl_version1.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
-        choice_current_versionChoices = []
-        self.choice_current_version = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choice_current_versionChoices, 0 )
-        self.choice_current_version.SetSelection( 0 )
-        bSizer5.Add( self.choice_current_version, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-        self.btn_clone_version = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
-
-        self.btn_clone_version.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_COPY, wx.ART_BUTTON ) )
-        self.btn_clone_version.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DDKSHADOW ) )
-
-        bSizer5.Add( self.btn_clone_version, 0, wx.ALL, 5 )
+        bSizer21.Add( self.lbl_version1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
-        bSizer3.Add( bSizer5, 0, wx.EXPAND, 5 )
+        bSizer3.Add( bSizer21, 0, wx.EXPAND, 5 )
 
         self.m_staticline1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer3.Add( self.m_staticline1, 0, wx.EXPAND |wx.ALL, 5 )
-
-        self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Свойства", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText6.SetLabelMarkup( u"Свойства" )
-        self.m_staticText6.Wrap( -1 )
-
-        self.m_staticText6.SetFont( wx.Font( 11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
-
-        bSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.EXPAND, 5 )
 
         self.properties_panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         bSizer18 = wx.BoxSizer( wx.VERTICAL )
@@ -174,6 +158,30 @@ class MainFrame ( wx.Frame ):
 
         bSizer6.SetMinSize( wx.Size( 300,-1 ) )
         bSizer13 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer5 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.lbl_version = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_version.Wrap( -1 )
+
+        self.lbl_version.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer5.Add( self.lbl_version, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        choice_current_versionChoices = []
+        self.choice_current_version = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choice_current_versionChoices, 0 )
+        self.choice_current_version.SetSelection( 0 )
+        bSizer5.Add( self.choice_current_version, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        self.btn_clone_version = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.btn_clone_version.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_COPY, wx.ART_BUTTON ) )
+        self.btn_clone_version.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_3DDKSHADOW ) )
+
+        bSizer5.Add( self.btn_clone_version, 0, wx.ALL, 5 )
+
+
+        bSizer13.Add( bSizer5, 2, wx.EXPAND, 5 )
 
 
         bSizer13.Add( ( 0, 0), 1, wx.EXPAND, 5 )
@@ -233,9 +241,9 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.onDocsOpen47, id = self.menu_about_sp47.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen317, id = self.menu_about_sp317.GetId() )
         self.btn_open_project_settings.Bind( wx.EVT_BUTTON, self.on_project_name_change )
+        self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
-        self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
         self.btn_up.Bind( wx.EVT_BUTTON, self.on_up )
         self.btn_down.Bind( wx.EVT_BUTTON, self.on_down )
 
@@ -290,17 +298,287 @@ class MainFrame ( wx.Frame ):
     def on_project_name_change( self, event ):
         event.Skip()
 
+    def make_reports( self, event ):
+        event.Skip()
+
     def set_current_version( self, event ):
         event.Skip()
 
-
-    def make_reports( self, event ):
-        event.Skip()
 
     def on_up( self, event ):
         event.Skip()
 
     def on_down( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BaseElementPanel
+###########################################################################
+
+class BaseElementPanel ( wx.Panel ):
+
+    def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+        wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+        bSizer24 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Шифр:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText13.Wrap( -1 )
+
+        bSizer23.Add( self.m_staticText13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer23.Add( self.m_textCtrl2, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer24.Add( bSizer23, 0, wx.EXPAND, 5 )
+
+        self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Название структурного элемента", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText16.Wrap( -1 )
+
+        bSizer24.Add( self.m_staticText16, 0, wx.ALL, 5 )
+
+        self.m_textCtrl5 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.m_textCtrl5, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"Официальный", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.m_checkBox1, 0, wx.ALL, 5 )
+
+
+        self.SetSizer( bSizer24 )
+        self.Layout()
+        bSizer24.Fit( self )
+
+    def __del__( self ):
+        pass
+
+
+###########################################################################
+## Class BaseFilePanel
+###########################################################################
+
+class BaseFilePanel ( wx.Panel ):
+
+    def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+        wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+        bSizer24 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Путь к файлу:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText16.Wrap( -1 )
+
+        bSizer24.Add( self.m_staticText16, 0, wx.ALL, 5 )
+
+        self.m_filePicker2 = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Путь к файлу", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE|wx.FLP_FILE_MUST_EXIST|wx.FLP_OPEN )
+        bSizer24.Add( self.m_filePicker2, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_staticText161 = wx.StaticText( self, wx.ID_ANY, u"Название файла:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText161.Wrap( -1 )
+
+        bSizer24.Add( self.m_staticText161, 0, wx.ALL, 5 )
+
+        self.m_textCtrl51 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+        bSizer24.Add( self.m_textCtrl51, 0, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Всего страниц в файле:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText13.Wrap( -1 )
+
+        bSizer23.Add( self.m_staticText13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.TE_READONLY )
+        bSizer23.Add( self.m_textCtrl2, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer24.Add( bSizer23, 0, wx.EXPAND, 5 )
+
+        bSizer231 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText131 = wx.StaticText( self, wx.ID_ANY, u"Подмножество страниц:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText131.Wrap( -1 )
+
+        bSizer231.Add( self.m_staticText131, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer231.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_textCtrl21 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), 0 )
+        bSizer231.Add( self.m_textCtrl21, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer24.Add( bSizer231, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer24 )
+        self.Layout()
+        bSizer24.Fit( self )
+
+    def __del__( self ):
+        pass
+
+
+###########################################################################
+## Class BaseProjectPanel
+###########################################################################
+
+class BaseProjectPanel ( wx.Panel ):
+
+    def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+        wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+        bSizer22 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Шифр объекта:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText13.Wrap( -1 )
+
+        bSizer23.Add( self.m_staticText13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+        self.text_code = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        self.text_code.SetMaxLength( 35 )
+        bSizer23.Add( self.text_code, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer22.Add( bSizer23, 0, wx.EXPAND, 5 )
+
+        self.m_staticText23 = wx.StaticText( self, wx.ID_ANY, u"Название текущей версии", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText23.Wrap( -1 )
+
+        bSizer22.Add( self.m_staticText23, 0, wx.ALL, 5 )
+
+        self.text_current_version_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        bSizer22.Add( self.text_current_version_name, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Папка для работы по умолчанию", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText12.Wrap( -1 )
+
+        bSizer22.Add( self.m_staticText12, 0, wx.ALL, 5 )
+
+        self.dp_default_save = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+        bSizer22.Add( self.dp_default_save, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer22 )
+        self.Layout()
+        bSizer22.Fit( self )
+
+        # Connect Events
+        self.text_code.Bind( wx.EVT_TEXT_ENTER, self.on_code_change )
+        self.text_current_version_name.Bind( wx.EVT_TEXT_ENTER, self.on_version_name_change )
+        self.dp_default_save.Bind( wx.EVT_DIRPICKER_CHANGED, self.on_default_dir_change )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_code_change( self, event ):
+        event.Skip()
+
+    def on_version_name_change( self, event ):
+        event.Skip()
+
+    def on_default_dir_change( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BaseTomePanel
+###########################################################################
+
+class BaseTomePanel ( wx.Panel ):
+
+    def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+        wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+        bSizer24 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Шифр тома:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText13.Wrap( -1 )
+
+        bSizer23.Add( self.m_staticText13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.lbl_prefix = wx.StaticText( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_prefix.Wrap( -1 )
+
+        bSizer23.Add( self.lbl_prefix, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.text_tome_code = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 70,-1 ), wx.TE_PROCESS_ENTER )
+        self.text_tome_code.SetMaxLength( 15 )
+        bSizer23.Add( self.text_tome_code, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+
+        bSizer24.Add( bSizer23, 0, wx.EXPAND, 5 )
+
+        self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Название тома", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText16.Wrap( -1 )
+
+        bSizer24.Add( self.m_staticText16, 0, wx.ALL, 5 )
+
+        self.text_tome_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        bSizer24.Add( self.text_tome_name, 0, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"Путь сохранения", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText17.Wrap( -1 )
+
+        bSizer31.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer31.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_to_default = wx.Button( self, wx.ID_ANY, u"В папку по умолчанию", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer31.Add( self.btn_to_default, 0, wx.ALL, 5 )
+
+
+        bSizer24.Add( bSizer31, 0, wx.EXPAND, 5 )
+
+        self.fp_save = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Выберите путь сохранения", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT|wx.FLP_SAVE|wx.FLP_USE_TEXTCTRL )
+        bSizer24.Add( self.fp_save, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer24 )
+        self.Layout()
+        bSizer24.Fit( self )
+
+        # Connect Events
+        self.text_tome_code.Bind( wx.EVT_TEXT_ENTER, self.on_tome_code_change )
+        self.text_tome_name.Bind( wx.EVT_TEXT_ENTER, self.on_tome_name_change )
+        self.btn_to_default.Bind( wx.EVT_BUTTON, self.on_move_to_default_folder )
+        self.fp_save.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_save_file_change )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_tome_code_change( self, event ):
+        event.Skip()
+
+    def on_tome_name_change( self, event ):
+        event.Skip()
+
+    def on_move_to_default_folder( self, event ):
+        event.Skip()
+
+    def on_save_file_change( self, event ):
         event.Skip()
 
 
