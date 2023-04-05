@@ -12,6 +12,14 @@ from pdf_report_builder.project.event_channel import EventChannel
 def get_tome_name(tome: Tome):
     return f'[{tome.basename}] {tome.human_readable_name}'
 
+def get_element_name(el: StructuralElement):
+    return f'[{el.code_attr}] {el.name}'
+
+def get_file_name(file: PDFFile):
+    return f'({file.subset}) {file.path.name}' \
+            if len(str(file.subset)) > 0 \
+            else str(file.path.name)
+
 class Tree(wx.TreeCtrl):
     def __init__(self, parent, project = None):
         super().__init__(
@@ -28,6 +36,8 @@ class Tree(wx.TreeCtrl):
                 lambda: self.redraw_tree(self.project)
             )
         EventChannel().subscribe('tome_name_update', self.update_selected_tome_name)
+        EventChannel().subscribe('element_name_update', self.update_selected_el_name)
+        EventChannel().subscribe('file_name_update', self.update_selected_file_name)
     
     def parse_project_structure(self, project: ReportProject):
         self.nodes = {}
@@ -97,13 +107,11 @@ class Tree(wx.TreeCtrl):
         return item_id
     
     def create_file_item_id(self, file: PDFFile, parent_id, previous=None):
-        file_name = f'({file.subset}) {file.path.name}' \
-            if len(str(file.subset)) > 0 \
-            else str(file.path.name)
+        file_name = get_file_name(file)
         return self.create_item_id(parent_id, previous, file_name, 3)
     
     def create_element_item_id(self, el: StructuralElement, parent_id, previous=None):
-        el_name = f'[{el.code_attr}] {el.name}'
+        el_name = get_element_name(el)
         return self.create_item_id(parent_id, previous, el_name, 2)
     
     def create_tome_item_id(self, tome: Tome, parent_id, previous=None):
@@ -147,4 +155,16 @@ class Tree(wx.TreeCtrl):
         item_id = self.GetSelection()
         tome = self.nodes[item_id].item
         new_name = get_tome_name(tome)
+        self.SetItemText(item_id, new_name)
+    
+    def update_selected_el_name(self):
+        item_id = self.GetSelection()
+        el = self.nodes[item_id].item
+        new_name = get_element_name(el)
+        self.SetItemText(item_id, new_name)
+
+    def update_selected_file_name(self):
+        item_id = self.GetSelection()
+        el = self.nodes[item_id].item
+        new_name = get_file_name(el)
         self.SetItemText(item_id, new_name)

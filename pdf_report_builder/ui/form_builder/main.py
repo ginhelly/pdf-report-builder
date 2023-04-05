@@ -333,8 +333,8 @@ class BaseElementPanel ( wx.Panel ):
 
         bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer23.Add( self.m_textCtrl2, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.text_element_code = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        bSizer23.Add( self.text_element_code, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
         bSizer24.Add( bSizer23, 0, wx.EXPAND, 5 )
@@ -344,19 +344,35 @@ class BaseElementPanel ( wx.Panel ):
 
         bSizer24.Add( self.m_staticText16, 0, wx.ALL, 5 )
 
-        self.m_textCtrl5 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer24.Add( self.m_textCtrl5, 0, wx.ALL|wx.EXPAND, 5 )
+        self.text_element_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        bSizer24.Add( self.text_element_name, 0, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"Официальный", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer24.Add( self.m_checkBox1, 0, wx.ALL, 5 )
+        self.cb_official = wx.CheckBox( self, wx.ID_ANY, u"Официальный", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.cb_official, 0, wx.ALL, 5 )
 
 
         self.SetSizer( bSizer24 )
         self.Layout()
         bSizer24.Fit( self )
 
+        # Connect Events
+        self.text_element_code.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_code_change )
+        self.text_element_name.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_name_change )
+        self.cb_official.Bind( wx.EVT_CHECKBOX, self.on_toggle_official )
+
     def __del__( self ):
         pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_text_element_code_change( self, event ):
+        event.Skip()
+
+    def on_text_element_name_change( self, event ):
+        event.Skip()
+
+    def on_toggle_official( self, event ):
+        event.Skip()
 
 
 ###########################################################################
@@ -375,16 +391,16 @@ class BaseFilePanel ( wx.Panel ):
 
         bSizer24.Add( self.m_staticText16, 0, wx.ALL, 5 )
 
-        self.m_filePicker2 = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Путь к файлу", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE|wx.FLP_FILE_MUST_EXIST|wx.FLP_OPEN )
-        bSizer24.Add( self.m_filePicker2, 0, wx.ALL|wx.EXPAND, 5 )
+        self.fp_file = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Путь к файлу", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE|wx.FLP_FILE_MUST_EXIST|wx.FLP_OPEN )
+        bSizer24.Add( self.fp_file, 0, wx.ALL|wx.EXPAND, 5 )
 
         self.m_staticText161 = wx.StaticText( self, wx.ID_ANY, u"Название файла:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText161.Wrap( -1 )
 
         bSizer24.Add( self.m_staticText161, 0, wx.ALL, 5 )
 
-        self.m_textCtrl51 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
-        bSizer24.Add( self.m_textCtrl51, 0, wx.ALL|wx.EXPAND, 5 )
+        self.text_file_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+        bSizer24.Add( self.text_file_name, 0, wx.ALL|wx.EXPAND, 5 )
 
         bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -396,8 +412,8 @@ class BaseFilePanel ( wx.Panel ):
 
         bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.TE_READONLY )
-        bSizer23.Add( self.m_textCtrl2, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.text_pages_number = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.TE_READONLY )
+        bSizer23.Add( self.text_pages_number, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
         bSizer24.Add( bSizer23, 0, wx.EXPAND, 5 )
@@ -412,8 +428,8 @@ class BaseFilePanel ( wx.Panel ):
 
         bSizer231.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_textCtrl21 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), 0 )
-        bSizer231.Add( self.m_textCtrl21, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.text_subset = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.TE_PROCESS_ENTER )
+        bSizer231.Add( self.text_subset, 2, wx.ALIGN_CENTER|wx.ALL, 5 )
 
 
         bSizer24.Add( bSizer231, 0, wx.EXPAND, 5 )
@@ -423,8 +439,20 @@ class BaseFilePanel ( wx.Panel ):
         self.Layout()
         bSizer24.Fit( self )
 
+        # Connect Events
+        self.fp_file.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_file_change )
+        self.text_subset.Bind( wx.EVT_TEXT_ENTER, self.on_subset_change )
+
     def __del__( self ):
         pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_file_change( self, event ):
+        event.Skip()
+
+    def on_subset_change( self, event ):
+        event.Skip()
 
 
 ###########################################################################

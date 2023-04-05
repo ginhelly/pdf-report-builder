@@ -7,9 +7,7 @@ from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.event_channel import EventChannel
 
 class TomePanel(BaseTomePanel):
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name=wx.EmptyString):
-        super().__init__(parent, id, pos, size, style, name)
-    
+
     def parse_tome(self, tome: Tome):
         self.tome = tome
         self.text_tome_code.SetValue(tome.basename)
@@ -31,7 +29,7 @@ class TomePanel(BaseTomePanel):
             dlg.Close()
     
     def on_move_to_default_folder(self, event):
-        default_folder = ProjectStorage().project.get_current_version().default_folder
+        default_folder = Path(ProjectStorage().project.get_current_version().default_folder)
         assert default_folder.exists() and default_folder.is_dir()
         self.tome.savepath = default_folder / self.tome.savepath.name
         self.fp_save.SetPath(str(self.tome.savepath))

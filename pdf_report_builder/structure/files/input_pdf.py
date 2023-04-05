@@ -41,6 +41,12 @@ class PDFFile(BaseLevel):
             self.pages_number = len(pdf_reader.pages)
         self._parse_subset(self.subset)
     
+    def change_file(self, path: Path):
+        assert path.is_file() and path.suffix == '.pdf'
+        self.path = path
+        self.subset = ''
+        self.read_file()
+    
     def _parse_subset(self, subset: str | PagesSubset):
         if isinstance(subset, PagesSubset):
             self.subset = subset

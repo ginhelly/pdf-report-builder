@@ -44,9 +44,9 @@ class Book(wx.Simplebook):
             self.panels[1].parse_tome(item)
             self.SetSelection(1)
         elif isinstance(item, StructuralElement):
+            self.panels[2].parse_element(item)
             self.SetSelection(2)
-            print('parse element')
         else:
+            self.panels[3].parse_file(item)
             self.SetSelection(3)
-            print('parse file')
     
