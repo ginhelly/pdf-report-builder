@@ -28,3 +28,15 @@ class FilePanel(BaseFilePanel):
             dlg = ErrorDialog(None, str(e), 'Не удалось открыть файл')
             dlg.ShowModal()
             dlg.Close()
+    
+    def on_subset_change(self, event):
+        try:
+            new_subset = self.text_subset.GetValue()
+            self.file.change_subset(new_subset)
+            EventChannel().publish('file_name_update')
+        except Exception as e:
+            if 'invalid' in str(e):
+                e = 'Некорректный ввод'
+            dlg = ErrorDialog(None, str(e), 'Не удалось изменить подмножество')
+            dlg.ShowModal()
+            dlg.Close()

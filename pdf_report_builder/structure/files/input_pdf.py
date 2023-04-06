@@ -51,7 +51,7 @@ class PDFFile(BaseLevel):
         if isinstance(subset, PagesSubset):
             self.subset = subset
             return
-        if subset in ('', 'all', '__all__'):
+        if subset in ('', 'all', '__all__', '.'):
             self.subset = PagesSubset(max_page_num=self.pages_number)
         else:
             self.subset = PagesSubset.from_string(

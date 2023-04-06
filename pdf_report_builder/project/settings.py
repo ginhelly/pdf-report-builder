@@ -14,7 +14,7 @@ def _default_name():
 @dataclass
 class ProjectSettings(BaseLevel):
     savepath: Path = field(
-        default_factory=lambda: WORKING_DIR / (_default_name() + '.reportprj')
+        default_factory=lambda: Path(os.path.expanduser('~/Documents')) / (_default_name() + '.reportprj')
     )
     name: str = field(default_factory=_default_name)
     save_format: saveformats = saveformats.JSON_V01

@@ -434,6 +434,21 @@ class BaseFilePanel ( wx.Panel ):
 
         bSizer24.Add( bSizer231, 0, wx.EXPAND, 5 )
 
+        self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, u"Пример ввода: <b>2-5,10,12-.</b>", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText26.SetLabelMarkup( u"Пример ввода: <b>2-5,10,12-.</b>" )
+        self.m_staticText26.Wrap( -1 )
+
+        self.m_staticText26.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText26, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+
+        self.m_staticText27 = wx.StaticText( self, wx.ID_ANY, u"где \".\" - значит \"До конца файла\"", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText27.Wrap( -1 )
+
+        self.m_staticText27.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText27, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+
 
         self.SetSizer( bSizer24 )
         self.Layout()
