@@ -1,3 +1,5 @@
+from os.path import getmtime
+from datetime import datetime
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
@@ -16,6 +18,7 @@ class PDFFile(BaseLevel):
     Свойства:
     path - путь до файла (pathlib.Path)
     pages_number - число страниц в файле
+    modified_datetime - дата и время изменения
     pdf_reader - PyPDF.PdfReader
     subset - подмножество страниц файла (PagesSubset)
     """
@@ -36,9 +39,13 @@ class PDFFile(BaseLevel):
             self.read_file()
     
     def read_file(self):
+        self.modified_datetime = datetime.fromtimestamp(
+            getmtime(self.path)
+        )
         with open(self.path, 'rb') as file:
             pdf_reader = PdfReader(file)
             self.pages_number = len(pdf_reader.pages)
+            self
         self._parse_subset(self.subset)
     
     def change_file(self, path: Path):

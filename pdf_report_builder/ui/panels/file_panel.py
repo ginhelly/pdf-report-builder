@@ -17,6 +17,11 @@ class FilePanel(BaseFilePanel):
         self.text_file_name.SetValue(self.file.path.name)
         self.text_pages_number.SetValue(str(self.file.pages_number))
         self.text_subset.SetValue(str(self.file.subset))
+        if not hasattr(self.file, 'modified_datetime'):
+            return
+        self.lbl_modified_datetime.SetLabelText(
+            self.file.modified_datetime.strftime('%d.%m.%Y %H:%M:%S')
+        )
     
     def on_file_change(self, event):
         try:

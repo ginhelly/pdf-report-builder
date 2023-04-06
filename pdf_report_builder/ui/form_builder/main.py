@@ -402,6 +402,21 @@ class BaseFilePanel ( wx.Panel ):
         self.text_file_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
         bSizer24.Add( self.text_file_name, 0, wx.ALL|wx.EXPAND, 5 )
 
+        bSizer32 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText28 = wx.StaticText( self, wx.ID_ANY, u"Изменен:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText28.Wrap( -1 )
+
+        bSizer32.Add( self.m_staticText28, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.lbl_modified_datetime = wx.StaticText( self, wx.ID_ANY, u"...", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_modified_datetime.Wrap( -1 )
+
+        bSizer32.Add( self.lbl_modified_datetime, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer24.Add( bSizer32, 0, wx.EXPAND, 5 )
+
         bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Всего страниц в файле:", wx.DefaultPosition, wx.DefaultSize, 0 )
