@@ -120,7 +120,7 @@ class ReportProject(BaseReportProject):
         root_path = self.settings.savepath.parent
         for ver in self.versions:
             for tome in ver.tomes:
-                if tome.savepath.is_relative_to(root_path):
+                if not tome.savepath.is_relative_to(root_path):
                     print(f'{tome.savepath} is not relative to {root_path}')
                     return False
                 for el in tome.structural_elements:
@@ -130,18 +130,11 @@ class ReportProject(BaseReportProject):
                             return False
         return True
     
-    def update_relative_paths(self):
-        base_root = Path(self.settings.savepath)
-        for ver in self.versions:
-            ...
-    
     @staticmethod
     def open(path: Path):
         project_as_dict = read_from_file(path)
         project = ReportProject.from_dict(project_as_dict, path)
         #project.settings.savepath = path
-        if project.settings.paths_relative:
-            project.update_relative_paths
         project.modified = False
         return project
     
