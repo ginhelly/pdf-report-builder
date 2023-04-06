@@ -24,7 +24,7 @@ class ReportProject(BaseReportProject):
         """
         self.settings = settings or ProjectSettings()
         self.versions = versions or [
-            Version(default_folder=self.settings.savepath.parent)
+            Version()
         ]
         self.modified = False
         self.event_channel = EventChannel()
@@ -116,18 +116,40 @@ class ReportProject(BaseReportProject):
             self.versions.remove(ver)
             remove_counter += 1
     
+    def all_paths_are_relative(self):
+        root_path = self.settings.savepath.parent
+        for ver in self.versions:
+            for tome in ver.tomes:
+                if tome.savepath.is_relative_to(root_path):
+                    print(f'{tome.savepath} is not relative to {root_path}')
+                    return False
+                for el in tome.structural_elements:
+                    for file in el.files:
+                        if not file.path.is_relative_to(root_path):
+                            print(f'{file.path} is not relative to {root_path}')
+                            return False
+        return True
+    
+    def update_relative_paths(self):
+        base_root = Path(self.settings.savepath)
+        for ver in self.versions:
+            ...
+    
     @staticmethod
     def open(path: Path):
         project_as_dict = read_from_file(path)
-        project = ReportProject.from_dict(project_as_dict)
-        project.settings.savepath = path
+        project = ReportProject.from_dict(project_as_dict, path)
+        #project.settings.savepath = path
+        if project.settings.paths_relative:
+            project.update_relative_paths
         project.modified = False
         return project
     
     @staticmethod
-    def from_dict(d: dict):
+    def from_dict(d: dict, path: Path):
         if 'settings' in d:
-            d['settings'] = ProjectSettings.from_dict(d['settings'])
+            d['settings'] = ProjectSettings.from_dict(d['settings'], path)
+            EventChannel().publish('settings_changed', d['settings'])
         if 'versions' in d:
             d['versions'] = [
                 Version.from_dict(ver) for ver in d['versions']

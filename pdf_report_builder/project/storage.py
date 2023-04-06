@@ -8,8 +8,9 @@ class ProjectStorage(metaclass=Singleton):
     def set_project(self, payload):
         if isinstance(payload, ReportProject):
             self._project = payload
-            return
-        self._project = payload[0]
+        else:
+            self._project = payload[0]
+        EventChannel().publish('settings_changed', self._project.settings)
     
     @property
     def project(self):

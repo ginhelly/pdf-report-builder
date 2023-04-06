@@ -8,6 +8,7 @@ from pypdf import PdfReader
 
 from .pages_subset import PagesSubset
 from pdf_report_builder.structure.level import BaseLevel
+from pdf_report_builder.project.storage_settings import SettingsStorage
 
 @dataclass
 class PDFFile(BaseLevel):
@@ -76,6 +77,8 @@ class PDFFile(BaseLevel):
     @staticmethod
     def from_dict(d: dict):
         if 'path' in d:
+            if SettingsStorage().settings.paths_relative:
+                d['path'] = SettingsStorage().settings.savepath.parent / d['path']
             d['path'] = Path(d['path'])
         change_subset = False
         if 'subset' in d:

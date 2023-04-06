@@ -22,15 +22,17 @@ class ProjectSettings(BaseLevel):
     paths_relative: bool = False
 
     @staticmethod
-    def from_dict(d: dict):
-        if 'savepath' in d:
-            d['savepath'] = Path(d['savepath'])
+    def from_dict(d: dict, path: Path):
+        d['savepath'] = path
         if 'save_format' in d:
             save_format = int(d['save_format'])
             try:
                 d['save_format'] = saveformats(save_format)
             except ValueError:
                 raise IOError('Неизвестный формат')
+        d['paths_relative'] = True \
+            if 'paths_relative' in d and d['paths_relative'] == 'True' \
+            else False
         
         valid = ['savepath', 'name', 'save_format', 'paths_relative', 'current_version_id']
         for key in list(d.keys()):

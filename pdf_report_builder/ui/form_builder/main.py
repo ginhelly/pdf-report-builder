@@ -518,16 +518,13 @@ class BaseProjectPanel ( wx.Panel ):
         self.text_current_version_name = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
         bSizer22.Add( self.text_current_version_name, 0, wx.ALL|wx.EXPAND, 5 )
 
-        self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Папка для работы по умолчанию", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText12.Wrap( -1 )
+        self.m_staticText31 = wx.StaticText( self, wx.ID_ANY, u"Место сохранения файла", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText31.Wrap( -1 )
 
-        bSizer22.Add( self.m_staticText12, 0, wx.ALL, 5 )
+        bSizer22.Add( self.m_staticText31, 0, wx.ALL, 5 )
 
-        self.dp_default_save = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
-        bSizer22.Add( self.dp_default_save, 0, wx.ALL|wx.EXPAND, 5 )
-
-        self.m_button7 = wx.Button( self, wx.ID_ANY, u"Установить папку файла проекта", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer22.Add( self.m_button7, 0, wx.ALL|wx.EXPAND, 5 )
+        self.text_savepath = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+        bSizer22.Add( self.text_savepath, 0, wx.ALL|wx.EXPAND, 5 )
 
         self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer22.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
@@ -544,8 +541,6 @@ class BaseProjectPanel ( wx.Panel ):
         # Connect Events
         self.text_code.Bind( wx.EVT_TEXT_ENTER, self.on_code_change )
         self.text_current_version_name.Bind( wx.EVT_TEXT_ENTER, self.on_version_name_change )
-        self.dp_default_save.Bind( wx.EVT_DIRPICKER_CHANGED, self.on_default_dir_change )
-        self.m_button7.Bind( wx.EVT_BUTTON, self.set_project_file_folder )
         self.cb_relative_paths.Bind( wx.EVT_CHECKBOX, self.toggle_relative_paths )
 
     def __del__( self ):
@@ -557,12 +552,6 @@ class BaseProjectPanel ( wx.Panel ):
         event.Skip()
 
     def on_version_name_change( self, event ):
-        event.Skip()
-
-    def on_default_dir_change( self, event ):
-        event.Skip()
-
-    def set_project_file_folder( self, event ):
         event.Skip()
 
     def toggle_relative_paths( self, event ):

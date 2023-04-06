@@ -14,6 +14,7 @@ from pdf_report_builder.ui.panels.book import Book
 from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.project.storage import ProjectStorage
+from pdf_report_builder.project.storage_settings import SettingsStorage
 
 
 def on_exception(exception_type, text: str = ""):
@@ -30,6 +31,7 @@ def on_exception(exception_type, text: str = ""):
 class PDFReportBuilderFrame(MainFrame):
     def __init__(self, parent):
         super().__init__(parent)
+        SettingsStorage()
         self.create_new_project()
         ProjectStorage().set_project(self.project)
         self.tree_component = Tree(self.tree_container, self.project)
@@ -130,6 +132,7 @@ class PDFReportBuilderFrame(MainFrame):
         self.book.parse_item(project)
         
     def save_project(self, event):
+        self.project.save()
         try:
             self.project.save()
         except Exception as e:
@@ -145,7 +148,7 @@ class PDFReportBuilderFrame(MainFrame):
             if save_dialog.ShowModal() == wx.ID_CANCEL:
                 return
             path = Path(save_dialog.GetPath())
-
+            self.project.save_as(path)
             try:
                 self.project.save_as(path)
             except Exception as e:

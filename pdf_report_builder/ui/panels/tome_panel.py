@@ -32,7 +32,7 @@ class TomePanel(BaseTomePanel):
             dlg.Close()
     
     def on_move_to_default_folder(self, event):
-        default_folder = Path(ProjectStorage().project.get_current_version().default_folder)
+        default_folder = Path(ProjectStorage().project.settings.savepath.parent)
         assert default_folder.exists() and default_folder.is_dir()
         self.tome.savepath = default_folder / self.tome.savepath.name
         self.fp_save.SetPath(str(self.tome.savepath))

@@ -14,6 +14,13 @@ from pdf_report_builder.structure.structural_elements.base import \
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.version import Version
 from pdf_report_builder.project.io.saveformats import saveformats
+from pdf_report_builder.project.storage_settings import SettingsStorage
+
+def encode_path(p: Path):
+    settings = SettingsStorage().settings
+    if settings.paths_relative and p.is_relative_to(settings.savepath.parent):
+        return str(p.relative_to(settings.savepath.parent))
+    return str(p)
 
 CUSTOM_STRING_ENCODERS = {
     # Path: lambda x: str(x),
@@ -27,7 +34,9 @@ CUSTOM_STRING_ENCODERS = {
 def ensure_strings_in_dict(d: dict):
     res = {}
     for i in d:
-        if not type(d[i]) in CUSTOM_STRING_ENCODERS:
+        if isinstance(d[i], Path):
+            res[i] = encode_path(d[i])
+        elif not type(d[i]) in CUSTOM_STRING_ENCODERS:
             res[i] = str(d[i])
         else:
             res[i] = CUSTOM_STRING_ENCODERS[type(d[i])](d[i])

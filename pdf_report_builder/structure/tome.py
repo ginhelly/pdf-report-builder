@@ -7,6 +7,7 @@ from typing import List
 from pdf_report_builder.structure.structural_elements.base import \
     StructuralElement
 from pdf_report_builder.structure.level import BaseLevel
+from pdf_report_builder.project.storage_settings import SettingsStorage
 
 def _default_savepath():
     return Path(expanduser('~/Documents')) / f'Новый том {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
@@ -58,6 +59,8 @@ class Tome(BaseLevel):
     @staticmethod
     def from_dict(d: dict):
         if 'savepath' in d:
+            if SettingsStorage().settings.paths_relative:
+                d['savepath'] = SettingsStorage().settings.savepath.parent / d['savepath']
             d['savepath'] = Path(d['savepath'])
         if 'structural_elements' in d:
             d['structural_elements'] = [
