@@ -7,6 +7,9 @@ from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.event_channel import EventChannel
 
 class TomePanel(BaseTomePanel):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name=wx.EmptyString):
+        super().__init__(parent, id, pos, size, style, name)
+        self.fp_save.GetPickerCtrl().SetLabel('Обзор...')
 
     def parse_tome(self, tome: Tome):
         self.tome = tome

@@ -6,6 +6,10 @@ from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 
 class ProjectPanel(BaseProjectPanel):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name=wx.EmptyString):
+        super().__init__(parent, id, pos, size, style, name)
+        self.dp_default_save.GetPickerCtrl().SetLabel('Обзор...')
+
     def parse_project(self, project: ReportProject):
         self.project = project
         ver = project.get_current_version()
@@ -32,3 +36,8 @@ class ProjectPanel(BaseProjectPanel):
             dlg = ErrorDialog(None, 'Не удалось установить путь', 'Неправильный путь')
             dlg.ShowModal()
             dlg.Close()
+    
+    def set_project_file_folder(self, event):
+        folder = self.project.settings.savepath.parent
+        self.project.get_current_version().default_folder = folder
+        self.dp_default_save.SetPath(str(folder))

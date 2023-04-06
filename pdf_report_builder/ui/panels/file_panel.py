@@ -6,6 +6,10 @@ from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 
 class FilePanel(BaseFilePanel):
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name=wx.EmptyString):
+        super().__init__(parent, id, pos, size, style, name)
+        self.fp_file.GetPickerCtrl().SetLabel('Обзор...')
+
     def parse_file(self, file: PDFFile):
         self.file = file
         self.fp_file.SetPath(
