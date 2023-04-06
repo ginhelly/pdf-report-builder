@@ -18,13 +18,18 @@ class FileContextMenu(TreeContextMenu):
         super().__init__(tree)
         self.file = file
         self.OPTIONS = [
-            MenuOption('Открыть', self.open_file),
+            MenuOption('Открыть', self.open_file, condition_enable=self.file_is_valid),
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
             MenuOption('-', lambda: ...),
             MenuOption('Удалить файл из списка', self.remove_file)
         ]
+    
+    def file_is_valid(self):
+        if self.file.path.exists() and self.file.path.is_file():
+            return True
+        return False
     
     def open_file(self):
         if self.file.path.exists() and self.file.path.is_file():

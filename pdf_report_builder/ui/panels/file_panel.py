@@ -15,7 +15,8 @@ class FilePanel(BaseFilePanel):
     
     def _update_fields(self):
         self.text_file_name.SetValue(self.file.path.name)
-        self.text_pages_number.SetValue(str(self.file.pages_number))
+        if hasattr(self.file, 'pages_number'):
+            self.text_pages_number.SetValue(str(self.file.pages_number))
         self.text_subset.SetValue(str(self.file.subset))
         if not hasattr(self.file, 'modified_datetime'):
             return

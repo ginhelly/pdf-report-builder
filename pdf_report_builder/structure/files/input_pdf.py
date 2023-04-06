@@ -90,6 +90,7 @@ class PDFFile(BaseLevel):
             if not key in valid:
                 del d[key]
         file = PDFFile(**d)
-        if change_subset:
+        if d['path'].exists() and d['path'].is_file() \
+                and d['path'].suffix == '.pdf' and change_subset:
             file.change_subset(subset)
         return file

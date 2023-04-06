@@ -16,6 +16,8 @@ def get_element_name(el: StructuralElement):
     return f'[{el.code_attr}] {el.name}'
 
 def get_file_name(file: PDFFile):
+    if not (file.path.exists() and file.path.is_file()):
+        return f'[ПОТЕРЯН] {file.path.name}'
     return f'({file.subset}) {file.path.name}' \
             if len(str(file.subset)) > 0 \
             else str(file.path.name)
@@ -108,7 +110,11 @@ class Tree(wx.TreeCtrl):
     
     def create_file_item_id(self, file: PDFFile, parent_id, previous=None):
         file_name = get_file_name(file)
-        return self.create_item_id(parent_id, previous, file_name, 3)
+        new_item = self.create_item_id(parent_id, previous, file_name, 3)
+        if not (file.path.exists() and file.path.is_file()):
+            self.SetItemBold(new_item)
+            self.SetItemTextColour(new_item, wx.Colour(255,0,0))
+        return new_item
     
     def create_element_item_id(self, el: StructuralElement, parent_id, previous=None):
         el_name = get_element_name(el)
@@ -165,6 +171,9 @@ class Tree(wx.TreeCtrl):
 
     def update_selected_file_name(self):
         item_id = self.GetSelection()
-        el = self.nodes[item_id].item
-        new_name = get_file_name(el)
+        file = self.nodes[item_id].item
+        new_name = get_file_name(file)
         self.SetItemText(item_id, new_name)
+        if file.path.exists() and file.path.is_file():
+            self.SetItemBold(item_id, False)
+            self.SetItemTextColour(item_id, wx.Colour(0,0,0))
