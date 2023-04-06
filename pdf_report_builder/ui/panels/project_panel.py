@@ -16,6 +16,18 @@ class ProjectPanel(BaseProjectPanel):
         self.dp_default_save.SetPath(str(ver.default_folder))
         self.text_code.SetValue(ver.code)
         self.text_current_version_name.SetValue(ver.name)
+        self.handle_cb_availability()
+        self.cb_relative_paths.SetValue(project.settings.paths_relative)
+
+    def all_paths_are_relative(self):
+        for ver in self.project.versions:
+            default_folder = Path(ver.default_folder)
+            for tome in ver.tomes:
+                for el in tome.structural_elements:
+                    for file in el.files:
+                        if not file.path.is_relative_to(default_folder):
+                            return False
+        return True
     
     def on_version_name_change(self, event):
         new_value = self.text_current_version_name.GetValue()
@@ -32,10 +44,23 @@ class ProjectPanel(BaseProjectPanel):
             path = Path(self.dp_default_save.GetPath())
             assert path.exists() and path.is_dir()
             self.project.get_current_version().default_folder = path
+            self.handle_cb_availability()
         except Exception:
             dlg = ErrorDialog(None, 'Не удалось установить путь', 'Неправильный путь')
             dlg.ShowModal()
             dlg.Close()
+        
+    def handle_cb_availability(self):
+        if self.all_paths_are_relative():
+            self.cb_relative_paths.Enable()
+        else:
+            self.project.settings.paths_relative = False
+            self.cb_relative_paths.SetValue(False)
+            self.cb_relative_paths.Disable()
+    
+    def toggle_relative_paths(self, event):
+        val = self.cb_relative_paths.GetValue()
+        self.project.settings.paths_relative = val
     
     def set_project_file_folder(self, event):
         folder = self.project.settings.savepath.parent

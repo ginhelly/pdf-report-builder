@@ -19,6 +19,7 @@ class ProjectSettings(BaseLevel):
     name: str = field(default_factory=_default_name)
     save_format: saveformats = saveformats.JSON_V01
     current_version_id: int = 0
+    paths_relative: bool = False
 
     @staticmethod
     def from_dict(d: dict):
@@ -31,7 +32,7 @@ class ProjectSettings(BaseLevel):
             except ValueError:
                 raise IOError('Неизвестный формат')
         
-        valid = ['savepath', 'name', 'save_format', 'current_version_id']
+        valid = ['savepath', 'name', 'save_format', 'paths_relative', 'current_version_id']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

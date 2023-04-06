@@ -526,6 +526,16 @@ class BaseProjectPanel ( wx.Panel ):
         self.dp_default_save = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
         bSizer22.Add( self.dp_default_save, 0, wx.ALL|wx.EXPAND, 5 )
 
+        self.m_button7 = wx.Button( self, wx.ID_ANY, u"Установить папку файла проекта", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer22.Add( self.m_button7, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        bSizer22.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.cb_relative_paths = wx.CheckBox( self, wx.ID_ANY, u"Сохранять относительные пути", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_relative_paths.SetValue(True)
+        bSizer22.Add( self.cb_relative_paths, 0, wx.ALL, 5 )
+
 
         self.SetSizer( bSizer22 )
         self.Layout()
@@ -535,6 +545,8 @@ class BaseProjectPanel ( wx.Panel ):
         self.text_code.Bind( wx.EVT_TEXT_ENTER, self.on_code_change )
         self.text_current_version_name.Bind( wx.EVT_TEXT_ENTER, self.on_version_name_change )
         self.dp_default_save.Bind( wx.EVT_DIRPICKER_CHANGED, self.on_default_dir_change )
+        self.m_button7.Bind( wx.EVT_BUTTON, self.set_project_file_folder )
+        self.cb_relative_paths.Bind( wx.EVT_CHECKBOX, self.toggle_relative_paths )
 
     def __del__( self ):
         pass
@@ -548,6 +560,12 @@ class BaseProjectPanel ( wx.Panel ):
         event.Skip()
 
     def on_default_dir_change( self, event ):
+        event.Skip()
+
+    def set_project_file_folder( self, event ):
+        event.Skip()
+
+    def toggle_relative_paths( self, event ):
         event.Skip()
 
 

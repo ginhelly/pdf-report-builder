@@ -112,12 +112,13 @@ class PDFReportBuilderFrame(MainFrame):
             if open_dialog.ShowModal() == wx.ID_CANCEL:
                 return
             path = Path(open_dialog.GetPath())
-            try:
+            self.project = ReportProject.open(path)
+            """try:
                 self.project = ReportProject.open(path)
             except Exception as e:
                 print(e)
                 on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
-                return
+                return"""
             EventChannel().publish('project_changed', self.project)
     
     def on_project_change(self, payload):
