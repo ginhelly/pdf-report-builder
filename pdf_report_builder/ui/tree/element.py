@@ -24,6 +24,7 @@ class ElementContextMenu(TreeContextMenu):
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
+            MenuOption('Вставить', self.paste, self.peek_clipboard),
             MenuOption('-', lambda: ...),
             MenuOption('Удалить элемент', self.remove_element)
         ]
@@ -63,22 +64,17 @@ class ElementContextMenu(TreeContextMenu):
         EventChannel().publish('remove_element', self.element)
         EventChannel().publish('tree_update')
     
-    def populate_menu(self, event):
-        super().populate_menu(event)
-        self.peek_clipboard()
-    
     def peek_clipboard(self):
         content = pyperclip.paste()
         if not (7 < len(content) < 5242880):
-            return
+            return False
         if not content[:7] == 'LEVEL=3':
-            return
+            return False
         try:
             self.clipboard_content = json.loads(content[7:])
         except Exception:
-            return
-        self.popupmenu.Insert(4, -1, 'Вставить')
-        self.OPTIONS.append(MenuOption('Вставить', self.paste))
+            return False
+        return True
 
     def paste(self):
         new_file = PDFFile.from_dict(self.clipboard_content)

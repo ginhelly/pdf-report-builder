@@ -16,7 +16,8 @@ class ProjectContextMenu(TreeContextMenu):
         super().__init__(tree)
         self.project = project
         self.OPTIONS = [
-            MenuOption('Добавить том...', self.add_tome)
+            MenuOption('Добавить том...', self.add_tome),
+            MenuOption('Вставить', self.paste, self.peek_clipboard)
         ]
     
     def add_tome(self):
@@ -40,22 +41,17 @@ class ProjectContextMenu(TreeContextMenu):
         ver.create_tome(basename, path.stem, path)
         EventChannel().publish('tree_update')
     
-    def populate_menu(self, event):
-        super().populate_menu(event)
-        self.peek_clipboard()
-    
     def peek_clipboard(self):
         content = pyperclip.paste()
         if not (7 < len(content) < 5242880):
-            return
+            return False
         if not content[:7] == 'LEVEL=1':
-            return
+            return False
         try:
             self.clipboard_content = json.loads(content[7:])
         except Exception:
-            return
-        self.popupmenu.Insert(1, -1, 'Вставить')
-        self.OPTIONS.append(MenuOption('Вставить', self.paste))
+            return False
+        return True
     
     def paste(self):
         new_tome = Tome.from_dict(self.clipboard_content)

@@ -4,6 +4,8 @@ from typing import NamedTuple, Callable
 class MenuOption(NamedTuple):
     name: str
     handle: Callable
+    condition_show: Callable = lambda: True
+    condition_enable: Callable = lambda: True
 
 
 class TreeContextMenu:
@@ -20,8 +22,12 @@ class TreeContextMenu:
     
     def populate_menu(self, event):
         for option in self.OPTIONS:
+            if not option.condition_show():
+                continue
             if len(option.name) >= 3:
                 item = self.popupmenu.Append(-1, option.name)
+                if not option.condition_enable():
+                    item.Enable(False)
             else:
                 self.popupmenu.AppendSeparator()
     

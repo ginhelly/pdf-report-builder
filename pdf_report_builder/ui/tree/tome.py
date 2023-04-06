@@ -23,6 +23,7 @@ class TomeContextMenu(TreeContextMenu):
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
+            MenuOption('Вставить', self.paste, self.peek_clipboard),
             MenuOption('-', lambda: ...),
             MenuOption('Удалить том', self.remove_tome)
         ]
@@ -49,23 +50,17 @@ class TomeContextMenu(TreeContextMenu):
         EventChannel().publish('remove_tome', self.tome)
         EventChannel().publish('tree_update')
     
-    
-    def populate_menu(self, event):
-        super().populate_menu(event)
-        self.peek_clipboard()
-    
-    def peek_clipboard(self):
+    def peek_clipboard(self) -> bool:
         content = pyperclip.paste()
         if not (7 < len(content) < 5242880):
-            return
+            return False
         if not content[:7] == 'LEVEL=2':
-            return
+            return False
         try:
             self.clipboard_content = json.loads(content[7:])
         except Exception:
-            return
-        self.popupmenu.Insert(4, -1, 'Вставить')
-        self.OPTIONS.append(MenuOption('Вставить', self.paste))
+            return False
+        return True
     
     def paste(self):
         new_el = StructuralElement.from_dict(self.clipboard_content)
@@ -78,8 +73,6 @@ class TomeContextMenu(TreeContextMenu):
         pyperclip.copy(f'LEVEL=1{s}')
     
     def cut_to_clipboard(self):
-        ser = serialize_level(self.tome)
-        s = json.dumps(ser, ensure_ascii=False)
-        pyperclip.copy(f'LEVEL=1{s}')
+        self.copy_to_clipboard()
         EventChannel().publish('remove_tome', self.tome)
         EventChannel().publish('tree_update')
