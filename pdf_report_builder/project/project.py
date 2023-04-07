@@ -82,12 +82,14 @@ class ReportProject(BaseReportProject):
     
     def handle_tome_remove(self, payload):
         self.get_current_version().remove_tome(payload[0])
+        EventChannel().publish('modified')
     
     def handle_element_remove(self, payload):
         element = payload[0]
         ver = self.get_current_version()
         for tome in ver.tomes:
             tome.remove_element(element)
+        EventChannel().publish('modified')
     
     def handle_file_remove(self, payload):
         file = payload[0]
@@ -95,6 +97,7 @@ class ReportProject(BaseReportProject):
         for tome in ver.tomes:
             for el in tome.structural_elements:
                 el.remove_file(file)
+        EventChannel().publish('modified')
     
     def clone_current_version(self, name: str):
         ver = deepcopy(self.get_current_version())

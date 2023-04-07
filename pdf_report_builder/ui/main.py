@@ -15,6 +15,7 @@ from pdf_report_builder.utils.docs import open_docs
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.storage_settings import SettingsStorage
+from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
 
 
 def on_exception(exception_type, text: str = ""):
@@ -51,14 +52,16 @@ class PDFReportBuilderFrame(MainFrame):
     
     def onExit(self, event):
         if self.project.modified:
-            if wx.MessageBox(
-                "Всё равно закрыть?",
-                "Проект был изменен",
-                wx.ICON_WARNING | wx.YES_NO
-            ) != wx.YES:
+            with CloseUnsavedDialog(self) as dlg:
+                res = dlg.ShowModal()
+            if res == wx.ID_CANCEL:
                 if isinstance(event, wx.CloseEvent) and event.CanVeto():
                     event.Veto()
                 return
+            elif res == wx.ID_YES:
+                self.save_project(1)
+            elif res == wx.ID_NO:
+                pass
         self.project.close()
         self.Destroy()
     
