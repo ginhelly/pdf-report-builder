@@ -1,5 +1,4 @@
 import wx
-from pdf_report_builder.ui.form_builder.main import BaseCloseUnsavedDialog
 
 class CloseUnsavedDialog(wx.MessageDialog):
     def __init__(self, parent, pos=wx.DefaultPosition):

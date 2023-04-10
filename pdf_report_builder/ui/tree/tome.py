@@ -32,16 +32,9 @@ class TomeContextMenu(TreeContextMenu):
         with AddElementDialog(None) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL:
                 return
-            selected_type = dlg.element_type.GetSelection()
-            code = dlg.element_code.GetLineText(0)
-        if selected_type == 0:
-            name, official, code2 = 'Структурный элемент', False, ''
-        else:
-            name, official, code2 = ELEMENTS[selected_type - 1]
-        if len(code) == 0:
-            code = code2
-        self.tome.create_element(name, official, code)
-        EventChannel().publish('tree_update')
+            scheme = dlg.get_element()
+            self.tome.create_element(scheme.name, scheme.official, scheme.code_attr)
+            EventChannel().publish('tree_update')
     
     def remove_tome(self):
         with DeletePrompt(None) as dlg:

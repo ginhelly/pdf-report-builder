@@ -1,50 +1,135 @@
 from typing import NamedTuple
+from enum import Enum
+
+class ElementCategory(Enum):
+    OTHER = 'Другое'
+    UTIL = 'Служебные'
+    TEXT = 'Текстовая часть'
+    GRAPHICS = 'Графическая часть'
 
 class ElementScheme(NamedTuple):
+    dialog_name: str
+    element_type: ElementCategory
     name: str
     official: bool
     code_attr: str
 
-text_report = ElementScheme(
-    'Текстовая часть',
-    True,
-    'Т'
-)
+element_schemes = [
+    ElementScheme(
+        'Другой',
+        ElementCategory.OTHER,
+        'Структурный элемент',
+        False,
+        ''
+    ),
 
-ktgi = ElementScheme(
-    'Картограмма топографо-геодезической изученности, \
+    ElementScheme(
+        'Титульный лист',
+        ElementCategory.UTIL,
+        'Титульный лист',
+        True,
+        ''
+    ),
+
+    ElementScheme(
+        'Список исполнителей',
+        ElementCategory.UTIL,
+        'Список исполнителей',
+        True,
+        ''
+    ),
+
+    ElementScheme(
+        'Содержание тома',
+        ElementCategory.UTIL,
+        'Содержание тома',
+        True,
+        'С'
+    ),
+
+    ElementScheme(
+        'Состав отчетной технической документации',
+        ElementCategory.UTIL,
+        'Состав отчетной технической документации',
+        True,
+        'СД'
+    ),
+
+    ElementScheme(
+        'Текстовая часть',
+        ElementCategory.TEXT,
+        'Текстовая часть',
+        True,
+        'Т'
+    ),
+
+    ElementScheme(
+        'КТГИ',
+        ElementCategory.GRAPHICS,
+        'Картограмма топографо-геодезической изученности, \
 совмещенная со схемой выполненных работ и схемой созданной \
 планово-высотной геодезической сети',
-    True,
-    'Г.1'
-)
+        True,
+        'Г.1'
+    ),
 
-base_net = ElementScheme(
-    'Схема созданной опорной геодезической сети',
-    True,
-    'Г.2'
-)
+    ElementScheme(
+        'Схема опорной сети',
+        ElementCategory.GRAPHICS,
+        'Схема созданной планово-высотной опорной сети \
+с указанием привязок к исходным пунктам',
+        True,
+        'Г.2'
+    ),
 
-survey_net = ElementScheme(
-   'Схема съемочной сети',
-    True,
-    'Г.3'
-)
+    ElementScheme(
+        'Схема съемочной сети',
+        ElementCategory.GRAPHICS,
+        'Схема съемочной геодезической сети \
+с указанием привязок к исходным пунктам',
+        True,
+        'Г.3'
+    ),
 
-overview = ElementScheme(
-   'Обзорная схема',
-    True,
-    'Г.4'
-)
+    ElementScheme(
+        'Обзорная схема',
+        ElementCategory.GRAPHICS,
+        'Обзорная схема расположения объекта',
+        True,
+        'Г.4'
+    ),
 
-topoplan = ElementScheme(
-   'Топографический план',
-    True,
-    'Г.5'
-)
+    ElementScheme(
+        'Топографический план М 1:1000',
+        ElementCategory.GRAPHICS,
+        'Топографический план М 1:1000',
+        True,
+        'Г.5'
+    ),
 
-profiles = ElementScheme(
-   'Продольные профили по трассе проектируемого газопровода',
-    True,
-    'Г.6'
-)
+    ElementScheme(
+        'Топографический план М 1:500',
+        ElementCategory.GRAPHICS,
+        'Топографический план М 1:500',
+        True,
+        'Г.5'
+    ),
+
+    ElementScheme(
+        'Продольный профиль (основная ось)',
+        ElementCategory.GRAPHICS,
+        'Продольный профиль трассы газопровода (основная ось) \
+масштаб гор. 1:1000, верт. 1:100',
+        True,
+        'Г.6'
+    ),
+
+    ElementScheme(
+        'Продольный профиль (отвод)',
+        ElementCategory.GRAPHICS,
+        'Продольный профиль трассы газопровода (отвод ) \
+масштаб гор. 1:1000, верт. 1:100',
+        True,
+        'Г.7'
+    )
+]

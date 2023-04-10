@@ -10,6 +10,7 @@
 import wx
 import wx.xrc
 import wx.richtext
+import wx.dataview
 
 ###########################################################################
 ## Class MainFrame
@@ -579,7 +580,7 @@ class BaseTomePanel ( wx.Panel ):
 
         bSizer23.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.lbl_prefix = wx.StaticText( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_prefix = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lbl_prefix.Wrap( -1 )
 
         bSizer23.Add( self.lbl_prefix, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -680,7 +681,7 @@ class AboutDialog ( wx.Dialog ):
 class BaseAddElementDialog ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Добавить структурный элемент", pos = wx.DefaultPosition, size = wx.Size( 403,157 ), style = wx.DEFAULT_DIALOG_STYLE )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Добавить структурный элемент", pos = wx.DefaultPosition, size = wx.Size( 403,413 ), style = wx.DEFAULT_DIALOG_STYLE )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -688,18 +689,25 @@ class BaseAddElementDialog ( wx.Dialog ):
 
         bSizer9 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Структурный элемент:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"Поиск:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText3.Wrap( -1 )
 
         bSizer9.Add( self.m_staticText3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-        element_typeChoices = []
-        self.element_type = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, element_typeChoices, 0 )
-        self.element_type.SetSelection( 0 )
-        bSizer9.Add( self.element_type, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
+        self.search_bar = wx.SearchCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.search_bar.ShowSearchButton( True )
+        self.search_bar.ShowCancelButton( False )
+        bSizer9.Add( self.search_bar, 1, wx.ALL, 5 )
 
 
         bSizer7.Add( bSizer9, 0, wx.EXPAND, 5 )
+
+        self.treelist_elements = wx.dataview.TreeListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.TL_DEFAULT_STYLE )
+        self.treelist_elements.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        self.treelist_elements.AppendColumn( u"Структурный элемент", wx.COL_WIDTH_AUTOSIZE, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
+
+        bSizer7.Add( self.treelist_elements, 1, wx.EXPAND |wx.ALL, 5 )
 
         bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -722,8 +730,8 @@ class BaseAddElementDialog ( wx.Dialog ):
 
         bSizer10.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_button2 = wx.Button( self, wx.ID_OK, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer10.Add( self.m_button2, 0, wx.ALL, 5 )
+        self.btn_ok = wx.Button( self, wx.ID_OK, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer10.Add( self.btn_ok, 0, wx.ALL, 5 )
 
         self.m_button3 = wx.Button( self, wx.ID_CANCEL, u"Отмена", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer10.Add( self.m_button3, 0, wx.ALL, 5 )
@@ -737,8 +745,24 @@ class BaseAddElementDialog ( wx.Dialog ):
 
         self.Centre( wx.BOTH )
 
+        # Connect Events
+        self.Bind( wx.EVT_CLOSE, self.on_close )
+        self.search_bar.Bind( wx.EVT_TEXT, self.update_filter )
+        self.treelist_elements.Bind( wx.dataview.EVT_TREELIST_SELECTION_CHANGED, self.on_sel_changed )
+
     def __del__( self ):
         pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_close( self, event ):
+        event.Skip()
+
+    def update_filter( self, event ):
+        event.Skip()
+
+    def on_sel_changed( self, event ):
+        event.Skip()
 
 
 ###########################################################################
