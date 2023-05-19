@@ -165,7 +165,8 @@ class PDFReportBuilderFrame(MainFrame):
     def create_new_version(self, event):
         with wx.TextEntryDialog(
             self,
-            "Название новой версии"
+            "Название новой версии",
+            caption='Введите название'
         ) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL:
                 return
@@ -183,7 +184,8 @@ class PDFReportBuilderFrame(MainFrame):
     def clone_current_version(self, event):
         with wx.TextEntryDialog(
             self,
-            "Название новой версии"
+            "Название новой версии",
+            caption='Введите название'
         ) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL:
                 return

@@ -104,20 +104,30 @@ class ReportProject(BaseReportProject):
         ver.name = name
         self.versions.append(ver)
         self.set_current_version_id(len(self.versions) - 1)
+
+    def _remove_version(self, version: Version):
+        self.versions.remove(version)
+        self.set_current_version_id(0)
+
+    def _remove_version_by_id(self, id: int):
+        cur_id = self.settings.current_version_id
+        if cur_id != 0 and id <= cur_id:
+            self.set_current_version_id(cur_id - 1)
+        version = self.versions[id]
+        self.versions.remove(version)
     
     def remove_versions(self, versions: list):
-        remove_counter = 0
-        for ver_id in versions:
-            print('NOW ', ver_id)
-            if isinstance(ver_id, Version):
-                ver = ver_id
-            else:
-                ver = self.versions[ver_id - remove_counter]
-            self.set_current_version_id(self.settings.current_version_id - 1)
-            if ver == self.get_current_version():
-                self.set_current_version_id(len(self.versions) - 1)
-            self.versions.remove(ver)
-            remove_counter += 1
+        types = (1 if isinstance(i, Version) else 0 for i in versions)
+        if sum(types) == len(versions):
+            # Тип данных всех элементов - Version
+            for version in versions:
+                self._remove_version(version)
+        elif sum(types) == 0:
+            version_ids = sorted(versions, reverse = True)
+            for version_id in version_ids:
+                self._remove_version_by_id(version_id)
+        else:
+            raise TypeError('Переданы объекты разных типов')
     
     def all_paths_are_relative(self):
         root_path = self.settings.savepath.parent
