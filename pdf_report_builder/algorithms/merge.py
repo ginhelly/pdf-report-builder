@@ -47,12 +47,14 @@ def _merge_one_tome(
     if with_bookmarks:
         logger.writeline(' Расставляю закладки...')
         add_bookmarks(merger, tome)
+        merger.page_mode = '/UseOutlines'
 
     with open(tome.savepath, 'wb') as output:
         logger.writeline(' Записываю результат на диск...')
         merger.write(output)
         merger.close()
         logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
+        logger.writeline(f' Путь: {tome.savepath}')
 
 def merge(
         project: ReportProject,

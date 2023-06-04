@@ -858,8 +858,22 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.cb_break_on_missing.SetValue(True)
         bSizer29.Add( self.cb_break_on_missing, 0, wx.ALL, 5 )
 
+        bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
+
         self.btn_process = wx.Button( self, wx.ID_ANY, u"Сформировать техотчеты", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer29.Add( self.btn_process, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.btn_process.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_TICK_MARK, wx.ART_BUTTON ) )
+        self.btn_process.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer31.Add( self.btn_process, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.btn_open_folders = wx.Button( self, wx.ID_ANY, u"Открыть выходную папку (папки)", wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.btn_open_folders.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FOLDER_OPEN, wx.ART_BUTTON ) )
+        bSizer31.Add( self.btn_open_folders, 1, wx.ALL, 5 )
+
+
+        bSizer29.Add( bSizer31, 0, wx.EXPAND, 5 )
 
         self.text_logger = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
         bSizer29.Add( self.text_logger, 1, wx.ALL|wx.EXPAND, 5 )
@@ -878,6 +892,7 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
         self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
         self.btn_process.Bind( wx.EVT_BUTTON, self.process )
+        self.btn_open_folders.Bind( wx.EVT_BUTTON, self.open_folders )
 
     def __del__( self ):
         pass
@@ -891,6 +906,9 @@ class BaseProcessingDialog ( wx.Dialog ):
         event.Skip()
 
     def process( self, event ):
+        event.Skip()
+
+    def open_folders( self, event ):
         event.Skip()
 
 

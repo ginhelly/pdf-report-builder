@@ -7,11 +7,9 @@ def add_bookmarks(
         tome: Tome
     ):
     page_number = 0
-    print('-----')
     for element in tome.structural_elements:
         writer.add_outline_item(
             element.name,
             page_number
         )
         page_number = page_number + element.pages_number
-        print(element.pages_number)

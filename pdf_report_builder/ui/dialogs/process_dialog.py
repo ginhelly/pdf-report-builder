@@ -1,3 +1,5 @@
+import subprocess
+
 from pdf_report_builder.algorithms.merge import merge
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.ui.form_builder.main import BaseProcessingDialog
@@ -9,12 +11,22 @@ class ProcessingDialog(BaseProcessingDialog):
         self._project = project
         self._with_bookmarks = True
         self._break_on_missing = True
+        ver = self._project.get_current_version()
+        self.folders = set(tome.savepath.parent for tome in ver.tomes)
+        if len(self.folders) > 1:
+            self.btn_open_folders.SetLabel('Открыть выходные папки')
+        else:
+            self.btn_open_folders.SetLabel('Открыть выходную папку')
     
     def toggle_bookmarks(self, event):
         self._with_bookmarks = not self._with_bookmarks
     
     def toggle_break_on_missing(self, event):
         self._break_on_missing = not self._break_on_missing
+    
+    def open_folders(self, event):
+        for folder in self.folders:
+            subprocess.Popen(f'explorer "{folder}"')
     
     def process(self, event):
         self.logger = ProcessingLogger(self.text_logger, self.progress_bar)
