@@ -19,7 +19,12 @@ class ProcessingDialog(BaseProcessingDialog):
     def process(self, event):
         self.logger = ProcessingLogger(self.text_logger, self.progress_bar)
         try:
-            merge(self._project, logger=self.logger, break_on_missing=self._break_on_missing)
+            merge(
+                self._project,
+                logger=self.logger,
+                break_on_missing=self._break_on_missing,
+                with_bookmarks=self._with_bookmarks
+            )
         except Exception as e:
             self.logger.writeline(f'Ошибка: {e}')
             self.logger.writeline(f'Выполнение программы прервано.')

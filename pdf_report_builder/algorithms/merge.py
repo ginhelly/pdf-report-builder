@@ -1,9 +1,11 @@
 from pypdf import PdfWriter
 
+from pdf_report_builder.algorithms.bookmarks import add_bookmarks
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.utils.logger import ProcessingLogger
+
 
 def _collect_files_to_merge(tome: Tome):
     files_to_merge = []
@@ -15,7 +17,8 @@ def _merge_one_tome(
         tome: Tome,
         logger: ProcessingLogger,
         delta: int,
-        break_on_missing: bool = True
+        break_on_missing: bool = True,
+        with_bookmarks: bool = True
     ):
     files_to_merge = _collect_files_to_merge(tome)
     if len(files_to_merge) == 0:
@@ -40,13 +43,23 @@ def _merge_one_tome(
         else:
             merger.append(fileobj=obj, pages=subset)
         logger.add_to_progress_bar(delta)
+    
+    if with_bookmarks:
+        logger.writeline(' Расставляю закладки...')
+        add_bookmarks(merger, tome)
+
     with open(tome.savepath, 'wb') as output:
         logger.writeline(' Записываю результат на диск...')
         merger.write(output)
         merger.close()
         logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
 
-def merge(project: ReportProject, logger: ProcessingLogger, break_on_missing: bool = True):
+def merge(
+        project: ReportProject,
+        logger: ProcessingLogger,
+        break_on_missing: bool = True,
+        with_bookmarks: bool = True
+    ):
     """Самое-самое главное, ради чего всё это затевалось"""
     ver = project.get_current_version()
     logger.writeline(f'Начинаю собирать набор техотчетов из версии "{ver.name}"')
@@ -55,7 +68,7 @@ def merge(project: ReportProject, logger: ProcessingLogger, break_on_missing: bo
 
     for tome in ver.tomes:
         logger.writeline(f' Обрабатываю том {tome.human_readable_name}')
-        _merge_one_tome(tome, logger, delta_progress_bar, break_on_missing)
+        _merge_one_tome(tome, logger, delta_progress_bar, break_on_missing, with_bookmarks)
         logger.writeline('')
     
     logger.writeline('Успешно завершено!')

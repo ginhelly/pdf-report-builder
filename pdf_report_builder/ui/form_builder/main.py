@@ -149,7 +149,7 @@ class MainFrame ( wx.Frame ):
         bSizer18.Fit( self.properties_panel )
         bSizer3.Add( self.properties_panel, 1, wx.EXPAND |wx.ALL, 5 )
 
-        self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты!", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.btn_merge = wx.Button( self, wx.ID_ANY, u"Сформировать отчеты...", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
 
 

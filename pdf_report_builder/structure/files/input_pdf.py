@@ -46,7 +46,6 @@ class PDFFile(BaseLevel):
         with open(self.path, 'rb') as file:
             pdf_reader = PdfReader(file)
             self.pages_number = len(pdf_reader.pages)
-            self
         self._parse_subset(self.subset)
     
     def change_file(self, path: Path):
@@ -72,7 +71,14 @@ class PDFFile(BaseLevel):
     
     @property
     def subset_pages_number(self):
-        return len(self.subset)
+        len_subset = len(self.subset)
+        if len_subset > 0:
+            return len_subset
+        try:
+            pages_number = getattr(self, 'pages_number')
+            return pages_number
+        except AttributeError:
+            return 0
     
     @staticmethod
     def from_dict(d: dict):
