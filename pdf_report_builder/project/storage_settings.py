@@ -1,5 +1,8 @@
+from pdf_report_builder.utils.singleton import Singleton
+
+from .event_channel import EventChannel
 from .settings import ProjectSettings
-from .event_channel import Singleton, EventChannel
+
 
 class SettingsStorage(metaclass=Singleton):
     def __init__(self):

@@ -1,5 +1,7 @@
+from pdf_report_builder.utils.singleton import Singleton
+
 from .project import ReportProject
-from .event_channel import Singleton, EventChannel
+from .event_channel import EventChannel
 
 class ProjectStorage(metaclass=Singleton):
     def __init__(self):
