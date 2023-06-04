@@ -823,3 +823,74 @@ class BaseRemoveVersionsDialog ( wx.Dialog ):
         event.Skip()
 
 
+###########################################################################
+## Class BaseProcessingDialog
+###########################################################################
+
+class BaseProcessingDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Формирование PDF-файлов...", pos = wx.DefaultPosition, size = wx.Size( 445,315 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer29 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_panel3 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_THEME|wx.TAB_TRAVERSAL )
+        bSizer30 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText24 = wx.StaticText( self.m_panel3, wx.ID_ANY, u"Опции формирования:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText24.Wrap( -1 )
+
+        bSizer30.Add( self.m_staticText24, 0, wx.ALL, 5 )
+
+        self.cb_with_bookmarks = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Формировать закладки на основе структуры", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_with_bookmarks.SetValue(True)
+        bSizer30.Add( self.cb_with_bookmarks, 0, wx.ALL, 5 )
+
+
+        self.m_panel3.SetSizer( bSizer30 )
+        self.m_panel3.Layout()
+        bSizer30.Fit( self.m_panel3 )
+        bSizer29.Add( self.m_panel3, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.cb_break_on_missing = wx.CheckBox( self, wx.ID_ANY, u"Прерывать процесс формирования при отсутствующем файле", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_break_on_missing.SetValue(True)
+        bSizer29.Add( self.cb_break_on_missing, 0, wx.ALL, 5 )
+
+        self.btn_process = wx.Button( self, wx.ID_ANY, u"Сформировать техотчеты", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer29.Add( self.btn_process, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.text_logger = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+        bSizer29.Add( self.text_logger, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.progress_bar = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+        self.progress_bar.SetValue( 0 )
+        bSizer29.Add( self.progress_bar, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer29 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
+        self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
+        self.btn_process.Bind( wx.EVT_BUTTON, self.process )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def toggle_bookmarks( self, event ):
+        event.Skip()
+
+    def toggle_break_on_missing( self, event ):
+        event.Skip()
+
+    def process( self, event ):
+        event.Skip()
+
+

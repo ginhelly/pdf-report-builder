@@ -2,10 +2,10 @@ from pathlib import Path
 
 import wx
 
-from pdf_report_builder.algorithms.merge import merge
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+from pdf_report_builder.ui.dialogs.process_dialog import ProcessingDialog
 from pdf_report_builder.ui.dialogs.remove_versions_dialog import \
     RemoveVersionsDialog
 from pdf_report_builder.ui.form_builder.main import MainFrame
@@ -251,12 +251,8 @@ class PDFReportBuilderFrame(MainFrame):
         
     def make_reports(self, event):
         try:
-            merge(self.project)
-            dlg = wx.MessageDialog(
-                None,
-                'Успешно сформировано!',
-                'Успех!',
-                wx.OK | wx.ICON_EXCLAMATION
+            dlg = ProcessingDialog(
+                self, self.project
             )
             dlg.ShowModal()
             dlg.Destroy()

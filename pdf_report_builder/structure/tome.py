@@ -56,6 +56,10 @@ class Tome(BaseLevel):
     def pages_number(self):
         return sum(element.pages_number for element in self.structural_elements)
 
+    @property
+    def input_pdfs_number(self):
+        return sum(len(element.files) for element in self.structural_elements)
+
     @staticmethod
     def from_dict(d: dict):
         if 'savepath' in d:
