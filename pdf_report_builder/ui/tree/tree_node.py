@@ -12,11 +12,6 @@ from pdf_report_builder.ui.tree.context_menu_factory import get_context_menu
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 
-CHILDREN = {
-    Tome: 'structural_elements',
-    StructuralElement: 'files'
-}
-
 @dataclass
 class TreeNode:
     item: BaseReportProject | BaseLevel
@@ -26,13 +21,20 @@ class TreeNode:
     children: List['TreeNode'] = field(default_factory=list)
     index: int = 0
 
-    def swap(self, i: int, j: int):
+    def swap(self, i: int, j: int, node=None):
+        shift = 0
         if isinstance(self.item, BaseReportProject):
             siblings = self.item.get_current_version().tomes
-        else:
-            siblings = getattr(self.item, CHILDREN[type(self.item)])
+        elif isinstance(self.item, Tome):
+            siblings = self.item.structural_elements
+        elif isinstance(self.item, StructuralElement):
+            if isinstance(node.item, StructuralElement):
+                siblings = self.item.subelements
+            else:
+                siblings = self.item.files
+                shift = len(self.item.subelements)
         child_nodes = self.children
-        siblings[i], siblings[j] = siblings[j], siblings[i]
+        siblings[i - shift], siblings[j - shift] = siblings[j - shift], siblings[i - shift]
         child_nodes[i], child_nodes[j] = child_nodes[j], child_nodes[i]
         child_nodes[i].index = i
         child_nodes[j].index = j

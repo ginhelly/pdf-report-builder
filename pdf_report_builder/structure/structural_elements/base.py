@@ -3,6 +3,7 @@ from typing import List
 from pathlib import Path
 from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
+from pdf_report_builder.structure.structural_elements.common import ElementScheme
 from pdf_report_builder.structure.level import BaseLevel
 
 class FileDescription(NamedTuple):
@@ -15,6 +16,9 @@ class StructuralElement(BaseLevel):
     official: bool = False
     code_attr: str = ""
     files: List[PDFFile] = field(
+        default_factory=lambda: []
+    )
+    subelements: List[BaseLevel] = field(
         default_factory=lambda: []
     )
 
@@ -33,6 +37,22 @@ class StructuralElement(BaseLevel):
             new_file = PDFFile(file_path, subset)
         self.files.append(new_file)
     
+    def add_subelement(
+            self,
+            element: BaseLevel | ElementScheme | dict
+    ):
+        if isinstance(element, dict):
+            new_subelement = StructuralElement.from_dict(element)
+        elif isinstance(element, ElementScheme):
+            new_subelement = StructuralElement(
+                name=element.name,
+                official=element.official,
+                code_attr=element.code_attr
+            )
+        else:
+            new_subelement = element
+        self.subelements.append(new_subelement)
+    
     def parse_files(self, files: list[FileDescription]):
         for file in files:
             self.add_file(file_description=file)
@@ -42,9 +62,16 @@ class StructuralElement(BaseLevel):
             if file in self.files:
                 self.files.remove(file)
         elif isinstance(file, int):
-            self.structural_elements.remove(
+            self.files.remove(
                 self.files[file]
             )
+    
+    def remove_element(self, el: BaseLevel | int):
+        if isinstance(el, StructuralElement):
+            if el in self.subelements:
+                self.subelements.remove(el)
+        elif isinstance(el, int):
+            self.subelements.remove(self.subelements[el])
     
     @property
     def pages_number(self):
@@ -57,7 +84,9 @@ class StructuralElement(BaseLevel):
             else False
         if 'files' in d:
             d['files'] = [PDFFile.from_dict(file) for file in d['files']]
-        valid = ['name', 'official', 'code_attr', 'files']
+        if 'subelements' in d:
+            d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
+        valid = ['name', 'official', 'code_attr', 'files', 'subelements']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

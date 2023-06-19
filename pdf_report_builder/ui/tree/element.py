@@ -11,6 +11,7 @@ from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.ui.dialogs.delete_item_dialog import DeletePrompt
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.project.io.json_serializer import serialize_level
+from pdf_report_builder.ui.dialogs.add_element_dialog import AddElementDialog
 
 from .base_context_menu import *
 
@@ -21,6 +22,7 @@ class ElementContextMenu(TreeContextMenu):
         self.element = element
         self.OPTIONS = [
             MenuOption('Добавить файл...', self.add_file),
+            MenuOption('Добавить дочерний элемент...', self.add_subelement),
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
@@ -56,6 +58,14 @@ class ElementContextMenu(TreeContextMenu):
             dlg.ShowModal()
             dlg.Destroy()
         EventChannel().publish('tree_update')
+    
+    def add_subelement(self):
+        with AddElementDialog(None) as dlg:
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                return
+            scheme = dlg.get_element_scheme()
+            self.element.add_subelement(scheme)
+            EventChannel().publish('tree_update')
 
     def remove_element(self):
         with DeletePrompt(None) as dlg:
@@ -68,17 +78,22 @@ class ElementContextMenu(TreeContextMenu):
         content = pyperclip.paste()
         if not (7 < len(content) < 5242880):
             return False
-        if not content[:7] == 'LEVEL=3':
+        if not content[:7] in ('LEVEL=3', 'LEVEL=2'):
             return False
         try:
             self.clipboard_content = json.loads(content[7:])
+            self.clipboard_type = 'file' if content[:7] == 'LEVEL=3' else 'subelement'
         except Exception:
             return False
         return True
 
     def paste(self):
-        new_file = PDFFile.from_dict(self.clipboard_content)
-        self.element.add_file(new_file)
+        if self.clipboard_type == 'file':
+            new_file = PDFFile.from_dict(self.clipboard_content)
+            self.element.add_file(new_file)
+        elif self.clipboard_type == 'subelement':
+            new_el = StructuralElement.from_dict(self.clipboard_content)
+            self.element.add_subelement(new_el)
         EventChannel().publish('tree_update')
     
     def copy_to_clipboard(self):

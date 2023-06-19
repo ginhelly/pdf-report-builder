@@ -218,15 +218,18 @@ class PDFReportBuilderFrame(MainFrame):
         self.book.parse_item(item)
     
     def toggle_up_down_buttons(self, event):
-        self._toggle_button(event, self.btn_up, 0)
-        self._toggle_button(event, self.btn_down, -1)
+        self._toggle_button(event, self.btn_up, 0, -1)
+        self._toggle_button(event, self.btn_down, -1, 1)
     
-    def _toggle_button(self, event, btn, i):
+    def _toggle_button(self, event, btn, i, j):
         tree_node = self.tree_component.nodes[event.Item]
         if tree_node.parent is None:
             btn.Disable()
             return
         if tree_node.parent.children[i] == tree_node:
+            btn.Disable()
+            return
+        if not type(tree_node.item) == type(tree_node.parent.children[tree_node.index + j].item):
             btn.Disable()
             return
         btn.Enable()

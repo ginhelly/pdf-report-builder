@@ -89,7 +89,15 @@ class ReportProject(BaseReportProject):
         ver = self.get_current_version()
         for tome in ver.tomes:
             tome.remove_element(element)
+            for private in tome.structural_elements:
+                self._handle_element_remove_recursive(private, element)
         EventChannel().publish('modified')
+
+    def _handle_element_remove_recursive(self, parent_element, element):
+        print('recursive')
+        parent_element.remove_element(element)
+        for subel in parent_element.subelements:
+            self._handle_element_remove_recursive(subel, element)
     
     def handle_file_remove(self, payload):
         file = payload[0]
@@ -97,7 +105,13 @@ class ReportProject(BaseReportProject):
         for tome in ver.tomes:
             for el in tome.structural_elements:
                 el.remove_file(file)
+                self._handle_file_remove_recursive(el, file)
         EventChannel().publish('modified')
+    
+    def _handle_file_remove_recursive(self, el, file):
+        for subel in el.subelements:
+            subel.remove_file(file)
+            self._handle_file_remove_recursive(subel, file)
     
     def clone_current_version(self, name: str):
         ver = deepcopy(self.get_current_version())

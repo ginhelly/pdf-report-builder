@@ -68,7 +68,19 @@ class Tree(wx.TreeCtrl):
             el_id = self.create_element_item_id(el, parent)
             el_node = get_tree_node(self, el, el_id, parent_node)
             self.nodes[el_id] = el_node
+            self._parse_subelements(el_id, el_node, el)
             self._parse_files(el_id, el_node, el)
+        return
+
+    def _parse_subelements(self, parent: wx.TreeItemId, parent_node: TreeNode, el: StructuralElement):
+        if len(el.subelements) == 0:
+            return
+        for subel in el.subelements:
+            subel_id = self.create_element_item_id(subel, parent)
+            subel_node = get_tree_node(self, subel, subel_id, parent_node)
+            self.nodes[subel_id] = subel_node
+            self._parse_subelements(subel_id, subel_node, subel)
+            self._parse_files(subel_id, subel_node, subel)
         return
     
     def _parse_files(
@@ -130,7 +142,7 @@ class Tree(wx.TreeCtrl):
         if parent2 != parent:
             raise ValueError('Айтемы должны быть одного уровня!')
         # Делает своп внутри дерева и в модели
-        parent.swap(node_i.index, node_j.index)
+        parent.swap(node_i.index, node_j.index, node_i)
         def redraw_item_by_node(tree, node, parent_node):
             del tree.nodes[node.item_id]
             tree.Delete(node.item_id)

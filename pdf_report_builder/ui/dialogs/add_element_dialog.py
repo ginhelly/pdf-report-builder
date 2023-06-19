@@ -49,7 +49,7 @@ class AddElementDialog(BaseAddElementDialog):
         code = '' if item_data is None else item_data.code_attr
         self.element_code.SetValue(code)
     
-    def get_element(self):
+    def get_element_scheme(self):
         sel = self.treelist_elements.GetSelection()
         scheme = self.treelist_elements.GetItemData(sel)
         if self.element_code.GetValue() != scheme.code_attr:
