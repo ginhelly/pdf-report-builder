@@ -9,6 +9,7 @@
 
 import wx
 import wx.xrc
+import wx.grid
 import wx.richtext
 import wx.dataview
 
@@ -67,6 +68,12 @@ class MainFrame ( wx.Frame ):
         self.menu_versions.Append( self.m_menuItem19 )
 
         self.m_menubar1.Append( self.menu_versions, u"&Версии" )
+
+        self.menu_utils = wx.Menu()
+        self.menu_utils_sheetscalc = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Калькулятор листов", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils.Append( self.menu_utils_sheetscalc )
+
+        self.m_menubar1.Append( self.menu_utils, u"Утилиты" )
 
         self.menu_about = wx.Menu()
         self.menu_about_about = wx.MenuItem( self.menu_about, wx.ID_ANY, u"О программе", wx.EmptyString, wx.ITEM_NORMAL )
@@ -235,6 +242,7 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.create_new_version, id = self.menu_versions_new.GetId() )
         self.Bind( wx.EVT_MENU, self.clone_current_version, id = self.m_menuItem18.GetId() )
         self.Bind( wx.EVT_MENU, self.on_remove_versions, id = self.m_menuItem19.GetId() )
+        self.Bind( wx.EVT_MENU, self.open_sheets_calc, id = self.menu_utils_sheetscalc.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
@@ -278,6 +286,9 @@ class MainFrame ( wx.Frame ):
     def on_remove_versions( self, event ):
         event.Skip()
 
+    def open_sheets_calc( self, event ):
+        event.Skip()
+
     def onAbout( self, event ):
         event.Skip()
 
@@ -310,6 +321,159 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
     def on_down( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BaseCalculatorDialog
+###########################################################################
+
+class BaseCalculatorDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Калькулятор листов", pos = wx.DefaultPosition, size = wx.Size( 942,487 ), style = wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+        self.SetExtraStyle( self.GetExtraStyle() | wx.WS_EX_TRANSIENT )
+
+        bSizer32 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer36 = wx.BoxSizer( wx.VERTICAL )
+
+        self.grid_blocks = wx.grid.Grid( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        # Grid
+        self.grid_blocks.CreateGrid( 0, 4 )
+        self.grid_blocks.EnableEditing( True )
+        self.grid_blocks.EnableGridLines( True )
+        self.grid_blocks.EnableDragGridSize( False )
+        self.grid_blocks.SetMargins( 0, 0 )
+
+        # Columns
+        self.grid_blocks.SetColSize( 0, 195 )
+        self.grid_blocks.SetColSize( 1, 115 )
+        self.grid_blocks.SetColSize( 2, 94 )
+        self.grid_blocks.SetColSize( 3, 73 )
+        self.grid_blocks.AutoSizeColumns()
+        self.grid_blocks.EnableDragColMove( False )
+        self.grid_blocks.EnableDragColSize( True )
+        self.grid_blocks.SetColLabelValue( 0, u"Название" )
+        self.grid_blocks.SetColLabelValue( 1, u"Формат листов" )
+        self.grid_blocks.SetColLabelValue( 2, u"Кол-во листов" )
+        self.grid_blocks.SetColLabelValue( 3, u"Подитог" )
+        self.grid_blocks.SetColLabelValue( 4, wx.EmptyString )
+        self.grid_blocks.SetColLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
+
+        # Rows
+        self.grid_blocks.EnableDragRowSize( True )
+        self.grid_blocks.SetRowLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.grid_blocks.SetDefaultCellAlignment( wx.ALIGN_LEFT, wx.ALIGN_TOP )
+        bSizer36.Add( self.grid_blocks, 1, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer37 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText34 = wx.StaticText( self, wx.ID_ANY, u"ИТОГО: ", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText34.Wrap( -1 )
+
+        self.m_staticText34.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer37.Add( self.m_staticText34, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.lbl_itogo = wx.StaticText( self, wx.ID_ANY, u"0 листов; 0 эквивалентно формату A4", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_itogo.Wrap( -1 )
+
+        bSizer37.Add( self.lbl_itogo, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer36.Add( bSizer37, 0, wx.EXPAND, 5 )
+
+        bSizer371 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText341 = wx.StaticText( self, wx.ID_ANY, u"ВЫБОРКА:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText341.Wrap( -1 )
+
+        self.m_staticText341.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer371.Add( self.m_staticText341, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.lbl_selection = wx.StaticText( self, wx.ID_ANY, u"0 листов; 0 эквивалентно формату A4", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.lbl_selection.Wrap( -1 )
+
+        bSizer371.Add( self.lbl_selection, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer36.Add( bSizer371, 0, wx.EXPAND, 5 )
+
+
+        bSizer34.Add( bSizer36, 2, wx.EXPAND, 5 )
+
+        bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer41 = wx.BoxSizer( wx.VERTICAL )
+
+        list_sheetsChoices = []
+        self.list_sheets = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, list_sheetsChoices, wx.LB_EXTENDED|wx.LB_HSCROLL|wx.LB_NEEDED_SB )
+        bSizer41.Add( self.list_sheets, 1, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer35.Add( bSizer41, 1, wx.EXPAND, 5 )
+
+
+        bSizer34.Add( bSizer35, 1, wx.EXPAND, 5 )
+
+
+        bSizer32.Add( bSizer34, 1, wx.EXPAND, 5 )
+
+        bSizer33 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer33.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_save = wx.Button( self, wx.ID_ANY, u"Сохранить в файл", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer33.Add( self.btn_save, 0, wx.ALL, 5 )
+
+        self.m_button11 = wx.Button( self, wx.ID_ANY, u"Загрузить из файла", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer33.Add( self.m_button11, 0, wx.ALL, 5 )
+
+        self.btn_close = wx.Button( self, wx.ID_ANY, u"Закрыть", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer33.Add( self.btn_close, 0, wx.ALL, 5 )
+
+
+        bSizer32.Add( bSizer33, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer32 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.grid_blocks.Bind( wx.grid.EVT_GRID_CELL_CHANGED, self.grid_updated )
+        self.grid_blocks.Bind( wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRightClick )
+        self.list_sheets.Bind( wx.EVT_LISTBOX, self.on_listbox_selection )
+        self.btn_close.Bind( wx.EVT_BUTTON, self.on_close )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def grid_updated( self, event ):
+        event.Skip()
+
+    def OnCellRightClick( self, event ):
+        event.Skip()
+
+    def on_listbox_selection( self, event ):
+        event.Skip()
+
+    def on_close( self, event ):
         event.Skip()
 
 

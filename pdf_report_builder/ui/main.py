@@ -8,6 +8,7 @@ from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.ui.dialogs.process_dialog import ProcessingDialog
 from pdf_report_builder.ui.dialogs.remove_versions_dialog import \
     RemoveVersionsDialog
+from pdf_report_builder.ui.dialogs.sheets_calc import CalculatorDialog
 from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.tree.tree import Tree
 from pdf_report_builder.ui.panels.book import Book
@@ -84,6 +85,11 @@ class PDFReportBuilderFrame(MainFrame):
     
     def onDocsOpen317(self, event):
         open_docs('SP317')
+
+    def open_sheets_calc(self, event):
+        with CalculatorDialog(self) as dlg:
+            if dlg.ShowModal() == wx.ID_CANCEL:
+                return
     
     def previous_project_willing_to_close(self):
         if self.project.modified:
