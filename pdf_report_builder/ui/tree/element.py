@@ -22,7 +22,7 @@ class ElementContextMenu(TreeContextMenu):
         self.element = element
         self.OPTIONS = [
             MenuOption('Добавить файл...', self.add_file),
-            MenuOption('Добавить дочерний элемент...', self.add_subelement),
+            MenuOption('Добавить вложенный элемент...', self.add_subelement),
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),

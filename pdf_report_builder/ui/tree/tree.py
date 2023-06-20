@@ -163,6 +163,7 @@ class Tree(wx.TreeCtrl):
             redraw_item_by_node(self, n, parent)
             if isinstance(n.item, StructuralElement):
                 n.children = []
+                self._parse_subelements(n.item_id, n, n.item)
                 self._parse_files(n.item_id, n, n.item)
             elif isinstance(n.item, Tome):
                 n.children = []

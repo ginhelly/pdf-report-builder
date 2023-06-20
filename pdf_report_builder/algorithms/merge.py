@@ -4,12 +4,20 @@ from pdf_report_builder.algorithms.bookmarks import add_bookmarks
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.tome import Tome
+from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.utils.logger import ProcessingLogger
 
+
+def _collect_files_in_subelements_recursive(el: StructuralElement, chain: dict) -> dict:
+    for subel in el.subelements:
+        chain = chain + subel.files
+        chain = _collect_files_in_subelements_recursive(subel, chain)
+    return chain
 
 def _collect_files_to_merge(tome: Tome):
     files_to_merge = []
     for element in tome.structural_elements:
+        files_to_merge = files_to_merge + _collect_files_in_subelements_recursive(element, [])
         files_to_merge = files_to_merge + element.files
     return files_to_merge
 

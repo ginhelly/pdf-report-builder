@@ -75,6 +75,7 @@ class StructuralElement(BaseLevel):
     
     @property
     def pages_number(self):
+        """Возвращает число страниц внутри структурного элемента без учета вложенных элементов"""
         return sum(file.subset_pages_number for file in self.files)
     
     @staticmethod
