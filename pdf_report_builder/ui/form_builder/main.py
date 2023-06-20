@@ -130,7 +130,7 @@ class MainFrame ( wx.Frame ):
         self.lbl_version1 = wx.StaticText( self, wx.ID_ANY, u"Свойства", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lbl_version1.Wrap( -1 )
 
-        self.lbl_version1.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+        self.lbl_version1.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
         bSizer21.Add( self.lbl_version1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
@@ -165,7 +165,7 @@ class MainFrame ( wx.Frame ):
         self.lbl_version = wx.StaticText( self, wx.ID_ANY, u"Текущая версия:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lbl_version.Wrap( -1 )
 
-        self.lbl_version.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+        self.lbl_version.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
         bSizer5.Add( self.lbl_version, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
@@ -324,6 +324,13 @@ class BaseElementPanel ( wx.Panel ):
 
         bSizer24 = wx.BoxSizer( wx.VERTICAL )
 
+        self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Структурный элемент", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText25.Wrap( -1 )
+
+        self.m_staticText25.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText25, 0, wx.ALL, 5 )
+
         bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Шифр:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -386,6 +393,13 @@ class BaseFilePanel ( wx.Panel ):
         wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
         bSizer24 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Файл", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText25.Wrap( -1 )
+
+        self.m_staticText25.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText25, 0, wx.ALL, 5 )
 
         self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Путь к файлу:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText16.Wrap( -1 )
@@ -497,6 +511,13 @@ class BaseProjectPanel ( wx.Panel ):
 
         bSizer22 = wx.BoxSizer( wx.VERTICAL )
 
+        self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Проект", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText25.Wrap( -1 )
+
+        self.m_staticText25.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer22.Add( self.m_staticText25, 0, wx.ALL, 5 )
+
         bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Шифр объекта:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -569,6 +590,13 @@ class BaseTomePanel ( wx.Panel ):
         wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
         bSizer24 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Том техотчета", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText25.Wrap( -1 )
+
+        self.m_staticText25.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText25, 0, wx.ALL, 5 )
 
         bSizer23 = wx.BoxSizer( wx.HORIZONTAL )
 
