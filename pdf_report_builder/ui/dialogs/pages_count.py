@@ -48,18 +48,24 @@ class PagesCountDialog(BasePagesCountDialog):
         self.treelist.AssignImageList(get_pagescount_imagelist())
         self.treelist.AppendColumn('Кол-во листов')
         self.treelist.AppendColumn('Экв. А4')
+        self.treelist.AppendColumn('Сквозная нумерация')
         self.add_node_recursive(root_node, root_item)
         self.treelist.SetColumnWidth(0, 300)
         self.treelist.Expand(root_item)
         
     def add_node_recursive(self, node: ParseReportNode, parent_item):
-        new_item = self.treelist.AppendItem(parent_item, node.name)
+        new_item = self.treelist.AppendItem(parent_item, node.name, data=node.type)
         self.treelist.SetItemText(new_item, 1, str(node.pages_native))
         if abs(node.pages_a4 - round(node.pages_a4)) > 0.1:
             a4_res = str(node.pages_a4)
         else:
             a4_res = str(round(node.pages_a4))
         self.treelist.SetItemText(new_item, 2, a4_res)
+
+        do_not_display_enumeration = (node.type == NodeType.VERSION) or (node.enumeration == False) or \
+            (node.type == NodeType.FILE and node.parent.type == NodeType.ELEMENT and node.parent.enumeration == False)
+        if not do_not_display_enumeration:
+            self.treelist.SetItemText(new_item, 3, str(node.current_page_number))
         for child in node.children:
             self.add_node_recursive(child, new_item)
         if node.type != NodeType.VERSION and node.pages_a4 >= 300:
@@ -69,5 +75,6 @@ class PagesCountDialog(BasePagesCountDialog):
             self.treelist.SetItemImage(new_item, icon, icon)
         self.treelist.Expand(new_item)
     
+
     def on_close(self, event):
         self.Close()

@@ -14,6 +14,8 @@ class FileDescription(NamedTuple):
 class StructuralElement(BaseLevel):
     name: str = "Структурный элемент"
     official: bool = False
+    enumeration_include: bool = True
+    enumeration_print: bool = True
     code_attr: str = ""
     files: List[PDFFile] = field(
         default_factory=lambda: []
@@ -44,11 +46,7 @@ class StructuralElement(BaseLevel):
         if isinstance(element, dict):
             new_subelement = StructuralElement.from_dict(element)
         elif isinstance(element, ElementScheme):
-            new_subelement = StructuralElement(
-                name=element.name,
-                official=element.official,
-                code_attr=element.code_attr
-            )
+            new_subelement = StructuralElement.from_scheme(element)
         else:
             new_subelement = element
         self.subelements.append(new_subelement)
@@ -83,13 +81,29 @@ class StructuralElement(BaseLevel):
         d['official'] = True \
             if not 'official' in d or d['official'] == 'True' \
             else False
+        d['enumeration_include'] = True \
+            if not 'enumeration_include' in d or d['enumeration_include'] == 'True' \
+            else False
+        d['enumeration_print'] = True \
+            if not 'enumeration_print' in d or d['enumeration_print'] == 'True' \
+            else False
         if 'files' in d:
             d['files'] = [PDFFile.from_dict(file) for file in d['files']]
         if 'subelements' in d:
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
-        valid = ['name', 'official', 'code_attr', 'files', 'subelements']
+        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]
         return StructuralElement(**d)
 
+    @staticmethod
+    def from_scheme(scheme: ElementScheme):
+        new_element = StructuralElement(
+            name=scheme.name,
+            official=scheme.official,
+            enumeration_include=scheme.enumeration_include,
+            enumeration_print=scheme.enumeration_print,
+            code_attr=scheme.code_attr
+        )
+        return new_element

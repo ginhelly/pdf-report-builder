@@ -73,7 +73,7 @@ class MainFrame ( wx.Frame ):
         self.menu_utils_sheetscalc = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Калькулятор страниц", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_sheetscalc )
 
-        self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Количество страниц тек. версии по томам", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Количество страниц и нумерация по томам", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_pagescount )
 
         self.m_menubar1.Append( self.menu_utils, u"Утилиты" )
@@ -537,6 +537,30 @@ class BaseElementPanel ( wx.Panel ):
         self.cb_official = wx.CheckBox( self, wx.ID_ANY, u"Официальный", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer24.Add( self.cb_official, 0, wx.ALL, 5 )
 
+        self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        bSizer24.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText59.Wrap( -1 )
+
+        self.m_staticText59.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText59, 0, wx.ALL, 5 )
+
+        self.m_staticText60 = wx.StaticText( self, wx.ID_ANY, u"(не распространяются на вложенные элементы)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText60.Wrap( -1 )
+
+        self.m_staticText60.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText60, 0, wx.ALL, 5 )
+
+        self.cb_enumeration_include = wx.CheckBox( self, wx.ID_ANY, u"Включать в сквозную нумерацию", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_enumeration_include.SetValue(True)
+        bSizer24.Add( self.cb_enumeration_include, 0, wx.ALL, 5 )
+
+        self.cb_enumeration_print = wx.CheckBox( self, wx.ID_ANY, u"Добавить сквозную нумерацию в отчет", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.cb_enumeration_print, 0, wx.ALL, 5 )
+
 
         self.SetSizer( bSizer24 )
         self.Layout()
@@ -546,6 +570,8 @@ class BaseElementPanel ( wx.Panel ):
         self.text_element_code.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_code_change )
         self.text_element_name.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_name_change )
         self.cb_official.Bind( wx.EVT_CHECKBOX, self.on_toggle_official )
+        self.cb_enumeration_include.Bind( wx.EVT_CHECKBOX, self.on_toggle_include )
+        self.cb_enumeration_print.Bind( wx.EVT_CHECKBOX, self.on_toggle_print )
 
     def __del__( self ):
         pass
@@ -559,6 +585,12 @@ class BaseElementPanel ( wx.Panel ):
         event.Skip()
 
     def on_toggle_official( self, event ):
+        event.Skip()
+
+    def on_toggle_include( self, event ):
+        event.Skip()
+
+    def on_toggle_print( self, event ):
         event.Skip()
 
 

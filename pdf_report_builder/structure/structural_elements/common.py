@@ -13,6 +13,8 @@ class ElementScheme(NamedTuple):
     name: str
     official: bool
     code_attr: str
+    enumeration_include: bool = True
+    enumeration_print: bool = True
 
 element_schemes = [
     ElementScheme(
@@ -28,7 +30,9 @@ element_schemes = [
         ElementCategory.UTIL,
         'Титульный лист',
         True,
-        ''
+        '',
+        False,
+        False
     ),
 
     ElementScheme(
@@ -36,7 +40,9 @@ element_schemes = [
         ElementCategory.UTIL,
         'Список исполнителей',
         True,
-        ''
+        '',
+        True,
+        False
     ),
 
     ElementScheme(
@@ -44,7 +50,9 @@ element_schemes = [
         ElementCategory.UTIL,
         'Содержание тома',
         True,
-        'С'
+        'С',
+        True,
+        False
     ),
 
     ElementScheme(
@@ -52,7 +60,9 @@ element_schemes = [
         ElementCategory.UTIL,
         'Состав отчетной технической документации',
         True,
-        'СД'
+        'СД',
+        True,
+        False
     ),
 
     ElementScheme(
@@ -60,7 +70,9 @@ element_schemes = [
         ElementCategory.TEXT,
         'Текстовая часть',
         True,
-        'Т'
+        'Т',
+        True,
+        False
     ),
 
     ElementScheme(

@@ -10,6 +10,8 @@ class ElementPanel(BaseElementPanel):
         self.text_element_code.SetValue(element.code_attr)
         self.text_element_name.SetValue(element.name)
         self.cb_official.SetValue(element.official)
+        self.cb_enumeration_include.SetValue(element.enumeration_include)
+        self.cb_enumeration_print.SetValue(element.enumeration_print)
     
     def on_text_element_code_change(self, event):
         new_value = self.text_element_code.GetValue()
@@ -24,3 +26,17 @@ class ElementPanel(BaseElementPanel):
     def on_toggle_official(self, event):
         val = self.cb_official.GetValue()
         self.element.official = val
+    
+    def on_toggle_include(self, event):
+        val = self.cb_enumeration_include.GetValue()
+        self.element.enumeration_include = val
+        if not val:
+            self.cb_enumeration_print.SetValue(False)
+            self.element.enumeration_print = False
+            self.cb_enumeration_print.Disable()
+        else:
+            self.cb_enumeration_print.Enable()
+    
+    def on_toggle_print(self, event):
+        val = self.cb_enumeration_print.GetValue()
+        self.element.enumeration_print = val

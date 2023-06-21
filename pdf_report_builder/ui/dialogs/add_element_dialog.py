@@ -58,7 +58,9 @@ class AddElementDialog(BaseAddElementDialog):
                 scheme.element_type,
                 scheme.name,
                 scheme.official,
-                self.element_code.GetValue()
+                self.element_code.GetValue(),
+                scheme.enumeration_include,
+                scheme.enumeration_print
             )
         return scheme
     
