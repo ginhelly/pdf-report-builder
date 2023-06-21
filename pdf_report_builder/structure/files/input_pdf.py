@@ -19,6 +19,7 @@ class PDFFile(BaseLevel):
     Свойства:
     path - путь до файла (pathlib.Path)
     pages_number - число страниц в файле
+    subset_pages_number - число страниц в подмножестве
     modified_datetime - дата и время изменения
     pdf_reader - PyPDF.PdfReader
     subset - подмножество страниц файла (PagesSubset)

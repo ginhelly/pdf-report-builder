@@ -70,8 +70,11 @@ class MainFrame ( wx.Frame ):
         self.m_menubar1.Append( self.menu_versions, u"&Версии" )
 
         self.menu_utils = wx.Menu()
-        self.menu_utils_sheetscalc = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Калькулятор листов", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils_sheetscalc = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Калькулятор страниц", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_sheetscalc )
+
+        self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Количество страниц тек. версии по томам", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils.Append( self.menu_utils_pagescount )
 
         self.m_menubar1.Append( self.menu_utils, u"Утилиты" )
 
@@ -243,6 +246,7 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.clone_current_version, id = self.m_menuItem18.GetId() )
         self.Bind( wx.EVT_MENU, self.on_remove_versions, id = self.m_menuItem19.GetId() )
         self.Bind( wx.EVT_MENU, self.open_sheets_calc, id = self.menu_utils_sheetscalc.GetId() )
+        self.Bind( wx.EVT_MENU, self.open_pagescount, id = self.menu_utils_pagescount.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
@@ -287,6 +291,9 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
     def open_sheets_calc( self, event ):
+        event.Skip()
+
+    def open_pagescount( self, event ):
         event.Skip()
 
     def onAbout( self, event ):
@@ -1109,6 +1116,53 @@ class BaseProcessingDialog ( wx.Dialog ):
         event.Skip()
 
     def open_folders( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BasePagesCountDialog
+###########################################################################
+
+class BasePagesCountDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Расчет количества листов", pos = wx.DefaultPosition, size = wx.Size( 609,508 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer50 = wx.BoxSizer( wx.VERTICAL )
+
+        self.treelist = wx.dataview.TreeListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.TL_DEFAULT_STYLE )
+        self.treelist.AppendColumn( u"Количество листов", wx.COL_WIDTH_DEFAULT, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
+
+        bSizer50.Add( self.treelist, 1, wx.EXPAND |wx.ALL, 5 )
+
+        bSizer51 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer51.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button12 = wx.Button( self, wx.ID_CLOSE, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer51.Add( self.m_button12, 0, wx.ALL, 5 )
+
+
+        bSizer50.Add( bSizer51, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer50 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.m_button12.Bind( wx.EVT_BUTTON, self.on_close )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_close( self, event ):
         event.Skip()
 
 

@@ -118,10 +118,17 @@ class PagesSubset:
         self.current_chunk_index = 0
         if len(self.chunks) > 0:
             self.current_iter = iter(self.chunks[0])
+        elif not self.max_page_num is None:
+            self._count_till_max_page = 0
         return self
     
     def __next__(self):
         if len(self.chunks) == 0:
+            if not self.max_page_num is None:
+                if self.max_page_num == self._count_till_max_page:
+                    raise StopIteration
+                self._count_till_max_page += 1
+                return self._count_till_max_page - 1
             raise StopIteration
         try:
             next_val = next(self.current_iter)
