@@ -12,6 +12,12 @@ class ElementPanel(BaseElementPanel):
         self.cb_official.SetValue(element.official)
         self.cb_enumeration_include.SetValue(element.enumeration_include)
         self.cb_enumeration_print.SetValue(element.enumeration_print)
+        if not element.enumeration_include:
+            self.cb_enumeration_print.SetValue(False)
+            self.element.enumeration_print = False
+            self.cb_enumeration_print.Disable()
+        else:
+            self.cb_enumeration_print.Enable()
     
     def on_text_element_code_change(self, event):
         new_value = self.text_element_code.GetValue()

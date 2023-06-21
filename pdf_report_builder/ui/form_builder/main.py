@@ -1087,6 +1087,10 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.cb_with_bookmarks.SetValue(True)
         bSizer30.Add( self.cb_with_bookmarks, 0, wx.ALL, 5 )
 
+        self.cb_enumerate = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Нумеровать страницы", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_enumerate.SetValue(True)
+        bSizer30.Add( self.cb_enumerate, 0, wx.ALL, 5 )
+
 
         self.m_panel3.SetSizer( bSizer30 )
         self.m_panel3.Layout()
@@ -1129,6 +1133,7 @@ class BaseProcessingDialog ( wx.Dialog ):
 
         # Connect Events
         self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
+        self.cb_enumerate.Bind( wx.EVT_CHECKBOX, self.toggle_enumerate )
         self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
         self.btn_process.Bind( wx.EVT_BUTTON, self.process )
         self.btn_open_folders.Bind( wx.EVT_BUTTON, self.open_folders )
@@ -1139,6 +1144,9 @@ class BaseProcessingDialog ( wx.Dialog ):
 
     # Virtual event handlers, override them in your derived class
     def toggle_bookmarks( self, event ):
+        event.Skip()
+
+    def toggle_enumerate( self, event ):
         event.Skip()
 
     def toggle_break_on_missing( self, event ):

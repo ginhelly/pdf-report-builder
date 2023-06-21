@@ -10,6 +10,7 @@ class ProcessingDialog(BaseProcessingDialog):
         super().__init__(parent)
         self._project = project
         self._with_bookmarks = True
+        self._enumerate = True
         self._break_on_missing = True
         ver = self._project.get_current_version()
         self.folders = set(tome.savepath.parent for tome in ver.tomes)
@@ -20,6 +21,9 @@ class ProcessingDialog(BaseProcessingDialog):
     
     def toggle_bookmarks(self, event):
         self._with_bookmarks = not self._with_bookmarks
+    
+    def toggle_enumerate(self, event):
+        self._enumerate = not self._enumerate
     
     def toggle_break_on_missing(self, event):
         self._break_on_missing = not self._break_on_missing
@@ -35,7 +39,8 @@ class ProcessingDialog(BaseProcessingDialog):
                 self._project,
                 logger=self.logger,
                 break_on_missing=self._break_on_missing,
-                with_bookmarks=self._with_bookmarks
+                with_bookmarks=self._with_bookmarks,
+                enumerate=self._enumerate
             )
         except Exception as e:
             self.logger.writeline(f'Ошибка: {e}')
