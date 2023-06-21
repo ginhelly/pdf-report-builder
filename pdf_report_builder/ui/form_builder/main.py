@@ -331,7 +331,7 @@ class MainFrame ( wx.Frame ):
 class BaseCalculatorDialog ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Калькулятор листов", pos = wx.DefaultPosition, size = wx.Size( 942,487 ), style = wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Калькулятор листов", pos = wx.DefaultPosition, size = wx.Size( 692,487 ), style = wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         self.SetExtraStyle( self.GetExtraStyle() | wx.WS_EX_TRANSIENT )
@@ -411,7 +411,7 @@ class BaseCalculatorDialog ( wx.Dialog ):
         bSizer36.Add( bSizer371, 0, wx.EXPAND, 5 )
 
 
-        bSizer34.Add( bSizer36, 2, wx.EXPAND, 5 )
+        bSizer34.Add( bSizer36, 3, wx.EXPAND, 5 )
 
         bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -425,7 +425,7 @@ class BaseCalculatorDialog ( wx.Dialog ):
         bSizer35.Add( bSizer41, 1, wx.EXPAND, 5 )
 
 
-        bSizer34.Add( bSizer35, 1, wx.EXPAND, 5 )
+        bSizer34.Add( bSizer35, 2, wx.EXPAND, 5 )
 
 
         bSizer32.Add( bSizer34, 1, wx.EXPAND, 5 )
@@ -457,6 +457,8 @@ class BaseCalculatorDialog ( wx.Dialog ):
         self.grid_blocks.Bind( wx.grid.EVT_GRID_CELL_CHANGED, self.grid_updated )
         self.grid_blocks.Bind( wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRightClick )
         self.list_sheets.Bind( wx.EVT_LISTBOX, self.on_listbox_selection )
+        self.btn_save.Bind( wx.EVT_BUTTON, self.on_save )
+        self.m_button11.Bind( wx.EVT_BUTTON, self.on_load )
         self.btn_close.Bind( wx.EVT_BUTTON, self.on_close )
 
     def __del__( self ):
@@ -471,6 +473,12 @@ class BaseCalculatorDialog ( wx.Dialog ):
         event.Skip()
 
     def on_listbox_selection( self, event ):
+        event.Skip()
+
+    def on_save( self, event ):
+        event.Skip()
+
+    def on_load( self, event ):
         event.Skip()
 
     def on_close( self, event ):

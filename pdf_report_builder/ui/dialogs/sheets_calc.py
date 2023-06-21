@@ -1,3 +1,4 @@
+import csv
 import wx
 
 from pdf_report_builder.ui.form_builder.main import BaseCalculatorDialog
@@ -30,7 +31,7 @@ class CalculatorDialog(BaseCalculatorDialog):
         self.PopupMenu(menu)
         menu.Destroy()
     
-    def OnRemoveRow(self, event):
+    def OnRemoveRow(self, event=None):
         rows = self.grid_blocks.GetSelectedRows()
         count = 0
         for row in rows:
@@ -58,12 +59,18 @@ class CalculatorDialog(BaseCalculatorDialog):
         self.choice_editor = wx.grid.GridCellChoiceEditor(choices)
         self.number_editor = wx.grid.GridCellNumberEditor()
     
-    def add_row(self, event=None):
+    def add_row(self, event=None, contents=None):
         self.grid_blocks.AppendRows(1)
         n = self.grid_blocks.GetNumberRows()
         self.grid_blocks.SetCellEditor(n - 1, 1, self.choice_editor)
         self.grid_blocks.SetCellEditor(n - 1, 2, self.number_editor)
-        self.grid_blocks.SetCellValue(n - 1, 2, '1')
+        if not (contents is None):
+            self.grid_blocks.SetCellValue(n - 1, 0, contents[0])
+            self.grid_blocks.SetCellValue(n - 1, 1, contents[1])
+            self.grid_blocks.SetCellValue(n - 1, 2, contents[2])
+            self.grid_blocks.SetCellValue(n - 1, 3, contents[3])
+        else:
+            self.grid_blocks.SetCellValue(n - 1, 2, '1')
         self.grid_blocks.SetReadOnly(n - 1, 3, True)
         self.count_total()
         self.update_list_sheets()
@@ -97,6 +104,7 @@ class CalculatorDialog(BaseCalculatorDialog):
         self.lbl_itogo.SetLabelText(
             f'{format_number(sum_native)} листов; {format_number(sum_a4)} эквивалентно формату A4'
         )
+        self.lbl_selection.SetLabelText('0 листов; 0 эквивалентно формату A4')
     
     def update_list_sheets(self):
         self.list_sheets.Clear()
@@ -123,3 +131,45 @@ class CalculatorDialog(BaseCalculatorDialog):
         self.lbl_selection.SetLabelText(
             f'{format_number(sum_native)} листов; {format_number(sum_a4)} эквивалентно формату A4'
         )
+    
+    def on_save(self, event):
+        dlg = wx.FileDialog(
+            self, message="Сохранить как", wildcard="CSV files (*.csv)|*.csv", style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT
+        )
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return
+        filepath = dlg.GetPath()
+
+        with open(filepath, 'w+', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+
+            for row in range(self.grid_blocks.GetNumberRows()):
+                row_data = []
+                for col in range(self.grid_blocks.GetNumberCols()):
+                    cell_value = self.grid_blocks.GetCellValue(row, col)
+                    row_data.append(cell_value)
+                writer.writerow(row_data)
+        
+    
+    def on_load(self, event):
+        dlg = wx.FileDialog(
+            None,
+            message="Открыть CSV-файл калькулятора",
+            wildcard="CSV files (*.csv)|*.csv",
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+        )
+        if dlg.ShowModal() == wx.ID_CANCEL:
+            return
+        filepath = dlg.GetPath()
+        with open(filepath, 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            rows = []
+            for row in reader:
+                rows.append(row)
+        self.grid_blocks.ClearGrid()
+        for i in range(self.grid_blocks.GetNumberRows()):
+            self.grid_blocks.SelectRow(i, True)
+        self.OnRemoveRow()
+
+        for i in range(len(rows)):
+            self.add_row(contents=rows[i])
