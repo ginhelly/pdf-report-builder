@@ -9,19 +9,18 @@ from pdf_report_builder.structure.structural_elements.base import StructuralElem
 from pdf_report_builder.utils.logger import ProcessingLogger
 
 
-def _collect_files_in_subelements_recursive(el: StructuralElement, chain: dict) -> dict:
+def _collect_files_in_subelements_recursive(el: StructuralElement) -> list:
+    chain = []
     for subel in el.subelements:
-        addition = [(file, el.enumeration_include and el.enumeration_print) for file in subel.files]
-        chain = chain + addition
-        chain = _collect_files_in_subelements_recursive(subel, chain)
+        chain = chain + _collect_files_in_subelements_recursive(subel)
+    chain = chain + el.files
     return chain
 
 def _collect_files_to_merge(tome: Tome):
-    files_to_merge = []
     for element in tome.structural_elements:
-        files_to_merge = files_to_merge + _collect_files_in_subelements_recursive(element, [])
-        addition = [(file, element.enumeration_include and element.enumeration_print) for file in element.files]
-        files_to_merge = files_to_merge + addition
+        files_to_merge = _collect_files_in_subelements_recursive(element)
+    for file in files_to_merge:
+        print(file)
     return files_to_merge
 
 def _merge_one_tome(
@@ -39,10 +38,10 @@ def _merge_one_tome(
         return
     merger = PdfWriter()
     inputs = [
-        file.path for file, enumerate in files_to_merge
+        file.path for file in files_to_merge
     ]
     subsets = [
-        list(file.subset) for file, enumerate in files_to_merge
+        list(file.subset) for file in files_to_merge
     ]
     for obj, subset in zip(inputs, subsets):
         if not (obj.exists() and obj.is_file()):
@@ -72,7 +71,7 @@ def _merge_one_tome(
     
     enumerate_end = 0
     if enumerate:
-        enumerate_end = enumerate_tome(tome, enumerate_start) + 1
+        enumerate_end = enumerate_tome(tome, enumerate_start, logger, with_bookmarks) + 1
     print(enumerate_end)
     return enumerate_end
 

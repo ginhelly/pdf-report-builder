@@ -11,6 +11,8 @@ from pypdf import PdfReader, PdfWriter
 
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
+from pdf_report_builder.utils.logger import ProcessingLogger
+from pdf_report_builder.algorithms.bookmarks import add_bookmarks
 
 class StructuralChunk(NamedTuple):
     pages_number: int
@@ -80,7 +82,7 @@ def add_text_to_page(page, text):
     shape.insert_text(damn_point, text, fontsize=fontsize, lineheight=5)
     shape.commit()
     
-def enumerate_tome(tome: Tome, start: int):
+def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookmarks: bool = True):
     path = tome.savepath.parent / (str(tome.savepath.name) + '.temp') 
     if not (path.exists() and path.is_file()):
         raise FileNotFoundError()
@@ -92,6 +94,11 @@ def enumerate_tome(tome: Tome, start: int):
     page_in_document = 0
     output = PdfWriter()
 
+    logger.set_progress_bar(0)
+    logger.writeline('')
+    logger.writeline('Расставляю нумерацию страниц...')
+    delta = int(100 / len(doc.pages))
+
     gost = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'GOST2304_TypeA.ttf'
     pdfmetrics.registerFont(TTFont('GOST2304A', gost))
 
@@ -102,10 +109,18 @@ def enumerate_tome(tome: Tome, start: int):
         page = doc.pages[page_in_document - 1] # doc[0]
         if i[1] == False or i[2] == False:
             output.add_page(page)
+            logger.add_to_progress_bar(delta)
             continue
         add_text_to_page2(page, str(i[0]))
         output.add_page(page)
+        logger.add_to_progress_bar(delta)
     
+    if with_bookmarks:
+        logger.writeline(' Расставляю закладки...')
+        add_bookmarks(output, tome)
+        output.page_mode = '/UseOutlines'
+    
+    logger.writeline('Сохраняю результат...')
     #doc.save(tome.savepath, incremental=True, encryption=0)
     with open(tome.savepath, 'wb+') as output_file:
         output.write(output_file)

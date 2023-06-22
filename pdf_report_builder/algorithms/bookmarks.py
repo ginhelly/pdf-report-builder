@@ -10,12 +10,13 @@ def _add_bookmarks_recursive(
         page_number
     ):
     for subel in el.subelements:
-        parent = writer.add_outline_item(
+        kin = writer.add_outline_item(
             subel.name,
             page_number,
             parent
         )
-        page_number = page_number + _add_bookmarks_recursive(writer, subel, parent, page_number)
+        print(f'name={subel.name}, kin={kin} parent={el.name}|{parent}')
+        page_number = page_number + _add_bookmarks_recursive(writer, subel, kin, page_number)
         page_number = page_number + subel.pages_number
     return page_number
 
