@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import wx
@@ -50,7 +51,19 @@ class PDFReportBuilderFrame(MainFrame):
         self.populate_choice_current_version()
         EventChannel().subscribe('version_name_update', self.populate_choice_current_version)
         EventChannel().subscribe('project_changed', self.on_project_change)
+        self.populate_menu_templates()
         #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
+    
+    def populate_menu_templates(self):
+        templates_path = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'templates'
+        for file in os.listdir(templates_path):
+            new_item = wx.MenuItem(self.menu_open_template, wx.ID_ANY, file)
+            self.menu_open_template.Append(new_item)
+            self.Bind(
+                wx.EVT_MENU,
+                lambda event: self.open_project(None, default_path=templates_path / file),
+                id = new_item.GetId()
+            )
     
     def onExit(self, event):
         if self.project.modified:
@@ -115,28 +128,31 @@ class PDFReportBuilderFrame(MainFrame):
         self.project = ReportProject()
         EventChannel().publish('project_changed', self.project)
     
-    def open_project(self, event):
+    def open_project(self, event, default_path=None):
         if hasattr(self, 'project'):
             if not self.previous_project_willing_to_close():
                 return
             self.project.close()
-        with wx.FileDialog(
-            self,
-            "Открыть файл проекта",
-            wildcard="Файлы PDF Report Builder (.reportprj)|*.reportprj",
-            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
-        ) as open_dialog:
-            if open_dialog.ShowModal() == wx.ID_CANCEL:
-                return
-            path = Path(open_dialog.GetPath())
-            #self.project = ReportProject.open(path)
-            try:
-                self.project = ReportProject.open(path)
-            except Exception as e:
-                print(e)
-                on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
-                return
-            EventChannel().publish('project_changed', self.project)
+        if default_path is None:
+            with wx.FileDialog(
+                self,
+                "Открыть файл проекта",
+                wildcard="Файлы PDF Report Builder (.reportprj)|*.reportprj",
+                style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+            ) as open_dialog:
+                if open_dialog.ShowModal() == wx.ID_CANCEL:
+                    return
+                path = Path(open_dialog.GetPath())
+                #self.project = ReportProject.open(path)
+        else:
+            path = default_path
+        try:
+            self.project = ReportProject.open(path)
+        except Exception as e:
+            print(e)
+            on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
+            return
+        EventChannel().publish('project_changed', self.project)
     
     def on_project_change(self, payload):
         project = payload[0]
