@@ -17,8 +17,9 @@ def _collect_files_in_subelements_recursive(el: StructuralElement) -> list:
     return chain
 
 def _collect_files_to_merge(tome: Tome):
+    files_to_merge = []
     for element in tome.structural_elements:
-        files_to_merge = _collect_files_in_subelements_recursive(element)
+        files_to_merge += _collect_files_in_subelements_recursive(element)
     for file in files_to_merge:
         print(file)
     return files_to_merge

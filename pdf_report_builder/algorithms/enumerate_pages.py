@@ -124,4 +124,5 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
     #doc.save(tome.savepath, incremental=True, encryption=0)
     with open(tome.savepath, 'wb+') as output_file:
         output.write(output_file)
+    os.remove(path)
     return to_return

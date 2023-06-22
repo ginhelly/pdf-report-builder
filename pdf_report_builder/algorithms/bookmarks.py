@@ -16,7 +16,7 @@ def _add_bookmarks_recursive(
             parent
         )
         print(f'name={subel.name}, kin={kin} parent={el.name}|{parent}')
-        page_number = page_number + _add_bookmarks_recursive(writer, subel, kin, page_number)
+        page_number = _add_bookmarks_recursive(writer, subel, kin, page_number)
         page_number = page_number + subel.pages_number
     return page_number
 
