@@ -62,7 +62,13 @@ class Tome(BaseLevel):
 
     @property
     def input_pdfs_number(self):
-        return sum(len(element.files) for element in self.structural_elements)
+        def count_files_recursive(el: StructuralElement):
+            res = 0
+            for subel in el.subelements:
+                res += count_files_recursive(subel)
+            res += len(el.files)
+            return res
+        return sum(count_files_recursive(element) for element in self.structural_elements)
 
     @staticmethod
     def from_dict(d: dict):

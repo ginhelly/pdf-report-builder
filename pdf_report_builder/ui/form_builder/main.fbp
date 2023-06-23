@@ -79,7 +79,7 @@
                 <property name="window_extra_style"></property>
                 <property name="window_name"></property>
                 <property name="window_style"></property>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">&amp;Проект</property>
                     <property name="name">menu_project</property>
                     <property name="permission">protected</property>

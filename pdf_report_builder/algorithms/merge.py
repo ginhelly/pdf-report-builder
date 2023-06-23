@@ -63,6 +63,10 @@ def _merge_one_tome(
         merger.page_mode = '/UseOutlines'
 
     savepath = tome.savepath.parent / (str(tome.savepath.name) + '.temp') if enumerate else tome.savepath
+    if not enumerate:
+        for page in merger.pages:
+            page.compress_content_streams()
+    
     with open(savepath, 'wb') as output:
         logger.writeline(' Записываю результат на диск...')
         merger.write(output)

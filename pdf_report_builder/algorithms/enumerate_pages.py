@@ -1,6 +1,6 @@
-from typing import NamedTuple
+from typing import NamedTuple, Callable
 
-import fitz
+#import fitz
 import io
 import os
 from pathlib import Path
@@ -24,12 +24,14 @@ def collect_chunks_recursively(el: StructuralElement):
     for subel in el.subelements:
         add = collect_chunks_recursively(subel)
         res = res + add
-    chunk = StructuralChunk(
-        el.pages_number,
-        el.enumeration_include,
-        el.enumeration_print
-    )
-    res.append(chunk)
+    if len(el.files) > 0:
+        chunk = StructuralChunk(
+            el.pages_number,
+            el.enumeration_include,
+            el.enumeration_print
+        )
+        #print(f'CHUNK={chunk}; EL={el}')
+        res.append(chunk)
     return res
 
 
@@ -41,6 +43,8 @@ class PageEnumerator:
         for el in tome.structural_elements:
             add = collect_chunks_recursively(el)
             chunks = chunks + add
+        for c in chunks:
+            print(c)
         self.chunks = chunks
         self.left = 0
 
@@ -63,24 +67,52 @@ class PageEnumerator:
         return (self.counter - 1, self.current_chunk.enumeration_include, self.current_chunk.enumeration_print)
 
 
-def add_text_to_page2(page, text):
+class TextParams(NamedTuple):
+    text: str
+    coords_function: Callable[[float, float], tuple[float]]
+
+
+def add_text_to_page_pypdf(page, text_params: list[TextParams]):
+
+    # Создаем холст reportlab (одновременно создается макет страницы)
     packet = io.BytesIO()
-    can = canvas.Canvas(packet, (page.mediabox.width, page.mediabox.height))
+    dimensions = (page.mediabox.width, page.mediabox.height)
+    can = canvas.Canvas(packet, dimensions)
     can.setFont('GOST2304A', 14)
-    can.drawString(page.mediabox.width - 35, page.mediabox.height - 30, text)
+
+    # Сдвигаем холст относительно макета
+    if page.rotation == 90:
+        translate_params = (page.mediabox.width, 0)
+    elif page.rotation == 180:
+        translate_params = (page.mediabox.width, page.mediabox.height)
+    elif page.rotation == 270:
+        translate_params = (0, page.mediabox.height)
+    else:
+        translate_params = (0, 0)
+    can.translate(*translate_params)
+
+    # Поворачиваем весь холст отн. его левого нижнего угла на угол поворота страницы (чтобы были повернуты символы)
+    can.rotate(page.rotation)
+
+    # Считаем реальные ширину и высоту (т.е. какие они будут отображаться в просмотрщике)
+    true_width = page.mediabox.height if page.rotation % 180 == 90 else page.mediabox.width
+    true_height = page.mediabox.width if page.rotation % 180 == 90 else page.mediabox.height
+
+    # Рисуем всю фигню
+    for text_param in text_params:
+        x, y = text_param.coords_function(true_width, true_height)
+        can.drawString(x, y, text_param.text)
+
+    # Сохраняем полученную PDF-ку в память
     can.save()
     packet.seek(0)
     new_pdf = PdfReader(packet)
+
+    # Поворачиваем весь лист согласно углу поворота страницы, чтобы они совпадали
+    new_pdf.pages[0].rotate(page.rotation)
+
+    # Вливаем в исходную PDF-страницу нашу новую с нашим контентом
     page.merge_page(new_pdf.pages[0])
-
-
-def add_text_to_page(page, text):
-    """Не работает"""
-    damn_point = fitz.Point(page.mediabox.width - 25, 25)
-    shape = page.new_shape()
-    fontsize = int(round(max(page.rect.height, page.rect.width) ** 0.5))
-    shape.insert_text(damn_point, text, fontsize=fontsize, lineheight=5)
-    shape.commit()
     
 def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookmarks: bool = True):
     path = tome.savepath.parent / (str(tome.savepath.name) + '.temp') 
@@ -107,11 +139,12 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
         print(i)
         page_in_document += 1
         page = doc.pages[page_in_document - 1] # doc[0]
-        if i[1] == False or i[2] == False:
-            output.add_page(page)
-            logger.add_to_progress_bar(delta)
-            continue
-        add_text_to_page2(page, str(i[0]))
+        if i[1] == True and i[2] == True:
+            enum_params = TextParams(
+                str(i[0]),
+                lambda true_width, true_height: (true_width - 35, true_height - 30)
+            )
+            add_text_to_page_pypdf(page, [enum_params])
         output.add_page(page)
         logger.add_to_progress_bar(delta)
     
@@ -119,6 +152,9 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
         logger.writeline(' Расставляю закладки...')
         add_bookmarks(output, tome)
         output.page_mode = '/UseOutlines'
+    
+    for page in output.pages:
+        page.compress_content_streams()
     
     logger.writeline('Сохраняю результат...')
     #doc.save(tome.savepath, incremental=True, encryption=0)
