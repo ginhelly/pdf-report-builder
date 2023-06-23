@@ -18,12 +18,24 @@
    "value": false
   },
   {
+   "optionDest": "icon_file",
+   "value": "C:/projects/pdf/pdf-report-builder/sisyphus.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "PDF Report Builder"
+  },
+  {
    "optionDest": "ascii",
    "value": false
   },
   {
    "optionDest": "clean_build",
    "value": false
+  },
+  {
+   "optionDest": "loglevel",
+   "value": "INFO"
   },
   {
    "optionDest": "strip",
@@ -71,11 +83,19 @@
   },
   {
    "optionDest": "hiddenimports",
+   "value": "wxpython"
+  },
+  {
+   "optionDest": "hiddenimports",
    "value": "pypdf"
   },
   {
    "optionDest": "hiddenimports",
-   "value": "wxpython"
+   "value": "pyperclip"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "reportlab"
   }
  ],
  "nonPyinstallerOptions": {
