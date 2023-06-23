@@ -16,6 +16,7 @@ class StructuralElement(BaseLevel):
     official: bool = False
     enumeration_include: bool = True
     enumeration_print: bool = True
+    create_bookmark: bool = True
     code_attr: str = ""
     files: List[PDFFile] = field(
         default_factory=lambda: []
@@ -87,11 +88,14 @@ class StructuralElement(BaseLevel):
         d['enumeration_print'] = True \
             if not 'enumeration_print' in d or d['enumeration_print'] == 'True' \
             else False
+        d['create_bookmark'] = True \
+            if not 'create_bookmark' in d or d['create_bookmark'] == 'True' \
+            else False
         if 'files' in d:
             d['files'] = [PDFFile.from_dict(file) for file in d['files']]
         if 'subelements' in d:
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
-        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print']
+        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

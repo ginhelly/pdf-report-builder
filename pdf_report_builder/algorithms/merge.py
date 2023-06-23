@@ -52,9 +52,9 @@ def _merge_one_tome(
             logger.add_to_progress_bar(delta)
             continue
         if len(subset) == 0:
-            merger.append(fileobj=obj)
+            merger.append(fileobj=obj, import_outline=False)
         else:
-            merger.append(fileobj=obj, pages=subset)
+            merger.append(fileobj=obj, pages=subset, import_outline=False)
         logger.add_to_progress_bar(delta)
     
     if with_bookmarks and not enumerate:

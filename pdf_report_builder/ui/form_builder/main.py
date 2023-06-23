@@ -537,6 +537,19 @@ class BaseElementPanel ( wx.Panel ):
         self.cb_official = wx.CheckBox( self, wx.ID_ANY, u"Официальный", wx.DefaultPosition, wx.DefaultSize, 0 )
         bSizer24.Add( self.cb_official, 0, wx.ALL, 5 )
 
+        self.m_staticline41 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        bSizer24.Add( self.m_staticline41, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.m_staticText591 = wx.StaticText( self, wx.ID_ANY, u"Настройки закладок", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText591.Wrap( -1 )
+
+        self.m_staticText591.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText591, 0, wx.ALL, 5 )
+
+        self.cb_create_bookmark = wx.CheckBox( self, wx.ID_ANY, u"Создавать закладку", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.cb_create_bookmark, 0, wx.ALL, 5 )
+
         self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer24.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
 
@@ -570,6 +583,7 @@ class BaseElementPanel ( wx.Panel ):
         self.text_element_code.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_code_change )
         self.text_element_name.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_name_change )
         self.cb_official.Bind( wx.EVT_CHECKBOX, self.on_toggle_official )
+        self.cb_create_bookmark.Bind( wx.EVT_CHECKBOX, self.on_toggle_bookmark_creation )
         self.cb_enumeration_include.Bind( wx.EVT_CHECKBOX, self.on_toggle_include )
         self.cb_enumeration_print.Bind( wx.EVT_CHECKBOX, self.on_toggle_print )
 
@@ -585,6 +599,9 @@ class BaseElementPanel ( wx.Panel ):
         event.Skip()
 
     def on_toggle_official( self, event ):
+        event.Skip()
+
+    def on_toggle_bookmark_creation( self, event ):
         event.Skip()
 
     def on_toggle_include( self, event ):

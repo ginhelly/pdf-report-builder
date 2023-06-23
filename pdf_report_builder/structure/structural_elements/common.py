@@ -15,6 +15,7 @@ class ElementScheme(NamedTuple):
     code_attr: str
     enumeration_include: bool = True
     enumeration_print: bool = True
+    create_bookmark: bool = True
 
 element_schemes = [
     ElementScheme(
@@ -31,6 +32,7 @@ element_schemes = [
         'Титульный лист',
         True,
         '',
+        False,
         False,
         False
     ),

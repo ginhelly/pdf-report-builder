@@ -10,6 +10,7 @@ class ElementPanel(BaseElementPanel):
         self.text_element_code.SetValue(element.code_attr)
         self.text_element_name.SetValue(element.name)
         self.cb_official.SetValue(element.official)
+        self.cb_create_bookmark.SetValue(element.create_bookmark)
         self.cb_enumeration_include.SetValue(element.enumeration_include)
         self.cb_enumeration_print.SetValue(element.enumeration_print)
         if not element.enumeration_include:
@@ -46,3 +47,7 @@ class ElementPanel(BaseElementPanel):
     def on_toggle_print(self, event):
         val = self.cb_enumeration_print.GetValue()
         self.element.enumeration_print = val
+    
+    def on_toggle_bookmark_creation(self, event):
+        val = self.cb_create_bookmark.GetValue()
+        self.element.create_bookmark = val
