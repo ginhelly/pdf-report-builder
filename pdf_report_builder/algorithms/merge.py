@@ -91,6 +91,9 @@ def merge(
     ver = project.get_current_version()
     logger.writeline(f'Начинаю собирать набор техотчетов из версии "{ver.name}"')
     total_input_files = sum(tome.input_pdfs_number for tome in ver.tomes)
+    if total_input_files == 0:
+        logger.writeline('Ни один том не содержит входных файлов!\nСборка отменяется.')
+        return
     delta_progress_bar = int(round(100 / total_input_files, 0))
 
     enumerate_counter = 1

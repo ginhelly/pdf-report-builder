@@ -3,7 +3,7 @@ from pathlib import Path
 
 import wx
 
-from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.project.project import ReportProject, FileLockedError
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.ui.dialogs.process_dialog import ProcessingDialog
@@ -150,7 +150,8 @@ class PDFReportBuilderFrame(MainFrame):
             self.project = ReportProject.open(path)
         except Exception as e:
             print(e)
-            on_exception(str(type(e)), 'Не удалось прочитать файл проекта')
+            error_text = str(e) if type(e) == FileLockedError else 'Не удалось прочитать файл проекта'
+            on_exception(str(type(e)), error_text)
             return
         EventChannel().publish('project_changed', self.project)
     

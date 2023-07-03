@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from copy import deepcopy
+import os
 from pathlib import Path
 import json
 from pdf_report_builder.structure.version import Version
@@ -7,6 +8,20 @@ from pdf_report_builder.project.settings import ProjectSettings
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
 from pdf_report_builder.project.event_channel import EventChannel
+
+class FileLockedError(Exception):
+    pass
+
+def create_lock_file(path: Path):
+    lock_path = path.parent / (path.stem + '.reportprj_lock')
+    try:
+        with open(lock_path, "x+") as file:
+            file.write(os.getlogin())
+        os.system(f"attrib +h {lock_path}")
+    except FileExistsError:
+        with open(lock_path, 'r') as lock:
+            user = lock.readline()
+        raise FileLockedError(f"Файл заблокирован пользователем {user}")
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
@@ -46,6 +61,10 @@ class ReportProject(BaseReportProject):
         self.modified = True
     
     def close(self):
+        path = Path(self.settings.savepath)
+        lock_path = path.parent / (path.stem + '.reportprj_lock')
+        if lock_path.exists() and lock_path.is_file():
+            os.remove(lock_path)
         self.event_channel.unsubscribe('modified', self.set_modified)
         self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
         self.event_channel.unsubscribe('remove_element', self.handle_element_remove)
@@ -159,6 +178,7 @@ class ReportProject(BaseReportProject):
     
     @staticmethod
     def open(path: Path):
+        create_lock_file(path)
         project_as_dict = read_from_file(path)
         project = ReportProject.from_dict(project_as_dict, path)
         #project.settings.savepath = path
