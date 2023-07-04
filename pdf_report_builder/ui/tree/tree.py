@@ -105,7 +105,7 @@ class Tree(wx.TreeCtrl):
         self.parse_project_structure(project)
     
     def on_context_menu(self, event):
-        self.nodes[event.Item].context_menu.show_menu(event)
+        self.nodes[event.Item].context_menu.show_menu(event, self.nodes[event.Item])
     
     def create_item_id(
             self,

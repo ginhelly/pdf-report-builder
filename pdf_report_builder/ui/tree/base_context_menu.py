@@ -13,7 +13,8 @@ class TreeContextMenu:
         self.tree = tree
         self.OPTIONS: list[MenuOption] = []
         
-    def show_menu(self, event):
+    def show_menu(self, event, node):
+        self.node = node
         self.popupmenu = wx.Menu()
         self.populate_menu(event)
         self.tree.Bind(wx.EVT_MENU, self.onSelectContext)
