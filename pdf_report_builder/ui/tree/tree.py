@@ -31,6 +31,9 @@ class Tree(wx.TreeCtrl):
         )
         self.AssignImageList(get_tree_images())
         self.Bind(wx.EVT_TREE_ITEM_MENU, self.on_context_menu)
+        self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.set_expanded)
+        self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.set_expanded)
+        self._programmatic_collapse = False
         if not project is None:
             self.redraw_tree(project)
             EventChannel().subscribe(
@@ -49,7 +52,18 @@ class Tree(wx.TreeCtrl):
         self.nodes[self.root] = get_tree_node(self, project, self.root, None)
         self.SetItemImage(self.root, 0, wx.TreeItemIcon_Normal)
         self._parse_tomes(project.get_current_version())
+        self.manage_expanded()
+    
+    def manage_expanded(self):
+        self._programmatic_collapse = True
         self.ExpandAll()
+        for item_id in self.nodes:
+            level = self.nodes[item_id].item
+            if not type(level) == ReportProject and not self.nodes[item_id].item.is_expanded:
+                self.Collapse(item_id)
+            else:
+                self.Expand(item_id)
+        self._programmatic_collapse = False
     
     def _parse_tomes(self, version: Version):
         for tome in version.tomes:
@@ -112,7 +126,8 @@ class Tree(wx.TreeCtrl):
             parent_id,
             previous=None,
             name='New Item',
-            image=-1
+            image=-1,
+            expanded=True
         ):
         if previous is None:
             item_id = self.AppendItem(parent_id, name, image)
@@ -122,7 +137,7 @@ class Tree(wx.TreeCtrl):
     
     def create_file_item_id(self, file: PDFFile, parent_id, previous=None):
         file_name = get_file_name(file)
-        new_item = self.create_item_id(parent_id, previous, file_name, 3)
+        new_item = self.create_item_id(parent_id, previous, file_name, 3, file.is_expanded)
         if not (file.path.exists() and file.path.is_file()):
             self.SetItemBold(new_item)
             self.SetItemTextColour(new_item, wx.Colour(255,0,0))
@@ -130,11 +145,11 @@ class Tree(wx.TreeCtrl):
     
     def create_element_item_id(self, el: StructuralElement, parent_id, previous=None):
         el_name = get_element_name(el)
-        return self.create_item_id(parent_id, previous, el_name, 2)
+        return self.create_item_id(parent_id, previous, el_name, 2, el.is_expanded)
     
     def create_tome_item_id(self, tome: Tome, parent_id, previous=None):
         tome_name = get_tome_name(tome)
-        return self.create_item_id(parent_id, previous, tome_name, 1)
+        return self.create_item_id(parent_id, previous, tome_name, 1, tome.is_expanded)
     
     def swap(self, node_i: TreeNode, node_j: TreeNode):
         parent = node_i.parent # проверка на бездуховность
@@ -169,7 +184,8 @@ class Tree(wx.TreeCtrl):
                 n.children = []
                 self._parse_elements(n.item_id, n, n.item)
         EventChannel().publish('modified')
-        self.ExpandAll()
+        self.manage_expanded()
+        #self.ExpandAll()
     
     def update_selected_tome_name(self):
         item_id = self.GetSelection()
@@ -191,3 +207,16 @@ class Tree(wx.TreeCtrl):
         if file.path.exists() and file.path.is_file():
             self.SetItemBold(item_id, False)
             self.SetItemTextColour(item_id, wx.Colour(0,0,0))
+    
+    def set_expanded(self, event: wx.TreeEvent):
+        if self._programmatic_collapse:
+            return
+        item_id = event.GetItem()
+        level = self.nodes[item_id].item
+        is_itemid_expanded = self.IsExpanded(item_id)
+        if type(level) == ReportProject:
+            return
+        if is_itemid_expanded:
+            level.set_expanded(True)
+        else:
+            level.set_expanded(False)

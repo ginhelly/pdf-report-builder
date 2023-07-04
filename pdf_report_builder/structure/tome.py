@@ -23,6 +23,10 @@ class Tome(BaseLevel):
     structural_elements: List[StructuralElement] = field(
         default_factory=lambda: []
     )
+    expanded: bool = True
+
+    def __repr__(self) -> str:
+        return f'Tome([{self.basename}] {self.human_readable_name}; {self.savepath})'
 
     def create_element(
         self,
@@ -80,8 +84,9 @@ class Tome(BaseLevel):
             d['structural_elements'] = [
                 StructuralElement.from_dict(el) for el in d['structural_elements']
             ]
+        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
         
-        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements']
+        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements', 'expanded']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

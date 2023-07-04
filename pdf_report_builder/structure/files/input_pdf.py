@@ -27,6 +27,7 @@ class PDFFile(BaseLevel):
     path: Path
     subset: str | PagesSubset = '',
     instant_read: bool = True
+    expanded: bool = True
 
     def __post_init__(self) -> None:
         if not self.path.exists():
@@ -95,7 +96,8 @@ class PDFFile(BaseLevel):
         d['instant_read'] = True \
             if not 'instant_read' in d or d['instant_read'] == 'True' \
             else False
-        valid = ['path', 'subset', 'instant_read']
+        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
+        valid = ['path', 'subset', 'instant_read', 'expanded']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

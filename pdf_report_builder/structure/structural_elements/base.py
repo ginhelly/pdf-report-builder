@@ -24,6 +24,10 @@ class StructuralElement(BaseLevel):
     subelements: List[BaseLevel] = field(
         default_factory=lambda: []
     )
+    expanded: bool = True
+
+    def __repr__(self) -> str:
+        return f'StructuralElement([{self.code_attr}] {self.name}; files={len(self.files)} & subelements={len(self.subelements)})'
 
     def add_file(
             self,
@@ -95,7 +99,8 @@ class StructuralElement(BaseLevel):
             d['files'] = [PDFFile.from_dict(file) for file in d['files']]
         if 'subelements' in d:
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
-        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark']
+        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
+        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark', 'expanded']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]
