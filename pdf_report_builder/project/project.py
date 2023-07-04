@@ -12,8 +12,11 @@ from pdf_report_builder.project.event_channel import EventChannel
 class FileLockedError(Exception):
     pass
 
+def _get_lock_path(path: Path):
+    return path.parent / (path.stem + '.reportprj_lock')
+
 def create_lock_file(path: Path):
-    lock_path = path.parent / (path.stem + '.reportprj_lock')
+    lock_path = _get_lock_path(path)
     try:
         with open(lock_path, "x+") as file:
             file.write(os.getlogin())
@@ -60,11 +63,14 @@ class ReportProject(BaseReportProject):
     def set_modified(self):
         self.modified = True
     
-    def close(self):
+    def remove_lock_file(self):
         path = Path(self.settings.savepath)
-        lock_path = path.parent / (path.stem + '.reportprj_lock')
+        lock_path = _get_lock_path(path)
         if lock_path.exists() and lock_path.is_file():
             os.remove(lock_path)
+    
+    def close(self):
+        self.remove_lock_file()
         self.event_channel.unsubscribe('modified', self.set_modified)
         self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
         self.event_channel.unsubscribe('remove_element', self.handle_element_remove)
@@ -81,8 +87,10 @@ class ReportProject(BaseReportProject):
         self.settings.name = new_name
     
     def save_as(self, new_path: Path):
+        self.remove_lock_file()
         self.settings.savepath = new_path
         self.save()
+        create_lock_file(new_path)
     
     def set_current_version_id(self, id: int):
         self.settings.current_version_id = id

@@ -41,6 +41,7 @@ class TomeContextMenu(TreeContextMenu):
             if dlg.ShowModal() != wx.ID_YES:
                 return
         self.node.parent.item.handle_tome_remove([self.tome])
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')
     
     def peek_clipboard(self) -> bool:
@@ -68,4 +69,5 @@ class TomeContextMenu(TreeContextMenu):
     def cut_to_clipboard(self):
         self.copy_to_clipboard()
         self.node.parent.item.handle_tome_remove([self.tome])
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')

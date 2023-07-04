@@ -129,10 +129,11 @@ class PDFReportBuilderFrame(MainFrame):
         EventChannel().publish('project_changed', self.project)
     
     def open_project(self, event, default_path=None):
+        close_previous = False
         if hasattr(self, 'project'):
             if not self.previous_project_willing_to_close():
                 return
-            self.project.close()
+            close_previous = True
         if default_path is None:
             with wx.FileDialog(
                 self,
@@ -147,6 +148,8 @@ class PDFReportBuilderFrame(MainFrame):
         else:
             path = default_path
         try:
+            if close_previous:
+                self.project.close()
             self.project = ReportProject.open(path)
         except Exception as e:
             print(e)

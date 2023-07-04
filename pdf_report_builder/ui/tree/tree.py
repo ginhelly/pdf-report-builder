@@ -168,6 +168,7 @@ class Tree(wx.TreeCtrl):
             elif isinstance(n.item, Tome):
                 n.children = []
                 self._parse_elements(n.item_id, n, n.item)
+        EventChannel().publish('modified')
         self.ExpandAll()
     
     def update_selected_tome_name(self):

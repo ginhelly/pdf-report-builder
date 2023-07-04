@@ -44,6 +44,7 @@ class FileContextMenu(TreeContextMenu):
             if dlg.ShowModal() != wx.ID_YES:
                 return
         self.node.parent.item.remove_file(self.file)
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')
     
     def copy_to_clipboard(self):
@@ -56,4 +57,5 @@ class FileContextMenu(TreeContextMenu):
         s = json.dumps(ser, ensure_ascii=False)
         pyperclip.copy(f'LEVEL=3{s}')
         self.node.parent.item.remove_file(self.file)
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')

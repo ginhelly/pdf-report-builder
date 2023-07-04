@@ -72,6 +72,7 @@ class ElementContextMenu(TreeContextMenu):
             if dlg.ShowModal() != wx.ID_YES:
                 return
         self.node.parent.item.remove_element(self.element)
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')
     
     def peek_clipboard(self):
@@ -106,4 +107,5 @@ class ElementContextMenu(TreeContextMenu):
         s = json.dumps(ser, ensure_ascii=False)
         pyperclip.copy(f'LEVEL=2{s}')
         self.node.parent.item.remove_element(self.element)
+        EventChannel().publish('modified')
         EventChannel().publish('tree_update')
