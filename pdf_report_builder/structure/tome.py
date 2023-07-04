@@ -24,6 +24,8 @@ class Tome(BaseLevel):
         default_factory=lambda: []
     )
     expanded: bool = True
+    use_custom_enumeration_start: bool = False
+    custom_enumeration_start: int = 0
 
     def __repr__(self) -> str:
         return f'Tome([{self.basename}] {self.human_readable_name}; {self.savepath})'
@@ -85,8 +87,9 @@ class Tome(BaseLevel):
                 StructuralElement.from_dict(el) for el in d['structural_elements']
             ]
         d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
+        d['use_custom_enumeration_start'] = True if not 'use_custom_enumeration_start' in d or d['use_custom_enumeration_start'] == 'True' else False
         
-        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements', 'expanded']
+        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements', 'expanded', 'use_custom_enumeration_start', 'custom_enumeration_start']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

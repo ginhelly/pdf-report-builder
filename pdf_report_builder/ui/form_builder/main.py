@@ -553,7 +553,7 @@ class BaseElementPanel ( wx.Panel ):
         self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer24.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
 
-        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки сквозной нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText59.Wrap( -1 )
 
         self.m_staticText59.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
@@ -875,6 +875,32 @@ class BaseTomePanel ( wx.Panel ):
         self.fp_save = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Выберите путь сохранения", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT|wx.FLP_SAVE|wx.FLP_USE_TEXTCTRL )
         bSizer24.Add( self.fp_save, 0, wx.ALL|wx.EXPAND, 5 )
 
+        self.m_staticline5 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+        bSizer24.Add( self.m_staticline5, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки сквозной нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText59.Wrap( -1 )
+
+        self.m_staticText59.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer24.Add( self.m_staticText59, 0, wx.ALL, 5 )
+
+        self.cb_use_custom_enumeration_start = wx.CheckBox( self, wx.ID_ANY, u"Задавать номер первой страницы руками", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer24.Add( self.cb_use_custom_enumeration_start, 0, wx.ALL, 5 )
+
+        bSizer42 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.spin_custom_enumeration_start = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 99999, 0 )
+        bSizer42.Add( self.spin_custom_enumeration_start, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.m_staticText39 = wx.StaticText( self, wx.ID_ANY, u"№ первой страницы тома", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText39.Wrap( -1 )
+
+        bSizer42.Add( self.m_staticText39, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer24.Add( bSizer42, 0, wx.EXPAND, 5 )
+
 
         self.SetSizer( bSizer24 )
         self.Layout()
@@ -885,6 +911,8 @@ class BaseTomePanel ( wx.Panel ):
         self.text_tome_name.Bind( wx.EVT_TEXT_ENTER, self.on_tome_name_change )
         self.btn_to_default.Bind( wx.EVT_BUTTON, self.on_move_to_default_folder )
         self.fp_save.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_save_file_change )
+        self.cb_use_custom_enumeration_start.Bind( wx.EVT_CHECKBOX, self.toggle_use_custom_enum_start )
+        self.spin_custom_enumeration_start.Bind( wx.EVT_SPINCTRL, self.on_custom_enum_start_update )
 
     def __del__( self ):
         pass
@@ -901,6 +929,12 @@ class BaseTomePanel ( wx.Panel ):
         event.Skip()
 
     def on_save_file_change( self, event ):
+        event.Skip()
+
+    def toggle_use_custom_enum_start( self, event ):
+        event.Skip()
+
+    def on_custom_enum_start_update( self, event ):
         event.Skip()
 
 

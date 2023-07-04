@@ -15,6 +15,12 @@ class TomePanel(BaseTomePanel):
         self.tome = tome
         self.text_tome_code.SetValue(tome.basename)
         self.text_tome_name.SetValue(tome.human_readable_name)
+        self.cb_use_custom_enumeration_start.SetValue(tome.use_custom_enumeration_start)
+        self.spin_custom_enumeration_start.SetValue(tome.custom_enumeration_start)
+        if tome.use_custom_enumeration_start:
+            self.spin_custom_enumeration_start.Enable()
+        else:
+            self.spin_custom_enumeration_start.Disable()
         self.fp_save.SetPath(str(tome.savepath))
         prefix = ProjectStorage().project.get_current_version().code
         if len(prefix) > 20:
@@ -46,3 +52,15 @@ class TomePanel(BaseTomePanel):
         new_value = self.text_tome_name.GetValue()
         self.tome.human_readable_name = new_value
         EventChannel().publish('tome_name_update')
+    
+    def toggle_use_custom_enum_start(self, event):
+        val = self.cb_use_custom_enumeration_start.GetValue()
+        self.tome.use_custom_enumeration_start = val
+        if val:
+            self.spin_custom_enumeration_start.Enable()
+        else:
+            self.spin_custom_enumeration_start.Disable()
+    
+    def on_custom_enum_start_update(self, event):
+        val = int(self.spin_custom_enumeration_start.GetValue())
+        self.tome.custom_enumeration_start = val

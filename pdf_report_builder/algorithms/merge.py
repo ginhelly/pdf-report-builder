@@ -98,6 +98,8 @@ def merge(
 
     enumerate_counter = 1
     for tome in ver.tomes:
+        if tome.use_custom_enumeration_start:
+            enumerate_counter = tome.custom_enumeration_start
         logger.writeline(f' Обрабатываю том {tome.human_readable_name}')
         enumerate_counter = _merge_one_tome(tome, logger, delta_progress_bar, break_on_missing, with_bookmarks, enumerate, enumerate_counter)
         print(enumerate_counter)
