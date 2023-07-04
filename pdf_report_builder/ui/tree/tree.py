@@ -116,7 +116,9 @@ class Tree(wx.TreeCtrl):
     def redraw_tree(self, project: ReportProject):
         self.DeleteAllItems()
         self.project = project
+        self.Freeze()
         self.parse_project_structure(project)
+        self.Thaw()
     
     def on_context_menu(self, event):
         self.nodes[event.Item].context_menu.show_menu(event, self.nodes[event.Item])
@@ -157,6 +159,7 @@ class Tree(wx.TreeCtrl):
         if parent2 != parent:
             raise ValueError('Айтемы должны быть одного уровня!')
         # Делает своп внутри дерева и в модели
+        self.Freeze()
         parent.swap(node_i.index, node_j.index, node_i)
         def redraw_item_by_node(tree, node, parent_node):
             del tree.nodes[node.item_id]
@@ -185,6 +188,7 @@ class Tree(wx.TreeCtrl):
                 self._parse_elements(n.item_id, n, n.item)
         EventChannel().publish('modified')
         self.manage_expanded()
+        self.Thaw()
         #self.ExpandAll()
     
     def update_selected_tome_name(self):

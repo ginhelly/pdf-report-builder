@@ -270,19 +270,23 @@ class PDFReportBuilderFrame(MainFrame):
         item_id = self.tree_component.GetSelection()
         node1 = self.tree_component.nodes[item_id]
         node2 = node1.prev
+        scroll = self.tree_component.GetScrollPos(wx.VERTICAL)
         self.tree_component.swap(node1, node2)
         self.tree_component.SelectItem(
             node1.item_id
         )
+        self.tree_component.SetScrollPos(wx.VERTICAL, scroll)
 
     def on_down(self, event):
         item_id = self.tree_component.GetSelection()
         node1 = self.tree_component.nodes[item_id]
         node2 = node1.next
+        scroll = self.tree_component.GetScrollPos(wx.VERTICAL)
         self.tree_component.swap(node1, node2)
         self.tree_component.SelectItem(
             node1.item_id
         )
+        self.tree_component.SetScrollPos(wx.VERTICAL, scroll + 1)
         
     def make_reports(self, event):
         try:
