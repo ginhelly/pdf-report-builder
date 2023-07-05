@@ -64,7 +64,7 @@ def _merge_one_tome(
     
     if with_bookmarks and not enumerate:
         logger.writeline(' Расставляю закладки...')
-        add_bookmarks(merger, tome)
+        add_bookmarks(merger, tome, logger)
         merger.page_mode = '/UseOutlines'
 
     savepath = tome.savepath.parent / (str(tome.savepath.name) + '.temp') if enumerate else tome.savepath

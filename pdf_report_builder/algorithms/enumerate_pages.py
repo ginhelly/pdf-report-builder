@@ -127,8 +127,7 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
     output = PdfWriter()
 
     logger.set_progress_bar(0)
-    logger.writeline('')
-    logger.writeline('Расставляю нумерацию страниц...')
+    logger.writeline(' Расставляю нумерацию страниц...')
     delta = int(100 / len(doc.pages))
 
     gost = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'GOST2304_TypeA.ttf'
@@ -150,7 +149,7 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
     
     if with_bookmarks:
         logger.writeline(' Расставляю закладки...')
-        add_bookmarks(output, tome)
+        add_bookmarks(output, tome, logger)
         output.page_mode = '/UseOutlines'
     
     for page in output.pages:
