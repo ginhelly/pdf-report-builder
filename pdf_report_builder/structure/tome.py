@@ -87,7 +87,7 @@ class Tome(BaseLevel):
                 StructuralElement.from_dict(el) for el in d['structural_elements']
             ]
         d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
-        d['use_custom_enumeration_start'] = True if not 'use_custom_enumeration_start' in d or d['use_custom_enumeration_start'] == 'True' else False
+        d['use_custom_enumeration_start'] = False if not 'use_custom_enumeration_start' in d or d['use_custom_enumeration_start'] == 'False' else True
         
         valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements', 'expanded', 'use_custom_enumeration_start', 'custom_enumeration_start']
         for key in list(d.keys()):

@@ -27,6 +27,7 @@ class ParseReportNode:
     current_page_number: int = 0
     children: List['ParseReportNode'] = field(default_factory=lambda: [])
     parent: Optional['Node'] = None
+    custom_tome_enum_start: int = -1
 
 def _parse_pages_read_pdf(file: PDFFile):
     pages_native = file.subset_pages_number
@@ -78,7 +79,14 @@ def _parse_pages_parse_element(element: StructuralElement, parent: ParseReportNo
 
 
 def _parse_pages_parse_tome(tome: Tome, parent: ParseReportNode):
-    tome_node = ParseReportNode(tome.human_readable_name, NodeType.TOME, parent=parent)
+    custom_enum = tome.custom_enumeration_start \
+        if tome.use_custom_enumeration_start \
+        else -1
+    tome_node = ParseReportNode(
+        tome.human_readable_name, 
+        NodeType.TOME, 
+        parent=parent,
+        custom_tome_enum_start=custom_enum)
     parent.children.append(tome_node)
     for element in tome.structural_elements:
         _parse_pages_parse_element(element, tome_node)
@@ -90,6 +98,8 @@ def _parse_pages_parse_tome(tome: Tome, parent: ParseReportNode):
     )
 
 def count_pages_recursive(node: ParseReportNode, n: int = 1):
+    if node.type == NodeType.TOME and node.custom_tome_enum_start > -1:
+        n = node.custom_tome_enum_start
     node.current_page_number = n
     if node.type == NodeType.FILE:
         return n + node.pages_native

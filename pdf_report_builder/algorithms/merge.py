@@ -1,3 +1,4 @@
+from typing import NamedTuple, List
 from pypdf import PdfWriter
 
 from pdf_report_builder.algorithms.bookmarks import add_bookmarks
@@ -8,6 +9,10 @@ from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.utils.logger import ProcessingLogger
 
+
+class MergeTask(NamedTuple):
+    tome: Tome
+    enumeration_start: int
 
 def _collect_files_in_subelements_recursive(el: StructuralElement) -> list:
     chain = []
@@ -81,28 +86,36 @@ def _merge_one_tome(
     return enumerate_end
 
 def merge(
-        project: ReportProject,
+        tasks: List[MergeTask],
+        version_name: str,
         logger: ProcessingLogger,
         break_on_missing: bool = True,
         with_bookmarks: bool = True,
         enumerate: bool = True
     ):
     """Самое-самое главное, ради чего всё это затевалось"""
-    ver = project.get_current_version()
-    logger.writeline(f'Начинаю собирать набор техотчетов из версии "{ver.name}"')
-    total_input_files = sum(tome.input_pdfs_number for tome in ver.tomes)
+    if len(tasks) == 0:
+        logger.writeline('Ни один том не поступил на сборку.\nСборка отменяется.')
+        return
+    logger.writeline(f'Начинаю собирать набор техотчетов из версии "{version_name}"')
+    tomes = [task.tome for task in tasks]
+    total_input_files = sum(tome.input_pdfs_number for tome in tomes)
     if total_input_files == 0:
         logger.writeline('Ни один том не содержит входных файлов!\nСборка отменяется.')
         return
     delta_progress_bar = int(round(100 / total_input_files, 0))
 
-    enumerate_counter = 1
-    for tome in ver.tomes:
-        if tome.use_custom_enumeration_start:
-            enumerate_counter = tome.custom_enumeration_start
-        logger.writeline(f' Обрабатываю том {tome.human_readable_name}')
-        enumerate_counter = _merge_one_tome(tome, logger, delta_progress_bar, break_on_missing, with_bookmarks, enumerate, enumerate_counter)
-        print(enumerate_counter)
+    for task in tasks:
+        logger.writeline(f' Обрабатываю том {task.tome.human_readable_name}')
+        enumerate_counter = _merge_one_tome(
+            task.tome,
+            logger,
+            delta_progress_bar,
+            break_on_missing,
+            with_bookmarks,
+            enumerate,
+            task.enumeration_start
+        )
         logger.writeline('')
     
     logger.writeline('Успешно завершено!')

@@ -1120,17 +1120,48 @@ class BaseRemoveVersionsDialog ( wx.Dialog ):
 class BaseProcessingDialog ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Формирование PDF-файлов...", pos = wx.DefaultPosition, size = wx.Size( 445,315 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Формирование PDF-файлов...", pos = wx.DefaultPosition, size = wx.Size( 1015,466 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
-        bSizer29 = wx.BoxSizer( wx.VERTICAL )
+        bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer44 = wx.BoxSizer( wx.VERTICAL )
 
         self.m_panel3 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_THEME|wx.TAB_TRAVERSAL )
         bSizer30 = wx.BoxSizer( wx.VERTICAL )
 
+        bSizer43 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText38 = wx.StaticText( self.m_panel3, wx.ID_ANY, u"Тома:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText38.Wrap( -1 )
+
+        self.m_staticText38.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer43.Add( self.m_staticText38, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer43.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_select_all_tomes = wx.Button( self.m_panel3, wx.ID_ANY, u"Выбрать все", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer43.Add( self.btn_select_all_tomes, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.btn_deselect_all_tomes = wx.Button( self.m_panel3, wx.ID_ANY, u"Снять выбор со всех", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer43.Add( self.btn_deselect_all_tomes, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer30.Add( bSizer43, 0, wx.EXPAND, 5 )
+
+        self.treelist_tomes = wx.dataview.TreeListCtrl( self.m_panel3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.TL_CHECKBOX|wx.dataview.TL_DEFAULT_STYLE|wx.dataview.TL_MULTIPLE )
+        self.treelist_tomes.AppendColumn( u"Том", wx.COL_WIDTH_AUTOSIZE, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
+        self.treelist_tomes.AppendColumn( u"Начало нумерации", wx.COL_WIDTH_AUTOSIZE, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
+
+        bSizer30.Add( self.treelist_tomes, 1, wx.EXPAND |wx.ALL, 5 )
+
         self.m_staticText24 = wx.StaticText( self.m_panel3, wx.ID_ANY, u"Опции формирования:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText24.Wrap( -1 )
+
+        self.m_staticText24.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
         bSizer30.Add( self.m_staticText24, 0, wx.ALL, 5 )
 
@@ -1146,11 +1177,11 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.m_panel3.SetSizer( bSizer30 )
         self.m_panel3.Layout()
         bSizer30.Fit( self.m_panel3 )
-        bSizer29.Add( self.m_panel3, 0, wx.EXPAND |wx.ALL, 5 )
+        bSizer44.Add( self.m_panel3, 1, wx.EXPAND |wx.ALL, 5 )
 
         self.cb_break_on_missing = wx.CheckBox( self, wx.ID_ANY, u"Прерывать процесс формирования при отсутствующем файле", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cb_break_on_missing.SetValue(True)
-        bSizer29.Add( self.cb_break_on_missing, 0, wx.ALL, 5 )
+        bSizer44.Add( self.cb_break_on_missing, 0, wx.ALL, 5 )
 
         bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -1167,14 +1198,22 @@ class BaseProcessingDialog ( wx.Dialog ):
         bSizer31.Add( self.btn_open_folders, 1, wx.ALL, 5 )
 
 
-        bSizer29.Add( bSizer31, 0, wx.EXPAND, 5 )
+        bSizer44.Add( bSizer31, 0, wx.EXPAND, 5 )
+
+
+        bSizer29.Add( bSizer44, 1, wx.EXPAND, 5 )
+
+        bSizer45 = wx.BoxSizer( wx.VERTICAL )
 
         self.text_logger = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-        bSizer29.Add( self.text_logger, 1, wx.ALL|wx.EXPAND, 5 )
+        bSizer45.Add( self.text_logger, 1, wx.ALL|wx.EXPAND, 5 )
 
         self.progress_bar = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
         self.progress_bar.SetValue( 0 )
-        bSizer29.Add( self.progress_bar, 0, wx.ALL|wx.EXPAND, 5 )
+        bSizer45.Add( self.progress_bar, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer29.Add( bSizer45, 1, wx.EXPAND, 5 )
 
 
         self.SetSizer( bSizer29 )
@@ -1183,6 +1222,8 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.Centre( wx.BOTH )
 
         # Connect Events
+        self.btn_select_all_tomes.Bind( wx.EVT_BUTTON, self.on_select_all_tomes )
+        self.btn_deselect_all_tomes.Bind( wx.EVT_BUTTON, self.on_deselect_all_tomes )
         self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
         self.cb_enumerate.Bind( wx.EVT_CHECKBOX, self.toggle_enumerate )
         self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
@@ -1194,6 +1235,12 @@ class BaseProcessingDialog ( wx.Dialog ):
 
 
     # Virtual event handlers, override them in your derived class
+    def on_select_all_tomes( self, event ):
+        event.Skip()
+
+    def on_deselect_all_tomes( self, event ):
+        event.Skip()
+
     def toggle_bookmarks( self, event ):
         event.Skip()
 
