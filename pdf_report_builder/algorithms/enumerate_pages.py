@@ -160,4 +160,6 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
     with open(tome.savepath, 'wb+') as output_file:
         output.write(output_file)
     os.remove(path)
+    logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
+    logger.writeline(f' Путь: {tome.savepath}')
     return to_return

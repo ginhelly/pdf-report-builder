@@ -76,8 +76,9 @@ def _merge_one_tome(
         logger.writeline(' Записываю результат на диск...')
         merger.write(output)
         merger.close()
-        logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
-        logger.writeline(f' Путь: {tome.savepath}')
+        if not enumerate:
+            logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
+            logger.writeline(f' Путь: {tome.savepath}')
     
     enumerate_end = 0
     if enumerate:
