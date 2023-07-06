@@ -9,10 +9,10 @@ class ElementPanel(BaseElementPanel):
         self.element = element
         self.text_element_code.SetValue(element.code_attr)
         self.text_element_name.SetValue(element.name)
-        self.cb_official.SetValue(element.official)
         self.cb_create_bookmark.SetValue(element.create_bookmark)
         self.cb_enumeration_include.SetValue(element.enumeration_include)
         self.cb_enumeration_print.SetValue(element.enumeration_print)
+        self.cb_code_add.SetValue(element.code_add)
         if not element.enumeration_include:
             self.cb_enumeration_print.SetValue(False)
             self.element.enumeration_print = False
@@ -29,10 +29,6 @@ class ElementPanel(BaseElementPanel):
         new_value = self.text_element_name.GetValue()
         self.element.name = new_value
         EventChannel().publish('element_name_update')
-    
-    def on_toggle_official(self, event):
-        val = self.cb_official.GetValue()
-        self.element.official = val
     
     def on_toggle_include(self, event):
         val = self.cb_enumeration_include.GetValue()
@@ -51,3 +47,7 @@ class ElementPanel(BaseElementPanel):
     def on_toggle_bookmark_creation(self, event):
         val = self.cb_create_bookmark.GetValue()
         self.element.create_bookmark = val
+    
+    def on_toggle_code_add(self, event):
+        val = self.cb_code_add.GetValue()
+        self.element.code_add = val

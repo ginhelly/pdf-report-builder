@@ -25,6 +25,7 @@ class StructuralElement(BaseLevel):
         default_factory=lambda: []
     )
     expanded: bool = True
+    code_add: bool = False
 
     def __repr__(self) -> str:
         return f'StructuralElement([{self.code_attr}] {self.name}; files={len(self.files)} & subelements={len(self.subelements)})'
@@ -104,7 +105,8 @@ class StructuralElement(BaseLevel):
         if 'subelements' in d:
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
         d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
-        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark', 'expanded']
+        d['code_add'] = False if not 'code_add' in d or d['code_add'] == 'False' else True
+        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark', 'expanded', 'code_add']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]
