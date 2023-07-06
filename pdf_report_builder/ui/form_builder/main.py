@@ -920,6 +920,7 @@ class BaseTomePanel ( wx.Panel ):
         self.fp_save.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_save_file_change )
         self.cb_use_custom_enumeration_start.Bind( wx.EVT_CHECKBOX, self.toggle_use_custom_enum_start )
         self.spin_custom_enumeration_start.Bind( wx.EVT_SPINCTRL, self.on_custom_enum_start_update )
+        self.spin_custom_enumeration_start.Bind( wx.EVT_TEXT_ENTER, self.on_custom_enum_start_update )
 
     def __del__( self ):
         pass
@@ -943,6 +944,7 @@ class BaseTomePanel ( wx.Panel ):
 
     def on_custom_enum_start_update( self, event ):
         event.Skip()
+
 
 
 ###########################################################################

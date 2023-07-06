@@ -5369,6 +5369,7 @@
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
                                 <event name="OnSpinCtrl">on_custom_enum_start_update</event>
+                                <event name="OnTextEnter">on_custom_enum_start_update</event>
                             </object>
                         </object>
                         <object class="sizeritem" expanded="0">

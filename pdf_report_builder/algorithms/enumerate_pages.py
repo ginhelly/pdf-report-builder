@@ -123,7 +123,7 @@ def add_text_to_page_pypdf(page, text_params: list[TextParams]):
     # Рисуем всю фигню
     for text_param in text_params:
         x, y = text_param.coords_function(true_width, true_height)
-        can.drawString(x, y, text_param.text)
+        can.drawCentredString(x, y, text_param.text)
 
     # Сохраняем полученную PDF-ку в память
     can.save()
@@ -165,13 +165,13 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
         if page_params.enumeration_include and page_params.enumeration_print:
             enum_params = TextParams(
                 str(page_params.index),
-                lambda true_width, true_height: (true_width - 35, true_height - 30)
+                lambda true_width, true_height: (true_width - 29, true_height - 29)
             )
             all_texts.append(enum_params)
         if page_params.code_add:
             all_texts.append(TextParams(
                 page_params.code,
-                lambda true_width, true_height: (true_width - 150, 50)
+                lambda true_width, true_height: (true_width - 180, 152)
             ))
         add_text_to_page_pypdf(page, all_texts)
         output.add_page(page)
