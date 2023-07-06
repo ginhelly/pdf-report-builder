@@ -9,6 +9,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from pypdf import PdfReader, PdfWriter
 
+from .parse_pages_count import ParseReportNode, NodeType
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.utils.logger import ProcessingLogger
@@ -18,17 +19,29 @@ class StructuralChunk(NamedTuple):
     pages_number: int
     enumeration_include: bool
     enumeration_print: bool
+    code_add: bool
+    code: str
 
-def collect_chunks_recursively(el: StructuralElement):
+class PageParams(NamedTuple):
+    index: int
+    enumeration_include: bool
+    enumeration_print: bool
+    code_add: bool
+    code: str
+
+def collect_chunks_recursively(node: ParseReportNode):
     res = []
-    for subel in el.subelements:
+    subelement_nodes = [child for child in node.children if child.type == NodeType.ELEMENT]
+    for subel in subelement_nodes:
         add = collect_chunks_recursively(subel)
         res = res + add
-    if len(el.files) > 0:
+    if len(node.level.files) > 0:
         chunk = StructuralChunk(
-            el.pages_number,
-            el.enumeration_include,
-            el.enumeration_print
+            node.level.pages_number,
+            node.level.enumeration_include,
+            node.level.enumeration_print,
+            node.level.code_add,
+            node.code
         )
         #print(f'CHUNK={chunk}; EL={el}')
         res.append(chunk)
@@ -36,12 +49,13 @@ def collect_chunks_recursively(el: StructuralElement):
 
 
 class PageEnumerator:
-    def __init__(self, tome: Tome, start: int = 1):
-        self.tome = tome
+    def __init__(self, node: ParseReportNode, start: int = 1):
+        self.tome = node.level
+        self.node = node
         self.counter = start
         chunks = []
-        for el in tome.structural_elements:
-            add = collect_chunks_recursively(el)
+        for child in self.node.children:
+            add = collect_chunks_recursively(child)
             chunks = chunks + add
         for c in chunks:
             print(c)
@@ -58,13 +72,19 @@ class PageEnumerator:
         self.chunks = self.chunks[1:]
         self.left = self.current_chunk.pages_number
     
-    def __next__(self):
+    def __next__(self) -> PageParams:
         if self.left == 0:
             self._change_chunk()
         self.left -= 1
         if self.current_chunk.enumeration_include:
             self.counter += 1
-        return (self.counter - 1, self.current_chunk.enumeration_include, self.current_chunk.enumeration_print)
+        return PageParams(
+            self.counter - 1,
+            self.current_chunk.enumeration_include,
+            self.current_chunk.enumeration_print,
+            self.current_chunk.code_add,
+            self.current_chunk.code
+        )
 
 
 class TextParams(NamedTuple):
@@ -73,6 +93,8 @@ class TextParams(NamedTuple):
 
 
 def add_text_to_page_pypdf(page, text_params: list[TextParams]):
+    if len(text_params) == 0:
+        return
 
     # Создаем холст reportlab (одновременно создается макет страницы)
     packet = io.BytesIO()
@@ -114,14 +136,15 @@ def add_text_to_page_pypdf(page, text_params: list[TextParams]):
     # Вливаем в исходную PDF-страницу нашу новую с нашим контентом
     page.merge_page(new_pdf.pages[0])
     
-def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookmarks: bool = True):
+def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, with_bookmarks: bool = True):
+    tome = node.level
     path = tome.savepath.parent / (str(tome.savepath.name) + '.temp') 
     if not (path.exists() and path.is_file()):
         raise FileNotFoundError()
     
     #doc = fitz.open(tome.savepath)
     doc = PdfReader(path)
-    enumerator = PageEnumerator(tome, start)
+    enumerator = PageEnumerator(node, start)
     to_return = start
     page_in_document = 0
     output = PdfWriter()
@@ -133,17 +156,24 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
     gost = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'GOST2304_TypeA.ttf'
     pdfmetrics.registerFont(TTFont('GOST2304A', gost))
 
-    for i in enumerator:
-        to_return = i[0]
-        print(i)
+    for page_params in enumerator:
+        to_return = page_params.index
+        print(page_params)
         page_in_document += 1
         page = doc.pages[page_in_document - 1] # doc[0]
-        if i[1] == True and i[2] == True:
+        all_texts = []
+        if page_params.enumeration_include and page_params.enumeration_print:
             enum_params = TextParams(
-                str(i[0]),
+                str(page_params.index),
                 lambda true_width, true_height: (true_width - 35, true_height - 30)
             )
-            add_text_to_page_pypdf(page, [enum_params])
+            all_texts.append(enum_params)
+        if page_params.code_add:
+            all_texts.append(TextParams(
+                page_params.code,
+                lambda true_width, true_height: (true_width - 150, 50)
+            ))
+        add_text_to_page_pypdf(page, all_texts)
         output.add_page(page)
         logger.add_to_progress_bar(delta)
     
@@ -152,8 +182,12 @@ def enumerate_tome(tome: Tome, start: int, logger: ProcessingLogger, with_bookma
         add_bookmarks(output, tome, logger)
         output.page_mode = '/UseOutlines'
     
+    logger.writeline(' Оптимизирую объем документа...')
+    logger.set_progress_bar(0)
+    delta2 = int(100 / len(output.pages))
     for page in output.pages:
         page.compress_content_streams()
+        logger.add_to_progress_bar(delta2)
     
     logger.writeline('Сохраняю результат...')
     #doc.save(tome.savepath, incremental=True, encryption=0)

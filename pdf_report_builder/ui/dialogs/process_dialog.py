@@ -2,7 +2,7 @@ import subprocess
 
 import wx
 
-from pdf_report_builder.algorithms.merge import merge, MergeTask
+from pdf_report_builder.algorithms.merge import merge
 from pdf_report_builder.algorithms.parse_pages_count import ParseReportNode, ProjectParser
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.structure.tome import Tome
@@ -34,11 +34,12 @@ class ProcessingDialog(BaseProcessingDialog):
 
     def _add_treelist_item(self, node: ParseReportNode, tome: Tome):
         root_item = self.treelist_tomes.GetRootItem()
-        new_item = self.treelist_tomes.AppendItem(root_item, node.name, data=tome)
+        new_item = self.treelist_tomes.AppendItem(root_item, node.name, data=node)
         enumeration_start = node.current_page_number \
             if not tome.use_custom_enumeration_start \
             else tome.custom_enumeration_start
         self.treelist_tomes.SetItemText(new_item, 1, str(enumeration_start))
+        self.treelist_tomes.SetItemText(new_item, 2, node.code)
         self.treelist_tomes.CheckItem(new_item)
     
     def on_select_all_tomes(self, event):
@@ -63,21 +64,16 @@ class ProcessingDialog(BaseProcessingDialog):
             subprocess.Popen(f'explorer "{folder}"')
     
     def process(self, event):
-        def make_task(item):
-            tome = self.treelist_tomes.GetItemData(item)
-            start = int(self.treelist_tomes.GetItemText(item, 1))
-            return MergeTask(tome, start)
-        
         tasks = []
         item = self.treelist_tomes.GetFirstItem()
         if self.treelist_tomes.GetCheckedState(item) == wx.CHK_CHECKED:
-            tasks.append(make_task(item))
+            tasks.append(self.treelist_tomes.GetItemData(item))
         while True:
             item = self.treelist_tomes.GetNextItem(item)
             if not item.IsOk():
                 break
             if self.treelist_tomes.GetCheckedState(item) == wx.CHK_CHECKED:
-                tasks.append(make_task(item))
+                tasks.append(self.treelist_tomes.GetItemData(item))
 
         self.logger = ProcessingLogger(self.text_logger, self.progress_bar)
         try:
