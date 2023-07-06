@@ -12,7 +12,7 @@ from pdf_report_builder.project.event_channel import EventChannel
 class Version(BaseLevel):
     name: str = "По умолчанию"
     tomes: List = field(
-        default_factory=lambda: [Tome('ИГДИ')]
+        default_factory=lambda: [Tome('.ИГДИ')]
     )
     code: str = '0000.000.КИИ.0/0.0000'
     

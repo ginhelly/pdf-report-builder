@@ -27,10 +27,11 @@ class ProcessingDialog(BaseProcessingDialog):
             self.btn_open_folders.SetLabel('Открыть выходную папку')
     
     def populate_tomes_select(self):
-        self.treelist_tomes.SetColumnWidth(0, 300)
         ver = self._project.get_current_version()
         for node, tome in zip(self._parse_project_root_node.children, ver.tomes):
             self._add_treelist_item(node, tome)
+        for i in range(4):
+            self.treelist_tomes.SetColumnWidth(i, width=wx.LIST_AUTOSIZE_USEHEADER)
 
     def _add_treelist_item(self, node: ParseReportNode, tome: Tome):
         root_item = self.treelist_tomes.GetRootItem()
@@ -39,7 +40,8 @@ class ProcessingDialog(BaseProcessingDialog):
             if not tome.use_custom_enumeration_start \
             else tome.custom_enumeration_start
         self.treelist_tomes.SetItemText(new_item, 1, str(enumeration_start))
-        self.treelist_tomes.SetItemText(new_item, 2, node.code)
+        self.treelist_tomes.SetItemText(new_item, 2, str(node.level.savepath))
+        self.treelist_tomes.SetItemText(new_item, 3, node.code)
         self.treelist_tomes.CheckItem(new_item)
     
     def on_select_all_tomes(self, event):

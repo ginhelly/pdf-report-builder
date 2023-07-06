@@ -60,8 +60,11 @@ class AddElementDialog(BaseAddElementDialog):
                 scheme.official,
                 self.element_code.GetValue(),
                 scheme.enumeration_include,
-                scheme.enumeration_print
+                scheme.enumeration_print,
+                scheme.create_bookmark,
+                scheme.code_add
             )
+        print(scheme)
         return scheme
     
     def on_close(self, event):

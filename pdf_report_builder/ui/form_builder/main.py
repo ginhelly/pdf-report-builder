@@ -560,7 +560,7 @@ class BaseElementPanel ( wx.Panel ):
         self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer24.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
 
-        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки сквозной нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText59.Wrap( -1 )
 
         self.m_staticText59.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
@@ -574,8 +574,14 @@ class BaseElementPanel ( wx.Panel ):
 
         bSizer24.Add( self.m_staticText60, 0, wx.ALL, 5 )
 
+        self.cb_inner_enumeration = wx.CheckBox( self, wx.ID_ANY, u"Нумеровать листы внутри элемента", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_inner_enumeration.SetValue(True)
+        bSizer24.Add( self.cb_inner_enumeration, 0, wx.ALL, 5 )
+
+
+        bSizer24.Add( ( 0, 10), 0, wx.EXPAND, 5 )
+
         self.cb_enumeration_include = wx.CheckBox( self, wx.ID_ANY, u"Включать в сквозную нумерацию", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.cb_enumeration_include.SetValue(True)
         bSizer24.Add( self.cb_enumeration_include, 0, wx.ALL, 5 )
 
         self.cb_enumeration_print = wx.CheckBox( self, wx.ID_ANY, u"Добавить сквозную нумерацию в отчет", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -591,6 +597,7 @@ class BaseElementPanel ( wx.Panel ):
         self.text_element_code.Bind( wx.EVT_TEXT_ENTER, self.on_text_element_code_change )
         self.cb_code_add.Bind( wx.EVT_CHECKBOX, self.on_toggle_code_add )
         self.cb_create_bookmark.Bind( wx.EVT_CHECKBOX, self.on_toggle_bookmark_creation )
+        self.cb_inner_enumeration.Bind( wx.EVT_CHECKBOX, self.on_toggle_inner_enumeration )
         self.cb_enumeration_include.Bind( wx.EVT_CHECKBOX, self.on_toggle_include )
         self.cb_enumeration_print.Bind( wx.EVT_CHECKBOX, self.on_toggle_print )
 
@@ -609,6 +616,9 @@ class BaseElementPanel ( wx.Panel ):
         event.Skip()
 
     def on_toggle_bookmark_creation( self, event ):
+        event.Skip()
+
+    def on_toggle_inner_enumeration( self, event ):
         event.Skip()
 
     def on_toggle_include( self, event ):

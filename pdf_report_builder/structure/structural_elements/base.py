@@ -119,6 +119,8 @@ class StructuralElement(BaseLevel):
             official=scheme.official,
             enumeration_include=scheme.enumeration_include,
             enumeration_print=scheme.enumeration_print,
-            code_attr=scheme.code_attr
+            code_attr=scheme.code_attr,
+            create_bookmark=scheme.create_bookmark,
+            code_add=scheme.code_add
         )
         return new_element

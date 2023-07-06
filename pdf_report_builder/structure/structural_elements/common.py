@@ -53,7 +53,7 @@ element_schemes = [
         ElementCategory.UTIL,
         'Содержание тома',
         True,
-        'С',
+        '.С',
         True,
         False
     ),
@@ -63,7 +63,7 @@ element_schemes = [
         ElementCategory.UTIL,
         'Состав отчетной технической документации',
         True,
-        'СД',
+        '.СД',
         True,
         False
     ),
@@ -73,7 +73,7 @@ element_schemes = [
         ElementCategory.TEXT,
         'Текстовая часть',
         True,
-        'Т',
+        '.Т',
         True,
         False
     ),
@@ -85,7 +85,7 @@ element_schemes = [
 совмещенная со схемой выполненных работ и схемой созданной \
 планово-высотной геодезической сети',
         True,
-        'Г.1',
+        '.Г.1',
         code_add=True
     ),
 
@@ -95,7 +95,7 @@ element_schemes = [
         'Схема созданной планово-высотной опорной сети \
 с указанием привязок к исходным пунктам',
         True,
-        'Г.2',
+        '.Г.2',
         code_add=True
     ),
 
@@ -105,7 +105,7 @@ element_schemes = [
         'Схема съемочной геодезической сети \
 с указанием привязок к исходным пунктам',
         True,
-        'Г.3',
+        '.Г.3',
         code_add=True
     ),
 
@@ -114,7 +114,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         'Обзорная схема расположения объекта',
         True,
-        'Г.4',
+        '.Г.4',
         code_add=True
     ),
 
@@ -123,7 +123,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         'Топографический план М 1:1000',
         True,
-        'Г.5',
+        '.Г.5',
         code_add=True
     ),
 
@@ -132,7 +132,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         'Топографический план М 1:500',
         True,
-        'Г.5',
+        '.Г.5',
         code_add=True
     ),
 
@@ -142,7 +142,7 @@ element_schemes = [
         'Продольный профиль трассы газопровода (основная ось) \
 масштаб гор. 1:1000, верт. 1:100',
         True,
-        'Г.6',
+        '.Г.6',
         code_add=True
     ),
 
@@ -152,7 +152,7 @@ element_schemes = [
         'Продольный профиль трассы газопровода (отвод ) \
 масштаб гор. 1:1000, верт. 1:100',
         True,
-        'Г.7',
+        '.Г.7',
         code_add=True
     )
 ]
