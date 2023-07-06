@@ -1174,6 +1174,7 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.treelist_tomes = wx.dataview.TreeListCtrl( self.m_panel3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.dataview.TL_CHECKBOX|wx.dataview.TL_DEFAULT_STYLE|wx.dataview.TL_MULTIPLE )
         self.treelist_tomes.AppendColumn( u"Том", wx.COL_WIDTH_AUTOSIZE, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
         self.treelist_tomes.AppendColumn( u"Начало нумерации", wx.COL_WIDTH_AUTOSIZE, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
+        self.treelist_tomes.AppendColumn( u"Путь", wx.COL_WIDTH_DEFAULT, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
         self.treelist_tomes.AppendColumn( u"Полный шифр", wx.COL_WIDTH_DEFAULT, wx.ALIGN_LEFT, wx.COL_RESIZABLE )
 
         bSizer30.Add( self.treelist_tomes, 1, wx.EXPAND |wx.ALL, 5 )
@@ -1185,15 +1186,19 @@ class BaseProcessingDialog ( wx.Dialog ):
 
         bSizer30.Add( self.m_staticText24, 0, wx.ALL, 5 )
 
-        gSizer1 = wx.GridSizer( 0, 2, 0, 0 )
+        gSizer1 = wx.GridSizer( 2, 0, 0, 0 )
 
-        self.cb_enumerate = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Нумеровать страницы", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.cb_enumerate.SetValue(True)
-        gSizer1.Add( self.cb_enumerate, 0, wx.ALL, 5 )
+        self.cb_inner_enumeration = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Нумерация внутри элементов", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_inner_enumeration.SetValue(True)
+        gSizer1.Add( self.cb_inner_enumeration, 0, wx.ALL, 5 )
 
         self.cb_add_codes = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Добавлять полные шифры элементов", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cb_add_codes.SetValue(True)
         gSizer1.Add( self.cb_add_codes, 0, wx.ALL, 5 )
+
+        self.cb_enumerate = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Сквозная нумерация", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_enumerate.SetValue(True)
+        gSizer1.Add( self.cb_enumerate, 0, wx.ALL, 5 )
 
         self.cb_with_bookmarks = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"Формировать закладки на основе структуры", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cb_with_bookmarks.SetValue(True)
@@ -1253,6 +1258,8 @@ class BaseProcessingDialog ( wx.Dialog ):
         # Connect Events
         self.btn_select_all_tomes.Bind( wx.EVT_BUTTON, self.on_select_all_tomes )
         self.btn_deselect_all_tomes.Bind( wx.EVT_BUTTON, self.on_deselect_all_tomes )
+        self.cb_inner_enumeration.Bind( wx.EVT_CHECKBOX, self.toggle_inner_enumeration )
+        self.cb_add_codes.Bind( wx.EVT_CHECKBOX, self.toggle_add_codes )
         self.cb_enumerate.Bind( wx.EVT_CHECKBOX, self.toggle_enumerate )
         self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
         self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
@@ -1268,6 +1275,12 @@ class BaseProcessingDialog ( wx.Dialog ):
         event.Skip()
 
     def on_deselect_all_tomes( self, event ):
+        event.Skip()
+
+    def toggle_inner_enumeration( self, event ):
+        event.Skip()
+
+    def toggle_add_codes( self, event ):
         event.Skip()
 
     def toggle_enumerate( self, event ):

@@ -17,6 +17,7 @@ class ElementScheme(NamedTuple):
     enumeration_print: bool = True
     create_bookmark: bool = True
     code_add: bool = False
+    inner_enumeration: bool = False
 
 element_schemes = [
     ElementScheme(
@@ -124,7 +125,8 @@ element_schemes = [
         'Топографический план М 1:1000',
         True,
         '.Г.5',
-        code_add=True
+        code_add=True,
+        inner_enumeration=True
     ),
 
     ElementScheme(
@@ -133,7 +135,8 @@ element_schemes = [
         'Топографический план М 1:500',
         True,
         '.Г.5',
-        code_add=True
+        code_add=True,
+        inner_enumeration=True
     ),
 
     ElementScheme(
@@ -143,7 +146,8 @@ element_schemes = [
 масштаб гор. 1:1000, верт. 1:100',
         True,
         '.Г.6',
-        code_add=True
+        code_add=True,
+        inner_enumeration=True
     ),
 
     ElementScheme(
@@ -153,6 +157,7 @@ element_schemes = [
 масштаб гор. 1:1000, верт. 1:100',
         True,
         '.Г.7',
-        code_add=True
+        code_add=True,
+        inner_enumeration=True
     )
 ]

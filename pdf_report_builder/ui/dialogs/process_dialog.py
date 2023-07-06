@@ -16,6 +16,8 @@ class ProcessingDialog(BaseProcessingDialog):
         self._with_bookmarks = True
         self._enumerate = True
         self._break_on_missing = True
+        self._add_codes = True
+        self._inner_enumeration = True
         parser = ProjectParser(count_a4=False)
         self._parse_project_root_node = parser.parse_project_for_pages(project)
         self.populate_tomes_select()
@@ -57,6 +59,12 @@ class ProcessingDialog(BaseProcessingDialog):
     
     def toggle_enumerate(self, event):
         self._enumerate = not self._enumerate
+
+    def toggle_add_codes(self, event):
+        self._add_codes = not self._add_codes
+    
+    def toggle_inner_enumeration(self, event):
+        self._inner_enumeration = not self._inner_enumeration
     
     def toggle_break_on_missing(self, event):
         self._break_on_missing = not self._break_on_missing
@@ -85,8 +93,11 @@ class ProcessingDialog(BaseProcessingDialog):
                 logger=self.logger,
                 break_on_missing=self._break_on_missing,
                 with_bookmarks=self._with_bookmarks,
-                enumerate=self._enumerate
+                enumerate=self._enumerate,
+                add_codes=self._add_codes,
+                inner_enumeration=self._inner_enumeration
             )
         except Exception as e:
+            print(e)
             self.logger.writeline(f'Ошибка: {e}')
             self.logger.writeline(f'Выполнение программы прервано.')

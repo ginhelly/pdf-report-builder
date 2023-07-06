@@ -26,6 +26,7 @@ class StructuralElement(BaseLevel):
     )
     expanded: bool = True
     code_add: bool = False
+    inner_enumeration: bool = False
 
     def __repr__(self) -> str:
         return f'StructuralElement([{self.code_attr}] {self.name}; files={len(self.files)} & subelements={len(self.subelements)})'
@@ -106,7 +107,20 @@ class StructuralElement(BaseLevel):
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
         d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
         d['code_add'] = False if not 'code_add' in d or d['code_add'] == 'False' else True
-        valid = ['name', 'official', 'code_attr', 'files', 'subelements', 'enumeration_include', 'enumeration_print', 'create_bookmark', 'expanded', 'code_add']
+        d['inner_enumeration'] = False if not 'inner_enumeration' in d or d['inner_enumeration'] == 'False' else True
+        valid = [
+            'name',
+            'official',
+            'code_attr',
+            'files',
+            'subelements',
+            'enumeration_include',
+            'enumeration_print',
+            'create_bookmark',
+            'expanded',
+            'code_add',
+            'inner_enumeration'
+        ]
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]
@@ -121,6 +135,7 @@ class StructuralElement(BaseLevel):
             enumeration_print=scheme.enumeration_print,
             code_attr=scheme.code_attr,
             create_bookmark=scheme.create_bookmark,
-            code_add=scheme.code_add
+            code_add=scheme.code_add,
+            inner_enumeration=scheme.inner_enumeration
         )
         return new_element

@@ -21,9 +21,13 @@ class StructuralChunk(NamedTuple):
     enumeration_print: bool
     code_add: bool
     code: str
+    inner_enumeration: bool
 
 class PageParams(NamedTuple):
     index: int
+    inner_index: int
+    inner_index_print: bool
+    pages_number: int
     enumeration_include: bool
     enumeration_print: bool
     code_add: bool
@@ -41,7 +45,8 @@ def collect_chunks_recursively(node: ParseReportNode):
             node.level.enumeration_include,
             node.level.enumeration_print,
             node.level.code_add,
-            node.code
+            node.code,
+            node.level.inner_enumeration
         )
         #print(f'CHUNK={chunk}; EL={el}')
         res.append(chunk)
@@ -57,10 +62,9 @@ class PageEnumerator:
         for child in self.node.children:
             add = collect_chunks_recursively(child)
             chunks = chunks + add
-        for c in chunks:
-            print(c)
         self.chunks = chunks
         self.left = 0
+        self.inner_index = 0
 
     def __iter__(self):
         return self
@@ -71,15 +75,20 @@ class PageEnumerator:
         self.current_chunk = self.chunks[0]
         self.chunks = self.chunks[1:]
         self.left = self.current_chunk.pages_number
+        self.inner_index = 0
     
     def __next__(self) -> PageParams:
         if self.left == 0:
             self._change_chunk()
         self.left -= 1
+        self.inner_index += 1
         if self.current_chunk.enumeration_include:
             self.counter += 1
         return PageParams(
             self.counter - 1,
+            self.inner_index,
+            self.current_chunk.inner_enumeration,
+            self.current_chunk.pages_number,
             self.current_chunk.enumeration_include,
             self.current_chunk.enumeration_print,
             self.current_chunk.code_add,
@@ -172,6 +181,15 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
             all_texts.append(TextParams(
                 page_params.code,
                 lambda true_width, true_height: (true_width - 180, 152)
+            ))
+        if page_params.inner_index_print:
+            all_texts.append(TextParams(
+                str(page_params.inner_index),
+                lambda true_width, true_height: (true_width - 90, 67)
+            ))
+            all_texts.append(TextParams(
+                str(page_params.pages_number),
+                lambda true_width, true_height: (true_width - 40, 67)
             ))
         add_text_to_page_pypdf(page, all_texts)
         output.add_page(page)

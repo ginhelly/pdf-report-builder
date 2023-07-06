@@ -33,13 +33,15 @@ def _merge_one_tome(
         with_bookmarks: bool = True,
         enumerate: bool = True,
         enumerate_start: int = 1,
-        add_codes: bool = True
+        add_codes: bool = True,
+        inner_enumeration: bool = True
     ):
     tome = node.level
     files_to_merge = _collect_files_to_merge(tome)
     if len(files_to_merge) == 0:
         logger.writeline(' (!) Том не содержит входных PDF-файлов. Пропускаю')
         return
+    any_text_to_add = enumerate or add_codes or inner_enumeration
     merger = PdfWriter()
     inputs = [
         file.path for file in files_to_merge
@@ -62,13 +64,13 @@ def _merge_one_tome(
             merger.append(fileobj=obj, pages=subset, import_outline=False)
         logger.add_to_progress_bar(delta)
     
-    if with_bookmarks and not (enumerate or add_codes):
+    if with_bookmarks and not any_text_to_add:
         logger.writeline(' Расставляю закладки...')
         add_bookmarks(merger, tome, logger)
         merger.page_mode = '/UseOutlines'
 
-    savepath = tome.savepath.parent / (str(tome.savepath.name) + '.temp') if (enumerate or add_codes) else tome.savepath
-    if not (enumerate or add_codes):
+    savepath = tome.savepath.parent / (str(tome.savepath.name) + '.temp') if any_text_to_add else tome.savepath
+    if not any_text_to_add:
         logger.writeline(' Оптимизирую объем документа...')
         logger.set_progress_bar(0)
         delta2 = int(100 / len(merger.pages))
@@ -80,12 +82,12 @@ def _merge_one_tome(
         logger.writeline(' Записываю результат на диск...')
         merger.write(output)
         merger.close()
-        if not (enumerate or add_codes):
+        if not any_text_to_add:
             logger.writeline(f' Успешно сформирован том {tome.human_readable_name}')
             logger.writeline(f' Путь: {tome.savepath}')
     
     enumerate_end = 0
-    if enumerate or add_codes:
+    if any_text_to_add:
         enumerate_end = enumerate_tome(node, enumerate_start, logger, with_bookmarks) + 1
     print(enumerate_end)
     return enumerate_end
@@ -97,7 +99,8 @@ def merge(
         break_on_missing: bool = True,
         with_bookmarks: bool = True,
         enumerate: bool = True,
-        add_codes: bool = True
+        add_codes: bool = True,
+        inner_enumeration: bool = True
     ):
     """Самое-самое главное, ради чего всё это затевалось"""
     if len(tasks) == 0:
@@ -122,7 +125,8 @@ def merge(
             with_bookmarks,
             enumerate,
             enum_start,
-            add_codes
+            add_codes,
+            inner_enumeration
         )
         logger.writeline('')
     

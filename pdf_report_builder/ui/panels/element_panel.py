@@ -13,6 +13,7 @@ class ElementPanel(BaseElementPanel):
         self.cb_enumeration_include.SetValue(element.enumeration_include)
         self.cb_enumeration_print.SetValue(element.enumeration_print)
         self.cb_code_add.SetValue(element.code_add)
+        self.cb_inner_enumeration.SetValue(element.inner_enumeration)
         if not element.enumeration_include:
             self.cb_enumeration_print.SetValue(False)
             self.element.enumeration_print = False
@@ -51,3 +52,7 @@ class ElementPanel(BaseElementPanel):
     def on_toggle_code_add(self, event):
         val = self.cb_code_add.GetValue()
         self.element.code_add = val
+
+    def on_toggle_inner_enumeration(self, event):
+        val = self.cb_inner_enumeration.GetValue()
+        self.element.inner_enumeration = val

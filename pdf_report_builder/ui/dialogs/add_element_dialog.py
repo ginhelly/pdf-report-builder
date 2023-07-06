@@ -62,7 +62,8 @@ class AddElementDialog(BaseAddElementDialog):
                 scheme.enumeration_include,
                 scheme.enumeration_print,
                 scheme.create_bookmark,
-                scheme.code_add
+                scheme.code_add,
+                scheme.inner_enumeration
             )
         print(scheme)
         return scheme
