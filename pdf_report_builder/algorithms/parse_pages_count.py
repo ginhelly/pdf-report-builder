@@ -26,106 +26,113 @@ class ParseReportNode:
     enumeration: bool = True
     current_page_number: int = 0
     children: List['ParseReportNode'] = field(default_factory=lambda: [])
-    parent: Optional['Node'] = None
+    parent: Optional['ParseReportNode'] = None
     custom_tome_enum_start: int = -1
 
-def _parse_pages_read_pdf(file: PDFFile):
-    pages_native = file.subset_pages_number
-    if not (file.path.exists() and file.path.is_file()):
-        return (pages_native, 0)
-    
-    reader = PdfReader(file.path)
-    P = PaperFormatStorage()
-    pages_a4 = 0.0
-    
-    for page_number in list(file.subset):
-        page = reader.pages[page_number]
-        width = page.mediabox.width * page.user_unit * 25.4 / 72 
-        height = page.mediabox.height * page.user_unit * 25.4 / 72 
-        paper_format = P.find_format_by_size(width, height)
-        pages_a4 = pages_a4 + paper_format.multiple_of_a4
-    return (pages_native, pages_a4)
+
+class ProjectParser:
+    def __init__(self, count_a4: bool = False):
+        self.count_a4 = count_a4
+
+    def _parse_pages_read_pdf(self, file: PDFFile):
+        pages_native = file.subset_pages_number
+        if not (file.path.exists() and file.path.is_file()):
+            return (pages_native, 0)
+        if not self.count_a4:
+            return (pages_native, 0)
         
+        reader = PdfReader(file.path)
+        P = PaperFormatStorage()
+        pages_a4 = 0.0
+        
+        for page_number in list(file.subset):
+            page = reader.pages[page_number]
+            width = page.mediabox.width * page.user_unit * 25.4 / 72 
+            height = page.mediabox.height * page.user_unit * 25.4 / 72 
+            paper_format = P.find_format_by_size(width, height)
+            pages_a4 = pages_a4 + paper_format.multiple_of_a4
+        return (pages_native, pages_a4)
+            
 
-def _parse_pages_parse_file(file: PDFFile, parent: ParseReportNode):
-    file_name = Path(file.path).name
-    file_node = ParseReportNode(file_name, NodeType.FILE, parent=parent)
-    parent.children.append(file_node)
-    pages_native, pages_a4 = _parse_pages_read_pdf(file)
-    file_node.pages_native = pages_native
-    file_node.pages_a4 = pages_a4
+    def _parse_pages_parse_file(self, file: PDFFile, parent: ParseReportNode):
+        file_name = Path(file.path).name
+        file_node = ParseReportNode(file_name, NodeType.FILE, parent=parent)
+        parent.children.append(file_node)
+        pages_native, pages_a4 = self._parse_pages_read_pdf(file)
+        file_node.pages_native = pages_native
+        file_node.pages_a4 = pages_a4
 
-def _parse_pages_parse_element(element: StructuralElement, parent: ParseReportNode):
-    element_node = ParseReportNode(element.name, NodeType.ELEMENT, parent=parent)
-    parent.children.append(element_node)
-    for subel in element.subelements:
-        _parse_pages_parse_element(subel, element_node)
-    for file in element.files:
-        _parse_pages_parse_file(file, element_node)
-    element_node.pages_a4 += sum(
-        node.pages_a4 for node in element_node.children if node.type == NodeType.FILE
-    )
-    element_node.pages_native += sum(
-        node.pages_native for node in element_node.children if node.type == NodeType.FILE
-    )
-    element_node.pages_a4 += sum(
-        node.pages_a4 for node in element_node.children if node.type == NodeType.ELEMENT
-    )
-    element_node.pages_native += sum(
-        node.pages_native for node in element_node.children if node.type == NodeType.ELEMENT
-    )
-    if not element.enumeration_include:
-        element_node.enumeration = False
+    def _parse_pages_parse_element(self, element: StructuralElement, parent: ParseReportNode):
+        element_node = ParseReportNode(element.name, NodeType.ELEMENT, parent=parent)
+        parent.children.append(element_node)
+        for subel in element.subelements:
+            self._parse_pages_parse_element(subel, element_node)
+        for file in element.files:
+            self._parse_pages_parse_file(file, element_node)
+        element_node.pages_a4 += sum(
+            node.pages_a4 for node in element_node.children if node.type == NodeType.FILE
+        )
+        element_node.pages_native += sum(
+            node.pages_native for node in element_node.children if node.type == NodeType.FILE
+        )
+        element_node.pages_a4 += sum(
+            node.pages_a4 for node in element_node.children if node.type == NodeType.ELEMENT
+        )
+        element_node.pages_native += sum(
+            node.pages_native for node in element_node.children if node.type == NodeType.ELEMENT
+        )
+        if not element.enumeration_include:
+            element_node.enumeration = False
 
 
-def _parse_pages_parse_tome(tome: Tome, parent: ParseReportNode):
-    custom_enum = tome.custom_enumeration_start \
-        if tome.use_custom_enumeration_start \
-        else -1
-    tome_node = ParseReportNode(
-        tome.human_readable_name, 
-        NodeType.TOME, 
-        parent=parent,
-        custom_tome_enum_start=custom_enum)
-    parent.children.append(tome_node)
-    for element in tome.structural_elements:
-        _parse_pages_parse_element(element, tome_node)
-    tome_node.pages_a4 += sum(
-        node.pages_a4 for node in tome_node.children
-    )
-    tome_node.pages_native += sum(
-        node.pages_native for node in tome_node.children
-    )
+    def _parse_pages_parse_tome(self, tome: Tome, parent: ParseReportNode):
+        custom_enum = tome.custom_enumeration_start \
+            if tome.use_custom_enumeration_start \
+            else -1
+        tome_node = ParseReportNode(
+            tome.human_readable_name, 
+            NodeType.TOME, 
+            parent=parent,
+            custom_tome_enum_start=custom_enum)
+        parent.children.append(tome_node)
+        for element in tome.structural_elements:
+            self._parse_pages_parse_element(element, tome_node)
+        tome_node.pages_a4 += sum(
+            node.pages_a4 for node in tome_node.children
+        )
+        tome_node.pages_native += sum(
+            node.pages_native for node in tome_node.children
+        )
 
-def count_pages_recursive(node: ParseReportNode, n: int = 1):
-    if node.type == NodeType.TOME and node.custom_tome_enum_start > -1:
-        n = node.custom_tome_enum_start
-    node.current_page_number = n
-    if node.type == NodeType.FILE:
-        return n + node.pages_native
-    if node.type == NodeType.ELEMENT:
-        subel_nodes = [child for child in node.children if child.type == NodeType.ELEMENT]
-        for subel in subel_nodes:
-            n = count_pages_recursive(subel, n)
-        if node.enumeration:
-            file_nodes = [child for child in node.children if child.type == NodeType.FILE]
-            for file in file_nodes:
-                n = count_pages_recursive(file, n)
+    def count_pages_recursive(self, node: ParseReportNode, n: int = 1):
+        if node.type == NodeType.TOME and node.custom_tome_enum_start > -1:
+            n = node.custom_tome_enum_start
+        node.current_page_number = n
+        if node.type == NodeType.FILE:
+            return n + node.pages_native
+        if node.type == NodeType.ELEMENT:
+            subel_nodes = [child for child in node.children if child.type == NodeType.ELEMENT]
+            for subel in subel_nodes:
+                n = self.count_pages_recursive(subel, n)
+            if node.enumeration:
+                file_nodes = [child for child in node.children if child.type == NodeType.FILE]
+                for file in file_nodes:
+                    n = self.count_pages_recursive(file, n)
+            return n
+        for child in node.children:
+            n = self.count_pages_recursive(child, n)
         return n
-    for child in node.children:
-        n = count_pages_recursive(child, n)
-    return n
-        
-def parse_project_for_pages(project: BaseReportProject):
-    ver = project.get_current_version()
-    root_node = ParseReportNode(ver.name, NodeType.VERSION)
-    for tome in ver.tomes:
-        _parse_pages_parse_tome(tome, root_node)
-    root_node.pages_a4 += sum(
-        node.pages_a4 for node in root_node.children
-    )
-    root_node.pages_native += sum(
-        node.pages_native for node in root_node.children
-    )
-    count_pages_recursive(root_node)
-    return root_node
+            
+    def parse_project_for_pages(self, project: BaseReportProject):
+        ver = project.get_current_version()
+        root_node = ParseReportNode(ver.name, NodeType.VERSION)
+        for tome in ver.tomes:
+            self._parse_pages_parse_tome(tome, root_node)
+        root_node.pages_a4 += sum(
+            node.pages_a4 for node in root_node.children
+        )
+        root_node.pages_native += sum(
+            node.pages_native for node in root_node.children
+        )
+        self.count_pages_recursive(root_node)
+        return root_node

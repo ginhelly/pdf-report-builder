@@ -5,7 +5,7 @@ import wx
 
 from pdf_report_builder.ui.form_builder.main import BasePagesCountDialog
 from pdf_report_builder.project.storage import ProjectStorage
-from pdf_report_builder.algorithms.parse_pages_count import parse_project_for_pages, ParseReportNode, NodeType
+from pdf_report_builder.algorithms.parse_pages_count import ProjectParser, ParseReportNode, NodeType
 
 def get_pagescount_imagelist():
     imagelist = wx.ImageList(width=16, height=16)
@@ -41,7 +41,8 @@ class PagesCountDialog(BasePagesCountDialog):
         print(self.project)
         if self.project is None:
             return
-        root_node = parse_project_for_pages(self.project)
+        parser = ProjectParser(count_a4=True)
+        root_node = parser.parse_project_for_pages(self.project)
         #self.treelist.DeleteAllItems()
         root_item = self.treelist.GetRootItem()
 

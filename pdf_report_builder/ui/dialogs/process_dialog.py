@@ -3,7 +3,7 @@ import subprocess
 import wx
 
 from pdf_report_builder.algorithms.merge import merge, MergeTask
-from pdf_report_builder.algorithms.parse_pages_count import ParseReportNode, parse_project_for_pages
+from pdf_report_builder.algorithms.parse_pages_count import ParseReportNode, ProjectParser
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.ui.form_builder.main import BaseProcessingDialog
@@ -16,7 +16,8 @@ class ProcessingDialog(BaseProcessingDialog):
         self._with_bookmarks = True
         self._enumerate = True
         self._break_on_missing = True
-        self._parse_project_root_node = parse_project_for_pages(project)
+        parser = ProjectParser(count_a4=False)
+        self._parse_project_root_node = parser.parse_project_for_pages(project)
         self.populate_tomes_select()
         ver = self._project.get_current_version()
         self.folders = set(tome.savepath.parent for tome in ver.tomes)
