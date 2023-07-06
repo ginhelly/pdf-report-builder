@@ -15,6 +15,7 @@ class Version(BaseLevel):
         default_factory=lambda: [Tome('.ИГДИ')]
     )
     code: str = '0000.000.КИИ.0/0.0000'
+    comments: str = ''
     
     def create_tome(
         self,
@@ -40,7 +41,7 @@ class Version(BaseLevel):
             d['tomes'] = [
                 Tome.from_dict(tome) for tome in d['tomes']
             ]
-        valid = ['name', 'tomes', 'code']
+        valid = ['name', 'tomes', 'code', 'comments']
         for key in list(d.keys()):
             if not key in valid:
                 del d[key]

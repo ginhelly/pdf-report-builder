@@ -15,6 +15,7 @@ class ProjectPanel(BaseProjectPanel):
         self.handle_cb_availability()
         self.cb_relative_paths.SetValue(project.settings.paths_relative)
         self.text_savepath.SetValue(str(project.settings.savepath.parent))
+        self.text_comments.SetValue(ver.comments)
     
     def on_version_name_change(self, event):
         new_value = self.text_current_version_name.GetValue()
@@ -37,3 +38,7 @@ class ProjectPanel(BaseProjectPanel):
     def toggle_relative_paths(self, event):
         val = self.cb_relative_paths.GetValue()
         self.project.settings.paths_relative = val
+    
+    def on_text_comments(self, event):
+        val = self.text_comments.GetValue()
+        self.project.get_current_version().comments = val

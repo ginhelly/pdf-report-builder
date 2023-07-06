@@ -793,6 +793,17 @@ class BaseProjectPanel ( wx.Panel ):
         self.text_savepath = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
         bSizer22.Add( self.text_savepath, 0, wx.ALL|wx.EXPAND, 5 )
 
+        self.m_staticText45 = wx.StaticText( self, wx.ID_ANY, u"Комментарии к текущей версии", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText45.Wrap( -1 )
+
+        bSizer22.Add( self.m_staticText45, 0, wx.ALL, 5 )
+
+        self.text_comments = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+        self.text_comments.SetMaxLength( 1000 )
+        self.text_comments.SetMinSize( wx.Size( -1,80 ) )
+
+        bSizer22.Add( self.text_comments, 1, wx.ALL|wx.EXPAND, 5 )
+
         self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
         bSizer22.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
 
@@ -808,6 +819,7 @@ class BaseProjectPanel ( wx.Panel ):
         # Connect Events
         self.text_code.Bind( wx.EVT_TEXT_ENTER, self.on_code_change )
         self.text_current_version_name.Bind( wx.EVT_TEXT_ENTER, self.on_version_name_change )
+        self.text_comments.Bind( wx.EVT_TEXT, self.on_text_comments )
         self.cb_relative_paths.Bind( wx.EVT_CHECKBOX, self.toggle_relative_paths )
 
     def __del__( self ):
@@ -819,6 +831,9 @@ class BaseProjectPanel ( wx.Panel ):
         event.Skip()
 
     def on_version_name_change( self, event ):
+        event.Skip()
+
+    def on_text_comments( self, event ):
         event.Skip()
 
     def toggle_relative_paths( self, event ):
@@ -1213,10 +1228,6 @@ class BaseProcessingDialog ( wx.Dialog ):
         bSizer30.Fit( self.m_panel3 )
         bSizer44.Add( self.m_panel3, 1, wx.EXPAND |wx.ALL, 5 )
 
-        self.cb_break_on_missing = wx.CheckBox( self, wx.ID_ANY, u"Прерывать процесс формирования при отсутствующем файле", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.cb_break_on_missing.SetValue(True)
-        bSizer44.Add( self.cb_break_on_missing, 0, wx.ALL, 5 )
-
         bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 
         self.btn_process = wx.Button( self, wx.ID_ANY, u"Сформировать техотчеты", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1262,7 +1273,6 @@ class BaseProcessingDialog ( wx.Dialog ):
         self.cb_add_codes.Bind( wx.EVT_CHECKBOX, self.toggle_add_codes )
         self.cb_enumerate.Bind( wx.EVT_CHECKBOX, self.toggle_enumerate )
         self.cb_with_bookmarks.Bind( wx.EVT_CHECKBOX, self.toggle_bookmarks )
-        self.cb_break_on_missing.Bind( wx.EVT_CHECKBOX, self.toggle_break_on_missing )
         self.btn_process.Bind( wx.EVT_BUTTON, self.process )
         self.btn_open_folders.Bind( wx.EVT_BUTTON, self.open_folders )
 
@@ -1287,9 +1297,6 @@ class BaseProcessingDialog ( wx.Dialog ):
         event.Skip()
 
     def toggle_bookmarks( self, event ):
-        event.Skip()
-
-    def toggle_break_on_missing( self, event ):
         event.Skip()
 
     def process( self, event ):

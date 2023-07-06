@@ -159,7 +159,7 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
     output = PdfWriter()
 
     logger.set_progress_bar(0)
-    logger.writeline(' Расставляю нумерацию страниц...')
+    logger.writeline(' Добавляю текстовые элементы...')
     delta = int(100 / len(doc.pages))
 
     gost = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'GOST2304_TypeA.ttf'
@@ -185,11 +185,11 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
         if page_params.inner_index_print:
             all_texts.append(TextParams(
                 str(page_params.inner_index),
-                lambda true_width, true_height: (true_width - 90, 67)
+                lambda true_width, true_height: (true_width - 92, 67)
             ))
             all_texts.append(TextParams(
                 str(page_params.pages_number),
-                lambda true_width, true_height: (true_width - 40, 67)
+                lambda true_width, true_height: (true_width - 44, 67)
             ))
         add_text_to_page_pypdf(page, all_texts)
         output.add_page(page)

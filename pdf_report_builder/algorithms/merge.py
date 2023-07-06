@@ -114,7 +114,7 @@ def merge(
         return
     
     for node in tasks:
-        logger.writeline(f' Обрабатываю том {node.level.human_readable_name}')
+        logger.writeline(f'Обрабатываю том {node.level.human_readable_name}')
         enum_start = node.current_page_number \
             if not node.level.use_custom_enumeration_start \
             else node.level.custom_enumeration_start
