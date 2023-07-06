@@ -82,6 +82,10 @@ class PDFFile(BaseLevel):
         except AttributeError:
             return 0
     
+    @property
+    def code(self):
+        return ''
+    
     @staticmethod
     def from_dict(d: dict):
         if 'path' in d:

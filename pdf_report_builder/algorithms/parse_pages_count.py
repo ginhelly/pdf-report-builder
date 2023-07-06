@@ -7,6 +7,7 @@ from pypdf import PdfReader
 
 from pdf_report_builder.paperformats.format import PaperFormatStorage
 from pdf_report_builder.project.base_project import BaseReportProject
+from pdf_report_builder.structure.level import BaseLevel
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.structure.files.input_pdf import PDFFile
@@ -28,6 +29,8 @@ class ParseReportNode:
     children: List['ParseReportNode'] = field(default_factory=lambda: [])
     parent: Optional['ParseReportNode'] = None
     custom_tome_enum_start: int = -1
+    level: Optional['BaseLevel'] = None
+    code: str = ''
 
 
 class ProjectParser:
@@ -56,15 +59,16 @@ class ProjectParser:
 
     def _parse_pages_parse_file(self, file: PDFFile, parent: ParseReportNode):
         file_name = Path(file.path).name
-        file_node = ParseReportNode(file_name, NodeType.FILE, parent=parent)
+        file_node = ParseReportNode(file_name, NodeType.FILE, parent=parent, level=file)
         parent.children.append(file_node)
         pages_native, pages_a4 = self._parse_pages_read_pdf(file)
         file_node.pages_native = pages_native
         file_node.pages_a4 = pages_a4
 
     def _parse_pages_parse_element(self, element: StructuralElement, parent: ParseReportNode):
-        element_node = ParseReportNode(element.name, NodeType.ELEMENT, parent=parent)
+        element_node = ParseReportNode(element.name, NodeType.ELEMENT, parent=parent, level=element)
         parent.children.append(element_node)
+        self.set_code(element_node)
         for subel in element.subelements:
             self._parse_pages_parse_element(subel, element_node)
         for file in element.files:
@@ -93,8 +97,11 @@ class ProjectParser:
             tome.human_readable_name, 
             NodeType.TOME, 
             parent=parent,
-            custom_tome_enum_start=custom_enum)
+            custom_tome_enum_start=custom_enum,
+            level=tome
+        )
         parent.children.append(tome_node)
+        self.set_code(tome_node)
         for element in tome.structural_elements:
             self._parse_pages_parse_element(element, tome_node)
         tome_node.pages_a4 += sum(
@@ -122,10 +129,18 @@ class ProjectParser:
         for child in node.children:
             n = self.count_pages_recursive(child, n)
         return n
+
+    def set_code(self, node: ParseReportNode):
+        code = node.level.code
+        parent = node.parent
+        if parent is not None:
+            code = parent.code + code
+        node.code = code
             
     def parse_project_for_pages(self, project: BaseReportProject):
         ver = project.get_current_version()
-        root_node = ParseReportNode(ver.name, NodeType.VERSION)
+        root_node = ParseReportNode(ver.name, NodeType.VERSION, level=ver)
+        self.set_code(root_node)
         for tome in ver.tomes:
             self._parse_pages_parse_tome(tome, root_node)
         root_node.pages_a4 += sum(

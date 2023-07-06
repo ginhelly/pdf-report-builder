@@ -65,6 +65,10 @@ class Tome(BaseLevel):
     @property
     def pages_number(self):
         return sum(element.pages_number for element in self.structural_elements)
+    
+    @property
+    def code(self):
+        return self.basename
 
     @property
     def input_pdfs_number(self):

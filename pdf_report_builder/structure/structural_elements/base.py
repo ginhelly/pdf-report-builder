@@ -81,6 +81,10 @@ class StructuralElement(BaseLevel):
         """Возвращает число страниц внутри структурного элемента без учета вложенных элементов"""
         return sum(file.subset_pages_number for file in self.files)
     
+    @property
+    def code(self):
+        return self.code_attr
+    
     @staticmethod
     def from_dict(d: dict):
         d['official'] = True \

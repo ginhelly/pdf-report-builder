@@ -73,7 +73,7 @@ class MainFrame ( wx.Frame ):
         self.menu_utils_sheetscalc = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Калькулятор страниц", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_sheetscalc )
 
-        self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Количество страниц и нумерация по томам", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Обзор структуры", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_pagescount )
 
         self.m_menubar1.Append( self.menu_utils, u"Утилиты" )
@@ -1264,7 +1264,7 @@ class BaseProcessingDialog ( wx.Dialog ):
 class BasePagesCountDialog ( wx.Dialog ):
 
     def __init__( self, parent ):
-        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Расчет количества листов", pos = wx.DefaultPosition, size = wx.Size( 609,508 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Сводные характеристики структуры", pos = wx.DefaultPosition, size = wx.Size( 998,509 ), style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
