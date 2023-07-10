@@ -5,7 +5,9 @@ import wx
 
 from pdf_report_builder.ui.form_builder.main import BasePagesCountDialog
 from pdf_report_builder.project.storage import ProjectStorage
+from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.algorithms.parse_pages_count import ProjectParser, ParseReportNode, NodeType
+
 
 def get_pagescount_imagelist():
     imagelist = wx.ImageList(width=16, height=16)
@@ -37,6 +39,7 @@ def _get_icon_image(node: ParseReportNode):
 class PagesCountDialog(BasePagesCountDialog):
     def __init__(self, parent):
         super().__init__(parent)
+        self.Bind(wx.EVT_CLOSE, self.on_close)
         self.project = ProjectStorage().project
         print(self.project)
         if self.project is None:
@@ -51,6 +54,16 @@ class PagesCountDialog(BasePagesCountDialog):
         self.treelist.AppendColumn('Экв. А4')
         self.treelist.AppendColumn('Сквозная нумерация')
         self.treelist.AppendColumn('Шифр')
+        self.add_node_recursive(root_node, root_item)
+        self.treelist.SetColumnWidth(0, 300)
+        self.treelist.Expand(root_item)
+        EventChannel().subscribe('pdf_files_update', self.redo_analysis)
+    
+    def redo_analysis(self):
+        parser = ProjectParser(count_a4=True)
+        root_node = parser.parse_project_for_pages(self.project)
+        self.treelist.DeleteAllItems()
+        root_item = self.treelist.GetRootItem()
         self.add_node_recursive(root_node, root_item)
         self.treelist.SetColumnWidth(0, 300)
         self.treelist.Expand(root_item)
@@ -85,4 +98,5 @@ class PagesCountDialog(BasePagesCountDialog):
     
 
     def on_close(self, event):
-        self.Close()
+        EventChannel().unsubscribe('pdf_files_update', self.redo_analysis)
+        self.Destroy()

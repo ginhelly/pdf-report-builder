@@ -24,6 +24,7 @@ class PDFFile(BaseLevel):
     pdf_reader - PyPDF.PdfReader
     subset - подмножество страниц файла (PagesSubset)
     valid - найден ли PDF на диске
+    file_modified - изменился ли файл
     """
     path: Path
     subset: str | PagesSubset = '',
@@ -37,6 +38,7 @@ class PDFFile(BaseLevel):
             self.valid = False
         else:
             self.valid = True
+        self.modified = False
         if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):
             self.subset = ''
         if self.instant_read and self.valid:
@@ -60,6 +62,14 @@ class PDFFile(BaseLevel):
     def on_deleted(self):
         self.valid = False
         self.subset = ''
+        self.pages_number = 0
+
+    def on_modified(self):
+        if self.instant_read:
+            self.read_file()
+        if hasattr(self, 'subset') and type(self.subset) == PagesSubset:
+            self.subset.update_max_page_num(self.pages_number)
+        self.modified = True
     
     def _parse_subset(self, subset: str | PagesSubset):
         if isinstance(subset, PagesSubset):

@@ -5,6 +5,7 @@ import wx
 from pdf_report_builder.algorithms.merge import merge
 from pdf_report_builder.algorithms.parse_pages_count import ParseReportNode, ProjectParser
 from pdf_report_builder.project.base_project import BaseReportProject
+from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.ui.form_builder.main import BaseProcessingDialog
 from pdf_report_builder.utils.logger import ProcessingLogger
@@ -13,6 +14,7 @@ class ProcessingDialog(BaseProcessingDialog):
     def __init__(self, parent, project: BaseReportProject):
         super().__init__(parent)
         self._project = project
+        self.Bind(wx.EVT_CLOSE, self.on_close)
         self._with_bookmarks = True
         self._enumerate = True
         self._break_on_missing = True
@@ -27,6 +29,17 @@ class ProcessingDialog(BaseProcessingDialog):
             self.btn_open_folders.SetLabel('Открыть выходные папки')
         else:
             self.btn_open_folders.SetLabel('Открыть выходную папку')
+        EventChannel().subscribe('pdf_files_update', self.redo_analysis2)
+    
+    def redo_analysis2(self):
+        parser = ProjectParser(count_a4=False)
+        self._parse_project_root_node = parser.parse_project_for_pages(self._project)
+        self.treelist_tomes.DeleteAllItems()
+        self.populate_tomes_select()
+    
+    def on_close(self, event):
+        EventChannel().unsubscribe('pdf_files_update', self.redo_analysis2)
+        self.Destroy()
     
     def populate_tomes_select(self):
         ver = self._project.get_current_version()

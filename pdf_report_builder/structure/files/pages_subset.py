@@ -61,7 +61,7 @@ class SubsetChunk:
     
     @stop.setter
     def stop(self, value: int | None):
-        if not value is None and (value <= 0 or value <= self.start):
+        if not value is None and (value <= 0 or value < self.start):
             raise ValueError('Некорректный номер страницы')
         if (
             not self._max_page_num is None \
@@ -147,6 +147,17 @@ class PagesSubset:
     
     def __len__(self):
         return sum(len(chunk) for chunk in self.chunks)
+    
+    def update_max_page_num(self, new_max_page_num: int):
+        self.max_page_num = new_max_page_num
+        self.chunks = list(filter(
+            lambda chunk: chunk.start < self.max_page_num,
+            self.chunks
+        ))
+        for chunk in self.chunks:
+            chunk._max_page_num = self.max_page_num
+            if chunk.stop and (chunk.stop >= self.max_page_num or chunk._to_the_end):
+                chunk.stop = self.max_page_num
     
     @staticmethod
     def from_string(

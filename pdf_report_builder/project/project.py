@@ -8,6 +8,7 @@ from pdf_report_builder.project.settings import ProjectSettings
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
 from pdf_report_builder.project.event_channel import EventChannel
+from pdf_report_builder.utils.file_watcher import FileWatcher
 
 class FileLockedError(Exception):
     pass
@@ -71,6 +72,7 @@ class ReportProject(BaseReportProject):
     
     def close(self):
         self.remove_lock_file()
+        FileWatcher().remove_all()
         self.event_channel.unsubscribe('modified', self.set_modified)
         self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
         self.event_channel.unsubscribe('remove_element', self.handle_element_remove)

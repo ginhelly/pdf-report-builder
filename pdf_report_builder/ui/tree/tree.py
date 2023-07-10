@@ -143,6 +143,8 @@ class Tree(wx.TreeCtrl):
         if not (file.path.exists() and file.path.is_file()):
             self.SetItemBold(new_item)
             self.SetItemTextColour(new_item, wx.Colour(255,0,0))
+        if file.modified:
+            self.SetItemBackgroundColour(new_item, wx.Colour(0, 240, 240))
         return new_item
     
     def create_element_item_id(self, el: StructuralElement, parent_id, previous=None):

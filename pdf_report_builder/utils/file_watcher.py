@@ -17,15 +17,21 @@ class PDFUpdateEventHandler(FileSystemEventHandler):
         self.file_watcher = file_watcher
 
     def on_deleted(self, event):
-        print('ONDELETED')
-        filepath = event.src_path
-        if Path(filepath).exists():
-            print('я тебе напиздел понимаешь напиздюнькал наебал тебя блять')
-            return
         files = self.file_watcher.get_files(event.src_path)
+        if len(files) == 0: return
         for file in files:
             file.on_deleted()
         EventChannel().publish('tree_update')
+        EventChannel().publish('pdf_files_update')
+    
+    def on_modified(self, event):
+        print('MODIFIED', event.src_path)
+        files = self.file_watcher.get_files(event.src_path)
+        if len(files) == 0: return
+        for file in files:
+            file.on_modified()
+        EventChannel().publish('tree_update')
+        EventChannel().publish('pdf_files_update')
 
 @dataclass
 class WatchedDirectory:

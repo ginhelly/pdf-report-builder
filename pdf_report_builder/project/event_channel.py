@@ -10,7 +10,7 @@ class EventChannel(metaclass=Singleton):
                 and event in self.subscribers.keys():
             self.subscribers[event] = list(
                 filter(
-                    lambda x: x is not callback,
+                    lambda x: not x == callback,
                     self.subscribers[event]
                 )
             )
