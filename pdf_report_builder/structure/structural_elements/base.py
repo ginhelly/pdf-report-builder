@@ -5,6 +5,7 @@ from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.structural_elements.common import ElementScheme
 from pdf_report_builder.structure.level import BaseLevel
+from pdf_report_builder.utils.file_watcher import FileWatcher
 
 class FileDescription(NamedTuple):
     path: Path
@@ -44,6 +45,7 @@ class StructuralElement(BaseLevel):
             new_file = PDFFile(*file_description)
         else:
             new_file = PDFFile(file_path, subset)
+        FileWatcher().add_file(new_file)
         self.files.append(new_file)
     
     def add_subelement(
@@ -64,12 +66,13 @@ class StructuralElement(BaseLevel):
     
     def remove_file(self, file: PDFFile | int):
         if isinstance(file, PDFFile):
+            FileWatcher().remove_file(file)
             if file in self.files:
                 self.files.remove(file)
         elif isinstance(file, int):
-            self.files.remove(
-                self.files[file]
-            )
+            pdffile = self.files[file]
+            FileWatcher().remove_file(pdffile)
+            self.files.remove(pdffile)
     
     def remove_element(self, el: BaseLevel | int):
         if isinstance(el, StructuralElement):
@@ -102,7 +105,12 @@ class StructuralElement(BaseLevel):
             if not 'create_bookmark' in d or d['create_bookmark'] == 'True' \
             else False
         if 'files' in d:
-            d['files'] = [PDFFile.from_dict(file) for file in d['files']]
+            parsed_files = []
+            for file in d['files']:
+                new_file = PDFFile.from_dict(file)
+                FileWatcher().add_file(new_file)
+                parsed_files.append(new_file)
+            d['files'] = parsed_files
         if 'subelements' in d:
             d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
         d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False

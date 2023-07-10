@@ -23,6 +23,7 @@ class PDFFile(BaseLevel):
     modified_datetime - дата и время изменения
     pdf_reader - PyPDF.PdfReader
     subset - подмножество страниц файла (PagesSubset)
+    valid - найден ли PDF на диске
     """
     path: Path
     subset: str | PagesSubset = '',
@@ -32,7 +33,7 @@ class PDFFile(BaseLevel):
     def __post_init__(self) -> None:
         if not self.path.exists():
             self.valid = False
-        elif not (self.path.is_file() and self.path.suffix == '.pdf'):
+        elif not (self.path.is_file() and self.path.suffix.lower() == '.pdf'):
             self.valid = False
         else:
             self.valid = True
@@ -55,6 +56,10 @@ class PDFFile(BaseLevel):
         self.path = path
         self.subset = ''
         self.read_file()
+    
+    def on_deleted(self):
+        self.valid = False
+        self.subset = ''
     
     def _parse_subset(self, subset: str | PagesSubset):
         if isinstance(subset, PagesSubset):
