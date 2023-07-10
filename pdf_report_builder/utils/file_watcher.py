@@ -3,7 +3,8 @@ from pathlib import Path
 from typing import Dict, List
 
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import FileSystemEventHandler, FileDeletedEvent, \
+    FileModifiedEvent, FileMovedEvent
 from watchdog.observers.api import ObservedWatch
 
 from pdf_report_builder.project.event_channel import EventChannel
@@ -17,6 +18,8 @@ class PDFUpdateEventHandler(FileSystemEventHandler):
         self.file_watcher = file_watcher
 
     def on_deleted(self, event):
+        if not type(event) == FileDeletedEvent:
+            return
         files = self.file_watcher.get_files(event.src_path)
         if len(files) == 0: return
         for file in files:
@@ -25,11 +28,24 @@ class PDFUpdateEventHandler(FileSystemEventHandler):
         EventChannel().publish('pdf_files_update')
     
     def on_modified(self, event):
-        print('MODIFIED', event.src_path)
+        if not type(event) == FileModifiedEvent:
+            return
         files = self.file_watcher.get_files(event.src_path)
         if len(files) == 0: return
         for file in files:
             file.on_modified()
+        EventChannel().publish('tree_update')
+        EventChannel().publish('pdf_files_update')
+    
+    def on_moved(self, event):
+        if not type(event) == FileMovedEvent:
+            return
+        print(event.src_path, event.dest_path)
+        files = self.file_watcher.get_files(event.src_path)
+        if len(files) == 0: return
+        for file in files:
+            file.on_moved(event.dest_path)
+            self.file_watcher.update_path(event.src_path)
         EventChannel().publish('tree_update')
         EventChannel().publish('pdf_files_update')
 
@@ -71,6 +87,13 @@ class FileWatcher(metaclass=Singleton):
         if not path in watched_dir.filepaths:
             return []
         return watched_dir.filepaths[path]
+
+    def update_path(self, old_path: str | Path):
+        old_path = Path(old_path)
+        watched_dir = self.dirs[old_path.parent]
+        files = watched_dir.filepaths[old_path]
+        for file in files:
+            self.add_file(file)
     
     def remove_files_by_path(self, filepath: str | Path):
         filepath = Path(filepath)

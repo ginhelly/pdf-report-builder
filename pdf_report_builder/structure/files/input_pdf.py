@@ -71,6 +71,10 @@ class PDFFile(BaseLevel):
             self.subset.update_max_page_num(self.pages_number)
         self.modified = True
     
+    def on_moved(self, new_path: str | Path):
+        self.path = Path(new_path)
+        self.modified = True
+    
     def _parse_subset(self, subset: str | PagesSubset):
         if isinstance(subset, PagesSubset):
             self.subset = subset
