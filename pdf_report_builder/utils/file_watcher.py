@@ -36,18 +36,7 @@ class PDFUpdateEventHandler(FileSystemEventHandler):
             file.on_modified()
         EventChannel().publish('tree_update')
         EventChannel().publish('pdf_files_update')
-    
-    def on_moved(self, event):
-        if not type(event) == FileMovedEvent:
-            return
-        print(event.src_path, event.dest_path)
-        files = self.file_watcher.get_files(event.src_path)
-        if len(files) == 0: return
-        for file in files:
-            file.on_moved(event.dest_path)
-            self.file_watcher.update_path(event.src_path)
-        EventChannel().publish('tree_update')
-        EventChannel().publish('pdf_files_update')
+
 
 @dataclass
 class WatchedDirectory:
