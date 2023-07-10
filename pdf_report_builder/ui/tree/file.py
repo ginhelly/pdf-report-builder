@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 
 import pyperclip
 import wx
@@ -19,6 +20,7 @@ class FileContextMenu(TreeContextMenu):
         self.file = file
         self.OPTIONS = [
             MenuOption('Открыть', self.open_file, condition_enable=self.file_is_valid),
+            MenuOption('Открыть папку с файлом', self.open_folder, condition_enable=self.file_is_valid),
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
@@ -38,6 +40,16 @@ class FileContextMenu(TreeContextMenu):
             dlg = ErrorDialog(None, 'Невозможно открыть файл')
             dlg.ShowModal()
             dlg.Destroy()
+    
+    def open_folder(self):
+        folder = self.file.path.parent
+        if folder.exists() and folder.is_dir():
+            subprocess.Popen(f'explorer "{folder}"')
+        else:
+            dlg = ErrorDialog(None, 'Невозможно открыть папку')
+            dlg.ShowModal()
+            dlg.Destroy()
+
     
     def remove_file(self):
         with DeletePrompt(None) as dlg:
