@@ -45,3 +45,5 @@ poetry/core/*
 *.reportprj
 /pdf_report_builder/data/*
 /output/*
+
+/main.dist/*
