@@ -1,5 +1,6 @@
 from typing import NamedTuple
 from enum import Enum
+from .base import StructuralElement
 
 class ElementCategory(Enum):
     OTHER = 'Другое'
@@ -10,154 +11,185 @@ class ElementCategory(Enum):
 class ElementScheme(NamedTuple):
     dialog_name: str
     element_type: ElementCategory
-    name: str
-    official: bool
-    code_attr: str
-    enumeration_include: bool = True
-    enumeration_print: bool = True
-    create_bookmark: bool = True
-    code_add: bool = False
-    inner_enumeration: bool = False
+    element: StructuralElement
 
 element_schemes = [
     ElementScheme(
         'Другой',
         ElementCategory.OTHER,
-        'Структурный элемент',
-        False,
-        ''
+        StructuralElement(
+            name='Структурный элемент',
+            code_attr = ''
+        )
     ),
 
     ElementScheme(
         'Титульный лист',
         ElementCategory.UTIL,
-        'Титульный лист',
-        True,
-        '',
-        False,
-        False,
-        False
+        StructuralElement(
+            name='Титульный лист',
+            enumeration_include=False,
+            enumeration_print=False,
+            create_bookmark=True
+        )
     ),
 
     ElementScheme(
         'Список исполнителей',
         ElementCategory.UTIL,
-        'Список исполнителей',
-        True,
-        '',
-        True,
-        False
+        StructuralElement(
+            name='Список исполнителей',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True
+        )
     ),
 
     ElementScheme(
         'Содержание тома',
         ElementCategory.UTIL,
-        'Содержание тома',
-        True,
-        '.С',
-        True,
-        False
+        StructuralElement(
+            name='Содержание тома',
+            code_attr='.С',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True
+        )
     ),
 
     ElementScheme(
         'Состав отчетной технической документации',
         ElementCategory.UTIL,
-        'Состав отчетной технической документации',
-        True,
-        '.СД',
-        True,
-        False
+        StructuralElement(
+            name='Состав отчетной технической документации',
+            code_attr='.СД',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True
+        )
     ),
 
     ElementScheme(
         'Текстовая часть',
         ElementCategory.TEXT,
-        'Текстовая часть',
-        True,
-        '.Т',
-        True,
-        False
+        StructuralElement(
+            name='Текстовая часть',
+            code_attr='.Т',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True
+        )
     ),
 
     ElementScheme(
         'КТГИ',
         ElementCategory.GRAPHICS,
-        'Картограмма топографо-геодезической изученности, \
+        StructuralElement(
+            name='Картограмма топографо-геодезической изученности, \
 совмещенная со схемой выполненных работ и схемой созданной \
 планово-высотной геодезической сети',
-        True,
-        '.Г.1',
-        code_add=True
+            code_attr='.1',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Схема опорной сети',
         ElementCategory.GRAPHICS,
-        'Схема созданной планово-высотной опорной сети \
+        StructuralElement(
+            name='Схема созданной планово-высотной опорной сети \
 с указанием привязок к исходным пунктам',
-        True,
-        '.Г.2',
-        code_add=True
+            code_attr='.2',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Схема съемочной сети',
         ElementCategory.GRAPHICS,
-        'Схема съемочной геодезической сети \
+        StructuralElement(
+            name='Схема съемочной геодезической сети \
 с указанием привязок к исходным пунктам',
-        True,
-        '.Г.3',
-        code_add=True
+            code_attr='.3',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Обзорная схема',
         ElementCategory.GRAPHICS,
-        'Обзорная схема расположения объекта',
-        True,
-        '.Г.4',
-        code_add=True
+        StructuralElement(
+            name='Обзорная схема расположения объекта',
+            code_attr='.4',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Топографический план М 1:1000',
         ElementCategory.GRAPHICS,
-        'Топографический план М 1:1000',
-        True,
-        '.Г.5',
-        code_add=True,
-        inner_enumeration=True
+        StructuralElement(
+            name='Топографический план М 1:1000',
+            code_attr='.5',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Топографический план М 1:500',
         ElementCategory.GRAPHICS,
-        'Топографический план М 1:500',
-        True,
-        '.Г.5',
-        code_add=True,
-        inner_enumeration=True
+        StructuralElement(
+            name='Топографический план М 1:500',
+            code_attr='.6',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True
+        )
     ),
 
     ElementScheme(
         'Продольный профиль (основная ось)',
         ElementCategory.GRAPHICS,
-        'Продольный профиль трассы газопровода (основная ось) \
+        StructuralElement(
+            name='Продольный профиль трассы газопровода (основная ось) \
 масштаб гор. 1:1000, верт. 1:100',
-        True,
-        '.Г.6',
-        code_add=True,
-        inner_enumeration=True
+            code_attr='.6',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True,
+            inner_enumeration=True
+        )
     ),
 
     ElementScheme(
         'Продольный профиль (отвод)',
         ElementCategory.GRAPHICS,
-        'Продольный профиль трассы газопровода (отвод ) \
+        StructuralElement(
+            name='Продольный профиль трассы газопровода (отвод ) \
 масштаб гор. 1:1000, верт. 1:100',
-        True,
-        '.Г.7',
-        code_add=True,
-        inner_enumeration=True
+            code_attr='.7',
+            enumeration_include=True,
+            enumeration_print=True,
+            create_bookmark=True,
+            code_add=True,
+            inner_enumeration=True
+        )
     )
 ]

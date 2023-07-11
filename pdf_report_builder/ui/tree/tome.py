@@ -32,8 +32,8 @@ class TomeContextMenu(TreeContextMenu):
         with AddElementDialog(None) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL:
                 return
-            scheme = dlg.get_element_scheme()
-            self.tome.create_element_by_scheme(scheme)
+            element = dlg.get_element()
+            self.tome.add_element(element)
             EventChannel().publish('tree_update')
     
     def remove_tome(self):

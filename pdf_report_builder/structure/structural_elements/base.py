@@ -3,7 +3,6 @@ from typing import List
 from pathlib import Path
 from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
-from pdf_report_builder.structure.structural_elements.common import ElementScheme
 from pdf_report_builder.structure.level import BaseLevel
 from pdf_report_builder.utils.file_watcher import FileWatcher
 
@@ -14,7 +13,7 @@ class FileDescription(NamedTuple):
 @dataclass
 class StructuralElement(BaseLevel):
     name: str = "Структурный элемент"
-    official: bool = False
+    #computed: int = 0
     enumeration_include: bool = True
     enumeration_print: bool = True
     create_bookmark: bool = True
@@ -50,12 +49,10 @@ class StructuralElement(BaseLevel):
     
     def add_subelement(
             self,
-            element: BaseLevel | ElementScheme | dict
+            element: BaseLevel | dict
     ):
         if isinstance(element, dict):
             new_subelement = StructuralElement.from_dict(element)
-        elif isinstance(element, ElementScheme):
-            new_subelement = StructuralElement.from_scheme(element)
         else:
             new_subelement = element
         self.subelements.append(new_subelement)
@@ -92,9 +89,6 @@ class StructuralElement(BaseLevel):
     
     @staticmethod
     def from_dict(d: dict):
-        d['official'] = True \
-            if not 'official' in d or d['official'] == 'True' \
-            else False
         d['enumeration_include'] = True \
             if not 'enumeration_include' in d or d['enumeration_include'] == 'True' \
             else False
@@ -118,7 +112,6 @@ class StructuralElement(BaseLevel):
         d['inner_enumeration'] = False if not 'inner_enumeration' in d or d['inner_enumeration'] == 'False' else True
         valid = [
             'name',
-            'official',
             'code_attr',
             'files',
             'subelements',
@@ -133,17 +126,3 @@ class StructuralElement(BaseLevel):
             if not key in valid:
                 del d[key]
         return StructuralElement(**d)
-
-    @staticmethod
-    def from_scheme(scheme: ElementScheme):
-        new_element = StructuralElement(
-            name=scheme.name,
-            official=scheme.official,
-            enumeration_include=scheme.enumeration_include,
-            enumeration_print=scheme.enumeration_print,
-            code_attr=scheme.code_attr,
-            create_bookmark=scheme.create_bookmark,
-            code_add=scheme.code_add,
-            inner_enumeration=scheme.inner_enumeration
-        )
-        return new_element

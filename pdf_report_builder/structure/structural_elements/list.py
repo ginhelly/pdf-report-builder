@@ -1,4 +1,3 @@
-from .base import StructuralElement
 from .common import *
 
 ELEMENTS_BY_SCHEME = {i: [] for i in ElementCategory}
@@ -11,7 +10,7 @@ def filter_schemes(elements, prompt: str):
     for category in elements:
         res[category] = list(filter(
             lambda scheme: prompt in scheme.dialog_name.lower() \
-                or prompt in scheme.name.lower(),
+                or prompt in scheme.element.name.lower(),
             elements[category]
         ))
         if len(res[category]) == 0:

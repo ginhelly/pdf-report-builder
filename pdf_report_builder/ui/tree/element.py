@@ -63,8 +63,8 @@ class ElementContextMenu(TreeContextMenu):
         with AddElementDialog(None) as dlg:
             if dlg.ShowModal() == wx.ID_CANCEL:
                 return
-            scheme = dlg.get_element_scheme()
-            self.element.add_subelement(scheme)
+            element = dlg.get_element()
+            self.element.add_subelement(element)
             EventChannel().publish('tree_update')
 
     def remove_element(self):

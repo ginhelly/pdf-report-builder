@@ -46,25 +46,14 @@ class AddElementDialog(BaseAddElementDialog):
             self.btn_ok.Enable()
     
     def update_code(self, item_data):
-        code = '' if item_data is None else item_data.code_attr
+        code = '' if item_data is None else item_data.element.code_attr
         self.element_code.SetValue(code)
     
-    def get_element_scheme(self):
+    def get_element(self):
         sel = self.treelist_elements.GetSelection()
-        scheme = self.treelist_elements.GetItemData(sel)
+        scheme = self.treelist_elements.GetItemData(sel).element
         if self.element_code.GetValue() != scheme.code_attr:
-            scheme = ElementScheme(
-                scheme.dialog_name,
-                scheme.element_type,
-                scheme.name,
-                scheme.official,
-                self.element_code.GetValue(),
-                scheme.enumeration_include,
-                scheme.enumeration_print,
-                scheme.create_bookmark,
-                scheme.code_add,
-                scheme.inner_enumeration
-            )
+            scheme.code_attr = self.element_code.GetValue()
         print(scheme)
         return scheme
     

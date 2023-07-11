@@ -41,10 +41,6 @@ class Tome(BaseLevel):
             code_attr=code_attr
         )
         self.add_element(new_element)
-
-    def create_element_by_scheme(self, scheme):
-        new_element = StructuralElement.from_scheme(scheme)
-        self.add_element(new_element)
     
     def create_empty_element(self):
         new_element = StructuralElement()
