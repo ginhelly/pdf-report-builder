@@ -4,7 +4,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-from pypdf import PdfReader
+#from pypdf import PdfReader
+import fitz
 
 from .pages_subset import PagesSubset
 from pdf_report_builder.structure.level import BaseLevel
@@ -48,9 +49,8 @@ class PDFFile(BaseLevel):
         self.modified_datetime = datetime.fromtimestamp(
             getmtime(self.path)
         )
-        with open(self.path, 'rb') as file:
-            pdf_reader = PdfReader(file)
-            self.pages_number = len(pdf_reader.pages)
+        doc = fitz.open(self.path)
+        self.pages_number = doc.page_count
         self._parse_subset(self.subset)
     
     def change_file(self, path: Path):
