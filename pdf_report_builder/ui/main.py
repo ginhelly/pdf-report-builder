@@ -6,6 +6,7 @@ import wx
 from pdf_report_builder.project.project import ReportProject, FileLockedError
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+from pdf_report_builder.ui.dialogs.info_message import InfoDialog
 from pdf_report_builder.ui.dialogs.process_dialog import ProcessingDialog
 from pdf_report_builder.ui.dialogs.remove_versions_dialog import \
     RemoveVersionsDialog
@@ -169,7 +170,11 @@ class PDFReportBuilderFrame(MainFrame):
     def save_project(self, event):
         try:
             self.project.save()
+            with InfoDialog(None) as dlg:
+                dlg.ShowModal()
+
         except Exception as e:
+            print(e)
             on_exception(type(e), 'Не удалось сохранить проект')
         
     def save_project_as(self, event):
@@ -184,6 +189,8 @@ class PDFReportBuilderFrame(MainFrame):
             path = Path(save_dialog.GetPath())
             try:
                 self.project.save_as(path)
+                with InfoDialog(None) as dlg:
+                    dlg.ShowModal()
             except Exception as e:
                 on_exception(str(type(e)), 'Не удалось сохранить проект')
     
