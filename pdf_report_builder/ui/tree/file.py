@@ -25,7 +25,7 @@ class FileContextMenu(TreeContextMenu):
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
             MenuOption('-', lambda: ...),
-            MenuOption('Удалить файл из списка', self.remove_file)
+            MenuOption('Удалить файл из проекта', self.remove_file)
         ]
     
     def file_is_valid(self):

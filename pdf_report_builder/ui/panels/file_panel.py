@@ -19,6 +19,8 @@ class FilePanel(BaseFilePanel):
         self._update_fields()
     
     def _update_fields(self):
+        if not hasattr(self, 'file'):
+            return
         self.text_file_name.SetValue(self.file.path.name)
         if hasattr(self.file, 'pages_number'):
             self.text_pages_number.SetValue(str(self.file.pages_number))

@@ -197,6 +197,18 @@ class MainFrame ( wx.Frame ):
 
         bSizer13.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
+        self.m_bpButton5 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+
+        self.m_bpButton5.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_DIR_UP, wx.ART_BUTTON ) )
+        bSizer13.Add( self.m_bpButton5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.m_staticline6 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+        self.m_staticline6.SetToolTip( u"Перезагрузить проект" )
+        self.m_staticline6.SetHelpText( u"Перезагрузить проект" )
+        self.m_staticline6.SetMinSize( wx.Size( -1,20 ) )
+
+        bSizer13.Add( self.m_staticline6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
         self.btn_up = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
 
         self.btn_up.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_UP, wx.ART_BUTTON ) )
@@ -257,6 +269,7 @@ class MainFrame ( wx.Frame ):
         self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
+        self.m_bpButton5.Bind( wx.EVT_BUTTON, self.reload_project )
         self.btn_up.Bind( wx.EVT_BUTTON, self.on_up )
         self.btn_down.Bind( wx.EVT_BUTTON, self.on_down )
 
@@ -323,6 +336,9 @@ class MainFrame ( wx.Frame ):
     def set_current_version( self, event ):
         event.Skip()
 
+
+    def reload_project( self, event ):
+        event.Skip()
 
     def on_up( self, event ):
         event.Skip()

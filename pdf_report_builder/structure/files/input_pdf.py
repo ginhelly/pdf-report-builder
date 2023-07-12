@@ -33,17 +33,20 @@ class PDFFile(BaseLevel):
     expanded: bool = True
 
     def __post_init__(self) -> None:
+        self.check_validity()
+        self.modified = False
+        if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):
+            self.subset = ''
+        if self.instant_read and self.valid:
+            self.read_file()
+
+    def check_validity(self):
         if not self.path.exists():
             self.valid = False
         elif not (self.path.is_file() and self.path.suffix.lower() == '.pdf'):
             self.valid = False
         else:
             self.valid = True
-        self.modified = False
-        if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):
-            self.subset = ''
-        if self.instant_read and self.valid:
-            self.read_file()
     
     def read_file(self):
         self.modified_datetime = datetime.fromtimestamp(
@@ -65,11 +68,12 @@ class PDFFile(BaseLevel):
         self.pages_number = 0
 
     def on_modified(self):
-        if self.instant_read:
+        self.check_validity()
+        if self.instant_read and self.valid:
             self.read_file()
         if hasattr(self, 'subset') and type(self.subset) == PagesSubset:
             self.subset.update_max_page_num(self.pages_number)
-        self.modified = True
+        #self.modified = True
     
     def on_moved(self, new_path: str | Path):
         self.path = Path(new_path)

@@ -11,6 +11,8 @@ from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.utils.file_watcher import FileWatcher
 from pdf_report_builder.utils.lock_file import *
 
+from settings import FILE_WATCHER
+
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
@@ -41,10 +43,6 @@ class ReportProject(BaseReportProject):
             'remove_element',
             self.handle_element_remove
         )
-        self.event_channel.subscribe(
-            'remove_file',
-            self.handle_file_remove
-        )
     
     def set_modified(self):
         self.modified = True
@@ -57,11 +55,11 @@ class ReportProject(BaseReportProject):
     
     def close(self):
         self.remove_lock_file()
-        FileWatcher().remove_all()
+        if FILE_WATCHER:
+            FileWatcher().remove_all()
         self.event_channel.unsubscribe('modified', self.set_modified)
         self.event_channel.unsubscribe('remove_tome', self.handle_tome_remove)
         self.event_channel.unsubscribe('remove_element', self.handle_element_remove)
-        self.event_channel.unsubscribe('remove_file', self.handle_file_remove)
     
     def __del__(self):
         self.close()
@@ -112,20 +110,6 @@ class ReportProject(BaseReportProject):
         parent_element.remove_element(element)
         for subel in parent_element.subelements:
             self._handle_element_remove_recursive(subel, element)
-    
-    def handle_file_remove(self, payload):
-        file = payload[0]
-        ver = self.get_current_version()
-        for tome in ver.tomes:
-            for el in tome.structural_elements:
-                el.remove_file(file)
-                self._handle_file_remove_recursive(el, file)
-        EventChannel().publish('modified')
-    
-    def _handle_file_remove_recursive(self, el, file):
-        for subel in el.subelements:
-            subel.remove_file(file)
-            self._handle_file_remove_recursive(subel, file)
     
     def clone_current_version(self, name: str):
         ver = deepcopy(self.get_current_version())

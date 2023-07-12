@@ -18,6 +18,7 @@ from pdf_report_builder.ui.form_builder.main import MainFrame
 from pdf_report_builder.ui.tree.tree import Tree
 from pdf_report_builder.ui.panels.book import Book
 from pdf_report_builder.utils.docs import open_docs
+from pdf_report_builder.algorithms.reload_files import reload_files
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.storage_settings import SettingsStorage
@@ -294,6 +295,11 @@ class PDFReportBuilderFrame(MainFrame):
             node1.item_id
         )
         self.tree_component.EnsureVisible(node1.item_id)
+    
+    def reload_project(self, event):
+        reload_files(self.project)
+        if hasattr(self, 'tree_component'):
+            self.tree_component.redraw_tree(self.project)
         
     def make_reports(self, event):
         try:

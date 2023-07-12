@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
+#from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, FileDeletedEvent, \
     FileModifiedEvent, FileMovedEvent
@@ -10,6 +11,8 @@ from watchdog.observers.api import ObservedWatch
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from .singleton import Singleton
+
+from settings import FILE_WATCHER
 
 
 class PDFUpdateEventHandler(FileSystemEventHandler):
@@ -49,7 +52,8 @@ class FileWatcher(metaclass=Singleton):
         self.dirs = {} # Dict[Path, WatchedDirectory]
         self.observer = Observer()
         self.event_handler = PDFUpdateEventHandler(self)
-        self.observer.start()
+        if FILE_WATCHER:
+            self.observer.start()
     
     def add_file(self, file: PDFFile):
         parent_dir_path = file.path.parent

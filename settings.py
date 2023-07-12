@@ -1,0 +1,2 @@
+DEBUG = True
+FILE_WATCHER = False

@@ -6,6 +6,8 @@ from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.level import BaseLevel
 from pdf_report_builder.utils.file_watcher import FileWatcher
 
+from settings import FILE_WATCHER
+
 class FileDescription(NamedTuple):
     path: Path
     subset: str
@@ -44,7 +46,8 @@ class StructuralElement(BaseLevel):
             new_file = PDFFile(*file_description)
         else:
             new_file = PDFFile(file_path, subset)
-        FileWatcher().add_file(new_file)
+        if FILE_WATCHER:
+            FileWatcher().add_file(new_file)
         self.files.append(new_file)
     
     def add_subelement(
@@ -58,13 +61,16 @@ class StructuralElement(BaseLevel):
             self.add_file(file_description=file)
     
     def remove_file(self, file: PDFFile | int):
+        print('===Removing file===')
         if isinstance(file, PDFFile):
-            FileWatcher().remove_file(file)
+            if FILE_WATCHER:
+                FileWatcher().remove_file(file)
             if file in self.files:
                 self.files.remove(file)
         elif isinstance(file, int):
             pdffile = self.files[file]
-            FileWatcher().remove_file(pdffile)
+            if FILE_WATCHER:
+                FileWatcher().remove_file(pdffile)
             self.files.remove(pdffile)
     
     def remove_element(self, el: BaseLevel | int):

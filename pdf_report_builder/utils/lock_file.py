@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from settings import DEBUG
+
 
 class FileLockedError(Exception):
     pass
@@ -17,4 +19,5 @@ def create_lock_file(path: Path):
     except FileExistsError:
         with open(lock_path, 'r') as lock:
             user = lock.readline()
-        raise FileLockedError(f"Файл заблокирован пользователем {user}")
+        if not DEBUG:
+            raise FileLockedError(f"Файл заблокирован пользователем {user}")
