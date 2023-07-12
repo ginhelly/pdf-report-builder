@@ -13,7 +13,7 @@ class FileDescription(NamedTuple):
 @dataclass
 class StructuralElement(BaseLevel):
     name: str = "Структурный элемент"
-    #computed: int = 0
+    computed: int = 0
     enumeration_include: bool = True
     enumeration_print: bool = True
     create_bookmark: bool = True
@@ -49,13 +49,9 @@ class StructuralElement(BaseLevel):
     
     def add_subelement(
             self,
-            element: BaseLevel | dict
+            element: BaseLevel
     ):
-        if isinstance(element, dict):
-            new_subelement = StructuralElement.from_dict(element)
-        else:
-            new_subelement = element
-        self.subelements.append(new_subelement)
+        self.subelements.append(element)
     
     def parse_files(self, files: list[FileDescription]):
         for file in files:
@@ -86,43 +82,3 @@ class StructuralElement(BaseLevel):
     @property
     def code(self):
         return self.code_attr
-    
-    @staticmethod
-    def from_dict(d: dict):
-        d['enumeration_include'] = True \
-            if not 'enumeration_include' in d or d['enumeration_include'] == 'True' \
-            else False
-        d['enumeration_print'] = True \
-            if not 'enumeration_print' in d or d['enumeration_print'] == 'True' \
-            else False
-        d['create_bookmark'] = True \
-            if not 'create_bookmark' in d or d['create_bookmark'] == 'True' \
-            else False
-        if 'files' in d:
-            parsed_files = []
-            for file in d['files']:
-                new_file = PDFFile.from_dict(file)
-                FileWatcher().add_file(new_file)
-                parsed_files.append(new_file)
-            d['files'] = parsed_files
-        if 'subelements' in d:
-            d['subelements'] = [StructuralElement.from_dict(el) for el in d['subelements']]
-        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
-        d['code_add'] = False if not 'code_add' in d or d['code_add'] == 'False' else True
-        d['inner_enumeration'] = False if not 'inner_enumeration' in d or d['inner_enumeration'] == 'False' else True
-        valid = [
-            'name',
-            'code_attr',
-            'files',
-            'subelements',
-            'enumeration_include',
-            'enumeration_print',
-            'create_bookmark',
-            'expanded',
-            'code_add',
-            'inner_enumeration'
-        ]
-        for key in list(d.keys()):
-            if not key in valid:
-                del d[key]
-        return StructuralElement(**d)

@@ -6,7 +6,7 @@ import wx
 
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.event_channel import EventChannel
-from pdf_report_builder.structure.tome import Tome
+from pdf_report_builder.structure.factory.tome_factory import TomeFactory
 
 from .base_context_menu import *
 
@@ -54,6 +54,6 @@ class ProjectContextMenu(TreeContextMenu):
         return True
     
     def paste(self):
-        new_tome = Tome.from_dict(self.clipboard_content)
+        new_tome = TomeFactory.from_dict(self.clipboard_content)
         self.project.get_current_version().append_tome(new_tome)
         EventChannel().publish('tree_update')

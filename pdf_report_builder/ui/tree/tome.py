@@ -6,7 +6,7 @@ import wx
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.structure.structural_elements.list import *
 from pdf_report_builder.structure.tome import Tome
-from pdf_report_builder.structure.structural_elements.base import StructuralElement
+from pdf_report_builder.structure.factory.element_factory import StructuralElementFactory
 from pdf_report_builder.ui.dialogs.add_element_dialog import AddElementDialog
 from pdf_report_builder.ui.dialogs.delete_item_dialog import DeletePrompt
 from pdf_report_builder.project.io.json_serializer import serialize_level
@@ -57,7 +57,7 @@ class TomeContextMenu(TreeContextMenu):
         return True
     
     def paste(self):
-        new_el = StructuralElement.from_dict(self.clipboard_content)
+        new_el = StructuralElementFactory.from_dict(self.clipboard_content)
         self.tome.add_element(new_el)
         EventChannel().publish('tree_update')
     

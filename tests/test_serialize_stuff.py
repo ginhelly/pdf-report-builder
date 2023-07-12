@@ -5,7 +5,7 @@ import unittest
 from dataclasses import asdict
 from pathlib import Path
 
-from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.structure.factory.project_factory import ReportProject
 from pdf_report_builder.project.io.base_serializer import BaseSerializer
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.files.pages_subset import PagesSubset
@@ -48,7 +48,7 @@ class TestPagesSubset(unittest.TestCase):
     def test_parse_settings(self):
         project2path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project2.reportprj'
         project3path = Path(os.getcwd()) / 'tests' / 'sample_pdf' / 'sample_project3.reportprj'
-        proj = ReportProject.open(project2path)
+        proj = ProjectFactory.open(project2path)
         print('MODIFIED 1 (FALSE): ', proj.modified)
         print(list(proj.versions[0].tomes[0].structural_elements[0].files[0].subset))
         proj.versions[0].tomes[0].structural_elements[0].name = 'Новое классное имя!'

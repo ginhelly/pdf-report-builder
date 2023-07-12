@@ -104,28 +104,3 @@ class PDFFile(BaseLevel):
     @property
     def code(self):
         return ''
-    
-    @staticmethod
-    def from_dict(d: dict):
-        if 'path' in d:
-            if SettingsStorage().settings.paths_relative:
-                d['path'] = SettingsStorage().settings.savepath.parent / d['path']
-            d['path'] = Path(d['path'])
-        change_subset = False
-        if 'subset' in d:
-            subset = d['subset']
-            del d['subset']
-            change_subset = True
-        d['instant_read'] = True \
-            if not 'instant_read' in d or d['instant_read'] == 'True' \
-            else False
-        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
-        valid = ['path', 'subset', 'instant_read', 'expanded']
-        for key in list(d.keys()):
-            if not key in valid:
-                del d[key]
-        file = PDFFile(**d)
-        if d['path'].exists() and d['path'].is_file() \
-                and d['path'].suffix == '.pdf' and change_subset:
-            file.change_subset(subset)
-        return file

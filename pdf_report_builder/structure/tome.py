@@ -75,27 +75,3 @@ class Tome(BaseLevel):
             res += len(el.files)
             return res
         return sum(count_files_recursive(element) for element in self.structural_elements)
-
-    @staticmethod
-    def from_dict(d: dict):
-        if 'savepath' in d:
-            if SettingsStorage().settings.paths_relative:
-                d['savepath'] = SettingsStorage().settings.savepath.parent / d['savepath']
-            d['savepath'] = Path(d['savepath'])
-        if 'structural_elements' in d:
-            d['structural_elements'] = [
-                StructuralElement.from_dict(el) for el in d['structural_elements']
-            ]
-        d['expanded'] = True if not 'expanded' in d or d['expanded'] == 'True' else False
-        d['use_custom_enumeration_start'] = False if not 'use_custom_enumeration_start' in d or d['use_custom_enumeration_start'] == 'False' else True
-        
-        valid = ['basename', 'human_readable_name', 'savepath', 'structural_elements', 'expanded', 'use_custom_enumeration_start', 'custom_enumeration_start']
-        for key in list(d.keys()):
-            if not key in valid:
-                del d[key]
-        return Tome(**d)
-    
-
-    
-
-    

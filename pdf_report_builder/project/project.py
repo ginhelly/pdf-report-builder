@@ -9,23 +9,8 @@ from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.utils.file_watcher import FileWatcher
+from pdf_report_builder.utils.lock_file import *
 
-class FileLockedError(Exception):
-    pass
-
-def _get_lock_path(path: Path):
-    return path.parent / (path.stem + '.reportprj_lock')
-
-def create_lock_file(path: Path):
-    lock_path = _get_lock_path(path)
-    try:
-        with open(lock_path, "x+") as file:
-            file.write(os.getlogin())
-        os.system(f"attrib +h {lock_path}")
-    except FileExistsError:
-        with open(lock_path, 'r') as lock:
-            user = lock.readline()
-        raise FileLockedError(f"Файл заблокирован пользователем {user}")
 
 class ReportProject(BaseReportProject):
     """Управление документами проектов техотчетов"""
@@ -66,7 +51,7 @@ class ReportProject(BaseReportProject):
     
     def remove_lock_file(self):
         path = Path(self.settings.savepath)
-        lock_path = _get_lock_path(path)
+        lock_path = get_lock_path(path)
         if lock_path.exists() and lock_path.is_file():
             os.remove(lock_path)
     
@@ -185,24 +170,3 @@ class ReportProject(BaseReportProject):
                             print(f'{file.path} is not relative to {root_path}')
                             return False
         return True
-    
-    @staticmethod
-    def open(path: Path):
-        create_lock_file(path)
-        project_as_dict = read_from_file(path)
-        project = ReportProject.from_dict(project_as_dict, path)
-        #project.settings.savepath = path
-        project.modified = False
-        return project
-    
-    @staticmethod
-    def from_dict(d: dict, path: Path):
-        if 'settings' in d:
-            d['settings'] = ProjectSettings.from_dict(d['settings'], path)
-            EventChannel().publish('settings_changed', d['settings'])
-        if 'versions' in d:
-            d['versions'] = [
-                Version.from_dict(ver) for ver in d['versions']
-            ]
-        return ReportProject(**d)
-    

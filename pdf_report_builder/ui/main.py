@@ -3,7 +3,9 @@ from pathlib import Path
 
 import wx
 
-from pdf_report_builder.project.project import ReportProject, FileLockedError
+from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.utils.lock_file import FileLockedError
+from pdf_report_builder.structure.factory.project_factory import ProjectFactory
 from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.ui.dialogs.info_message import InfoDialog
@@ -145,13 +147,13 @@ class PDFReportBuilderFrame(MainFrame):
                 if open_dialog.ShowModal() == wx.ID_CANCEL:
                     return
                 path = Path(open_dialog.GetPath())
-                #self.project = ReportProject.open(path)
         else:
             path = default_path
+        self.project = ProjectFactory.open(path)
         try:
             if close_previous:
                 self.project.close()
-            self.project = ReportProject.open(path)
+            self.project = ProjectFactory.open(path)
         except Exception as e:
             print(e)
             error_text = str(e) if type(e) == FileLockedError else 'Не удалось прочитать файл проекта'

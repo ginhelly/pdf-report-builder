@@ -34,16 +34,5 @@ class Version(BaseLevel):
             self.tomes.remove(tome)
         elif type(tome) == int:
             self.tomes.remove(self.tomes[tome])
-    
-    @staticmethod
-    def from_dict(d: dict):
-        if 'tomes' in list(d.keys()):
-            d['tomes'] = [
-                Tome.from_dict(tome) for tome in d['tomes']
-            ]
-        valid = ['name', 'tomes', 'code', 'comments']
-        for key in list(d.keys()):
-            if not key in valid:
-                del d[key]
-        return Version(**d)
+
     

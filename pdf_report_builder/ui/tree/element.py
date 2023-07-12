@@ -7,7 +7,9 @@ import wx
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.structure.structural_elements.base import \
     StructuralElement
-from pdf_report_builder.structure.files.input_pdf import PDFFile
+from pdf_report_builder.structure.factory.element_factory import \
+    StructuralElementFactory
+from pdf_report_builder.structure.factory.file_factory import FileFactory
 from pdf_report_builder.ui.dialogs.delete_item_dialog import DeletePrompt
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.project.io.json_serializer import serialize_level
@@ -90,10 +92,10 @@ class ElementContextMenu(TreeContextMenu):
 
     def paste(self):
         if self.clipboard_type == 'file':
-            new_file = PDFFile.from_dict(self.clipboard_content)
+            new_file = FileFactory.from_dict(self.clipboard_content)
             self.element.add_file(new_file)
         elif self.clipboard_type == 'subelement':
-            new_el = StructuralElement.from_dict(self.clipboard_content)
+            new_el = StructuralElementFactory.from_dict(self.clipboard_content)
             self.element.add_subelement(new_el)
         EventChannel().publish('tree_update')
     
