@@ -97,7 +97,7 @@ class FileWatcher(metaclass=Singleton):
         return
     
     def remove_file(self, file: PDFFile):
-        filepath = Path(filepath)
+        filepath = Path(file.path)
         if not filepath.parent in self.dirs:
             raise ValueError('Нет такого файла')
         watched_dir = self.dirs[filepath.parent]

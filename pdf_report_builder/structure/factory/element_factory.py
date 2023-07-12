@@ -2,6 +2,7 @@ from enum import Enum
 
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.structure.structural_elements.tome_contents import TomeContentsElement
+from pdf_report_builder.utils.file_watcher import FileWatcher
 from .base_factory import BaseFactory
 from .dict_processors import DictProcessor
 from .file_factory import FileFactory
@@ -35,6 +36,8 @@ class StructuralElementFactory(BaseFactory):
         dict_processor.parse_boolean('code_add', False)
         dict_processor.parse_boolean('inner_enumeration', False)
         dict_processor.parse_levels_list('files', FileFactory.from_dict)
+        for file in dict_processor.d['files']:
+            FileWatcher().add_file(file)
         dict_processor.parse_levels_list('subelements', StructuralElementFactory.from_dict)
         return dict_processor
 

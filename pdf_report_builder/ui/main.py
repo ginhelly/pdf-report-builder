@@ -149,7 +149,7 @@ class PDFReportBuilderFrame(MainFrame):
                 path = Path(open_dialog.GetPath())
         else:
             path = default_path
-        self.project = ProjectFactory.open(path)
+        #self.project = ProjectFactory.open(path)
         try:
             if close_previous:
                 self.project.close()
