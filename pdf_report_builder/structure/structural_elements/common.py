@@ -1,12 +1,15 @@
 from typing import NamedTuple
 from enum import Enum
 from .base import StructuralElement
+from .tome_contents import TomeContentsElement
+from .computed_types import ComputedTypes
 
 class ElementCategory(Enum):
     OTHER = 'Другое'
     UTIL = 'Служебные'
     TEXT = 'Текстовая часть'
     GRAPHICS = 'Графическая часть'
+    COMPUTED = 'Автособираемые'
 
 class ElementScheme(NamedTuple):
     dialog_name: str
@@ -190,6 +193,20 @@ element_schemes = [
             create_bookmark=True,
             code_add=True,
             inner_enumeration=True
+        )
+    ),
+
+    ElementScheme(
+        'Содержание тома (автосбор)',
+        ElementCategory.COMPUTED,
+        TomeContentsElement(
+            name='Содержание тома',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True,
+            code_attr='.С',
+            code_add=False,
+            inner_enumeration=False
         )
     )
 ]

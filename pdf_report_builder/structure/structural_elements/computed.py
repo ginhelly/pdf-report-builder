@@ -10,7 +10,7 @@ from .base import StructuralElement
 WORKING_DIR = Path(os.getenv('APPDATA')) / 'PDF_Report_Builder'
 
 def _default_temp_path():
-    return WORKING_DIR / f'TempFile{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}'
+    return WORKING_DIR / f'TempFile{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
 
 @dataclass
 class ComputedElement(StructuralElement):
@@ -33,6 +33,14 @@ class ComputedElement(StructuralElement):
     
     @property
     def files(self):
-        if self.file_exists():
+        if self.file_exists:
             return [PDFFile(self.pdf_temp_path)]
         return []
+    
+    @subelements.setter
+    def subelements(self, value):
+        ...
+    
+    @files.setter
+    def files(self, value):
+        ...

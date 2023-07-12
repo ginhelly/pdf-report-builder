@@ -140,17 +140,3 @@ class ReportProject(BaseReportProject):
                 self._remove_version_by_id(version_id)
         else:
             raise TypeError('Переданы объекты разных типов')
-    
-    def all_paths_are_relative(self):
-        root_path = self.settings.savepath.parent
-        for ver in self.versions:
-            for tome in ver.tomes:
-                if not tome.savepath.is_relative_to(root_path):
-                    print(f'{tome.savepath} is not relative to {root_path}')
-                    return False
-                for el in tome.structural_elements:
-                    for file in el.files:
-                        if not file.path.is_relative_to(root_path):
-                            print(f'{file.path} is not relative to {root_path}')
-                            return False
-        return True

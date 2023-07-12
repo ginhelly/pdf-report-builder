@@ -4,6 +4,7 @@ from pdf_report_builder.ui.form_builder.main import BaseProjectPanel
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
+from pdf_report_builder.utils.relative import all_paths_are_relative
 
 class ProjectPanel(BaseProjectPanel):
 
@@ -28,7 +29,7 @@ class ProjectPanel(BaseProjectPanel):
         EventChannel().publish('tree_update')
         
     def handle_cb_availability(self):
-        if self.project.all_paths_are_relative():
+        if all_paths_are_relative(self.project):
             self.cb_relative_paths.Enable()
         else:
             self.project.settings.paths_relative = False
