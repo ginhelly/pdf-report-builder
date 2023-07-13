@@ -33,6 +33,7 @@ class PDFFile(BaseLevel):
     expanded: bool = True
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         self.check_validity()
         self.modified = False
         if (not type(self.subset) == str) and (not isinstance(self.subset, PagesSubset)):

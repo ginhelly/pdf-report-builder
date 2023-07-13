@@ -49,12 +49,14 @@ class StructuralElement(BaseLevel):
         if FILE_WATCHER:
             FileWatcher().add_file(new_file)
         self.files.append(new_file)
+        new_file.parent = self
     
     def add_subelement(
             self,
             element: BaseLevel
     ):
         self.subelements.append(element)
+        element.parent = self
     
     def parse_files(self, files: list[FileDescription]):
         for file in files:

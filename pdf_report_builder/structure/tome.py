@@ -48,6 +48,7 @@ class Tome(BaseLevel):
 
     def add_element(self, element: StructuralElement):
         self.structural_elements.append(element)
+        element.parent = self
     
     def remove_element(self, element: StructuralElement | int):
         if isinstance(element, StructuralElement):

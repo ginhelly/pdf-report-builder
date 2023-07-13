@@ -28,6 +28,7 @@ class Version(BaseLevel):
 
     def append_tome(self, tome: Tome):
         self.tomes.append(tome)
+        tome.parent = self
     
     def remove_tome(self, tome: Tome | int):
         if isinstance(tome, Tome) and tome in self.tomes:
