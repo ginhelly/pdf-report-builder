@@ -4,6 +4,7 @@ from pdf_report_builder.structure.level import BaseLevel
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
+from pdf_report_builder.structure.structural_elements.tome_contents import TomeContentsElement
 #from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.ui.tree.tree_node import TreeNode
 
@@ -11,6 +12,7 @@ from .project_panel import ProjectPanel
 from .tome_panel import TomePanel
 from .element_panel import ElementPanel
 from .file_panel import FilePanel
+from .tome_contents_panel import TomeContentsPanel
 
 class Book(wx.Simplebook):
     def __init__(
@@ -26,12 +28,14 @@ class Book(wx.Simplebook):
             ProjectPanel(self),
             TomePanel(self),
             ElementPanel(self),
-            FilePanel(self)
+            FilePanel(self),
+            TomeContentsPanel(self)
         ]
         self.AddPage(self.panels[0], 'Настройки проекта')
         self.AddPage(self.panels[1], 'Настройки тома')
         self.AddPage(self.panels[2], 'Настройки элемента')
         self.AddPage(self.panels[3], 'Настройки файла')
+        self.AddPage(self.panels[4], 'Tome Contents')
         self.SetSelection(0)
     
     def parse_item(self,
@@ -43,6 +47,10 @@ class Book(wx.Simplebook):
         elif isinstance(item, Tome):
             self.panels[1].parse_tome(item)
             self.SetSelection(1)
+        elif isinstance(item, TomeContentsElement):
+            self.panels[4].parse_element(item)
+            print('Tome contents')
+            self.SetSelection(4)
         elif isinstance(item, StructuralElement):
             self.panels[2].parse_element(item)
             self.SetSelection(2)
