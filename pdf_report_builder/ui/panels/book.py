@@ -49,7 +49,6 @@ class Book(wx.Simplebook):
             self.SetSelection(1)
         elif isinstance(item, TomeContentsElement):
             self.panels[4].parse_element(item)
-            print('Tome contents')
             self.SetSelection(4)
         elif isinstance(item, StructuralElement):
             self.panels[2].parse_element(item)

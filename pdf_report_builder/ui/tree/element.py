@@ -23,12 +23,13 @@ class ElementContextMenu(TreeContextMenu):
         super().__init__(tree)
         self.element = element
         self.OPTIONS = [
-            MenuOption('Добавить файл...', self.add_file),
-            MenuOption('Добавить вложенный элемент...', self.add_subelement),
+            MenuOption('Добавить файл...', self.add_file, self.is_element_raw),
+            MenuOption('Добавить вложенный элемент...', self.add_subelement, self.is_element_raw),
+            MenuOption('Сформировать PDF', self.make_pdf, self.is_element_computed),
             MenuOption('-', lambda: ...),
             MenuOption('Вырезать', self.cut_to_clipboard),
             MenuOption('Копировать', self.copy_to_clipboard),
-            MenuOption('Вставить', self.paste, self.peek_clipboard),
+            MenuOption('Вставить', self.paste, self.peek_clipboard, self.is_element_raw),
             MenuOption('-', lambda: ...),
             MenuOption('Удалить элемент', self.remove_element)
         ]
@@ -109,5 +110,18 @@ class ElementContextMenu(TreeContextMenu):
         s = json.dumps(ser, ensure_ascii=False)
         pyperclip.copy(f'LEVEL=2{s}')
         self.node.parent.item.remove_element(self.element)
+        EventChannel().publish('modified')
+        EventChannel().publish('tree_update')
+    
+    def is_element_computed(self):
+        return self.element.computed > 0
+    
+    def is_element_raw(self):
+        return self.element.computed == 0
+    
+    def make_pdf(self):
+        if self.is_element_raw():
+            return
+        self.element.make_pdf()
         EventChannel().publish('modified')
         EventChannel().publish('tree_update')
