@@ -149,7 +149,8 @@ class Tree(wx.TreeCtrl):
     
     def create_element_item_id(self, el: StructuralElement, parent_id, previous=None):
         el_name = get_element_name(el)
-        return self.create_item_id(parent_id, previous, el_name, 2, el.is_expanded)
+        icon = 4 if el.computed > 0 else 2
+        return self.create_item_id(parent_id, previous, el_name, icon, el.is_expanded)
     
     def create_tome_item_id(self, tome: Tome, parent_id, previous=None):
         tome_name = get_tome_name(tome)
