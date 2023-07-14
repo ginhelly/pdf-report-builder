@@ -31,3 +31,12 @@ class BaseLevel:
     @parent.setter
     def parent(self, value):
         self._parent = value
+
+    @property
+    def full_code(self):
+        code = self.code
+        parent = self.parent
+        while not parent is None:
+            code = parent.code + code
+            parent = parent.parent
+        return code

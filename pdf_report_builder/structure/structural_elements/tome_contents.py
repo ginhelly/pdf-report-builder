@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 
 from docx import Document
+from docx2pdf import convert as docx2pdf_convert
+import fitz
 
 from dataclasses import dataclass, field
 from .computed import ComputedElement
@@ -36,13 +38,23 @@ class TomeContentsElement(ComputedElement):
 
     def get_nodes_with_bookmark(self, root_node: ParseReportNode):
         return self._get_nodes_with_bookmark_recursive(root_node)
+
+    def get_doc_temp_path(self):
+        return self.pdf_temp_path.parent / (self.pdf_temp_path.stem + '.docx')
     
     def process_doc(self, node: ParseReportNode):
         doc = Document(self.doc_template)
         table = doc.tables[0]
-        print(table.rows[1].cells[0].text)
-        for node in self.get_nodes_with_bookmark(node):
-            print(node.name, node.code)
+        for i, node in enumerate(self.get_nodes_with_bookmark(node)):
+            if i > 0:
+                table.add_row()
+            row = table.rows[-1]
+            row.cells[0].text = node.code
+            row.cells[1].text = node.name
+            if node.current_page_number and node.current_page_number > 0:
+                row.cells[2].text = f'с.{node.current_page_number}'
+        doc_temp_path = self.get_doc_temp_path()
+        doc.save(doc_temp_path)
 
     def make_pdf(self):
         tome = self._get_tome()
@@ -51,6 +63,11 @@ class TomeContentsElement(ComputedElement):
         root_node = parser.parse_project_for_pages(project)
         tome_node = parser.get_tome_node(root_node, tome)
         self.process_doc(tome_node)
+        docx2pdf_convert(
+            self.get_doc_temp_path(),
+            self.pdf_temp_path
+        )
+        os.remove(self.get_doc_temp_path())
 
 
     @property
