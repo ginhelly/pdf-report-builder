@@ -27,6 +27,11 @@ class Tome(BaseLevel):
     use_custom_enumeration_start: bool = False
     custom_enumeration_start: int = 0
 
+    def __post_init__(self):
+        super().__post_init__()
+        for element in self.structural_elements:
+            element.parent = self
+
     def __repr__(self) -> str:
         return f'Tome([{self.basename}] {self.human_readable_name}; {self.savepath})'
 

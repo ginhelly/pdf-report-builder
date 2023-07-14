@@ -30,6 +30,12 @@ class StructuralElement(BaseLevel):
     code_add: bool = False
     inner_enumeration: bool = False
 
+    def __post_init__(self):
+        for file in self.files:
+            file.parent = self
+        for subel in self.subelements:
+            subel.parent = self
+
     def __repr__(self) -> str:
         return f'StructuralElement([{self.code_attr}] {self.name}; files={len(self.files)} & subelements={len(self.subelements)})'
 
@@ -63,7 +69,6 @@ class StructuralElement(BaseLevel):
             self.add_file(file_description=file)
     
     def remove_file(self, file: PDFFile | int):
-        print('===Removing file===')
         if isinstance(file, PDFFile):
             if FILE_WATCHER:
                 FileWatcher().remove_file(file)

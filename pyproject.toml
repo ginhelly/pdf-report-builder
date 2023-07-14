@@ -16,6 +16,8 @@ pymupdf = "^1.22.3"
 reportlab = "^4.0.4"
 watchdog = "^3.0.0"
 nuitka = "^1.7.3"
+python-docx = "^0.8.11"
+docx2pdf = "^0.1.8"
 
 [tool.poetry.scripts]
 main = "pdf_report_builder.main.py"

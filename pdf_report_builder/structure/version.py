@@ -16,6 +16,11 @@ class Version(BaseLevel):
     )
     code: str = '0000.000.КИИ.0/0.0000'
     comments: str = ''
+
+    def __post_init__(self):
+        super().__post_init__()
+        for tome in self.tomes:
+            tome.parent = self
     
     def create_tome(
         self,

@@ -22,15 +22,17 @@ class NodeType(Enum):
 class ParseReportNode:
     name: str
     type: NodeType
-    pages_native: int = 0
-    pages_a4: float = 0.0
-    enumeration: bool = True
-    current_page_number: int = 0
+    pages_native: int = 0 # Сколько у элемента внутри PDF-страниц
+    pages_a4: float = 0.0 # Сколько у элемента внутри страниц, эквивалентных A4
+    enumeration: bool = True # Включать ли элемент в сквозную нумерацию
+    current_page_number: int = 0 # Номер первой страницы элемента в сквозной нумерации
     children: List['ParseReportNode'] = field(default_factory=lambda: [])
     parent: Optional['ParseReportNode'] = None
-    custom_tome_enum_start: int = -1
+    custom_tome_enum_start: int = -1 # Кастомный номер первой страницы тома
     level: Optional['BaseLevel'] = None
-    code: str = ''
+    code: str = '' # Сборный шифр элемента
+    create_bookmark: bool = False # Создавать ли закладку на элементе
+    page_number_in_pdf_tome: int = 0
 
 
 class ProjectParser:
@@ -87,6 +89,8 @@ class ProjectParser:
         )
         if not element.enumeration_include:
             element_node.enumeration = False
+        if element.create_bookmark:
+            element_node.create_bookmark = True
 
 
     def _parse_pages_parse_tome(self, tome: Tome, parent: ParseReportNode):
@@ -136,6 +140,22 @@ class ProjectParser:
         if parent is not None:
             code = parent.code + code
         node.code = code
+
+    def calculate_page_number_in_tome_recursive(self, node: ParseReportNode, index: int = 0):
+        if node.type in (NodeType.TOME, NodeType.VERSION):
+            index = 0
+            for child in node.children:
+                index += self.calculate_page_number_in_tome_recursive(child, index)
+        elif node.type == NodeType.ELEMENT:
+            node.page_number_in_pdf_tome = index
+            subelements = filter(
+                lambda child: child.type == NodeType.ELEMENT,
+                node.children
+            )
+            for subel in subelements:
+                index += self.calculate_page_number_in_tome_recursive(subel, index)
+            index += node.level.pages_number
+        return index
             
     def parse_project_for_pages(self, project: BaseReportProject):
         ver = project.get_current_version()
@@ -150,4 +170,11 @@ class ProjectParser:
             node.pages_native for node in root_node.children
         )
         self.count_pages_recursive(root_node)
+        self.calculate_page_number_in_tome_recursive(root_node)
         return root_node
+    
+    def get_tome_node(self, root_node: ParseReportNode, tome):
+        for node in root_node.children:
+            if tome is node.level:
+                return node
+        return None

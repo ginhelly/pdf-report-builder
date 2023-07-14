@@ -197,7 +197,7 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
     
     if with_bookmarks:
         logger.writeline(' Расставляю закладки...')
-        add_bookmarks(output, tome, logger)
+        add_bookmarks(output, node, logger)
         output.page_mode = '/UseOutlines'
     
     logger.writeline(' Оптимизирую объем документа...')

@@ -1,45 +1,38 @@
 from pypdf import PdfWriter
 
-from pdf_report_builder.structure.tome import Tome
-from pdf_report_builder.structure.structural_elements.base import StructuralElement
+from pdf_report_builder.algorithms.parse_pages_count import ParseReportNode
 
 def _add_bookmarks_recursive(
         writer: PdfWriter,
-        el: StructuralElement,
+        node: ParseReportNode,
         parent,
-        page_number,
         logger
     ):
-    for subel in el.subelements:
-        if subel.create_bookmark:
+    for child in node.children:
+        if child.create_bookmark:
             kin = writer.add_outline_item(
-                subel.name,
-                page_number,
+                child.name,
+                child.page_number_in_pdf_tome,
                 parent
             )
-            logger.writeline(f'  Добавил закладку {subel.name} на странице {page_number + 1}')
+            logger.writeline(f'  Добавил закладку {child.name} на странице {child.page_number_in_pdf_tome + 1}')
         else:
             kin = parent
-        print(f'name={subel.name}, ADD_BOOKMARK={subel.create_bookmark} parent={el.name}|{parent}')
-        page_number = _add_bookmarks_recursive(writer, subel, kin, page_number, logger)
-        page_number = page_number + subel.pages_number
-    return page_number
+        _add_bookmarks_recursive(writer, child, kin, logger)
 
     
 def add_bookmarks(
         writer: PdfWriter,
-        tome: Tome,
+        tome_node: ParseReportNode,
         logger
     ):
-    page_number = 0
-    for element in tome.structural_elements:
-        if element.create_bookmark:
+    for child in tome_node.children:
+        if child.create_bookmark:
             parent = writer.add_outline_item(
-                element.name,
-                page_number
+                child.name,
+                child.page_number_in_pdf_tome
             )
-            logger.writeline(f'  Добавил закладку {element.name} на странице {page_number + 1}')
+            logger.writeline(f'  Добавил закладку {child.name} на странице {child.page_number_in_pdf_tome + 1}')
         else:
             parent = None
-        page_number = page_number + _add_bookmarks_recursive(writer, element, parent, page_number, logger)
-        page_number = page_number + element.pages_number
+        _add_bookmarks_recursive(writer, child, parent, logger)
