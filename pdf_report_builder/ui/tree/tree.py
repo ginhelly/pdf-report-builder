@@ -8,6 +8,7 @@ from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.ui.tree.tree_icons import get_tree_images
 from .tree_node import *
 from pdf_report_builder.project.event_channel import EventChannel
+from pdf_report_builder.structure.level_enum import NodeType
 
 def get_tome_name(tome: Tome):
     return f'[{tome.basename}] {tome.human_readable_name}'
@@ -43,6 +44,9 @@ class Tree(wx.TreeCtrl):
         EventChannel().subscribe('tome_name_update', self.update_selected_tome_name)
         EventChannel().subscribe('element_name_update', self.update_selected_el_name)
         EventChannel().subscribe('file_name_update', self.update_selected_file_name)
+        self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.on_drag_start)
+        self.Bind(wx.EVT_TREE_END_DRAG, self.on_drag_end)
+        self._drag_item = None
     
     def parse_project_structure(self, project: ReportProject):
         self.nodes = {}
@@ -192,7 +196,27 @@ class Tree(wx.TreeCtrl):
         EventChannel().publish('modified')
         self.manage_expanded()
         self.Thaw()
-        #self.ExpandAll()
+    
+    def rearrange(self, source_node: TreeNode, target_node: TreeNode):
+        self.Freeze()
+        parent = source_node.parent
+        parent.rearrange(source_node.index, target_node.index, source_node)
+        self.redraw_tree(self.project)
+        EventChannel().publish('modified')
+        self.manage_expanded()
+        self.Thaw()
+
+    def append_as_child(self, source_node: TreeNode, target_node: TreeNode):
+        self.Freeze()
+        source_item = source_node.item
+        source_parent = source_node.parent.item
+        source_parent.remove_child(source_item)
+        target_item = target_node.item
+        target_item.append_child(source_item)
+        self.redraw_tree(self.project)
+        EventChannel().publish('modified')
+        self.manage_expanded()
+        self.Thaw()
     
     def update_selected_tome_name(self):
         item_id = self.GetSelection()
@@ -227,3 +251,56 @@ class Tree(wx.TreeCtrl):
             level.set_expanded(True)
         else:
             level.set_expanded(False)
+
+    def _same_level(self, node1: TreeNode, node2: TreeNode):
+        return node1.item.level == node2.item.level \
+            and node1.parent == node2.parent
+    
+    def _can_append_as_child(self, parent: TreeNode, child: TreeNode):
+        def is_not_a_computed_element(item):
+            if item.level == NodeType.ELEMENT and item.is_computed:
+                return False
+            return True
+        if parent.item.level == NodeType.ELEMENT\
+            and is_not_a_computed_element(parent.item) \
+            and child.item.level == NodeType.ELEMENT:
+            return True
+        if (child.item.level.value - parent.item.level.value == 1) \
+            and is_not_a_computed_element(parent.item) \
+            and is_not_a_computed_element(child.parent.item):
+            return True
+        return False
+    
+    def on_drag_start(self, event):
+        event.Allow()
+        self._drag_item = event.GetItem()
+
+    def on_drag_end(self, event):
+        dragged_item = self._drag_item
+        target_item = event.GetItem()
+        dragged_node = self.nodes[dragged_item]
+        target_node = self.nodes[target_item]
+        
+        same_level = self._same_level(dragged_node, target_node)
+        can_append_as_child = self._can_append_as_child(target_node, dragged_node)
+        rearrange = lambda: self.rearrange(dragged_node, target_node)
+        append_as_child = lambda: self.append_as_child(dragged_node, target_node)
+
+        if same_level and can_append_as_child:
+            def menu_handler(event):
+                id = event.GetId()
+                if id == 0:
+                    append_as_child()
+                elif id == 1:
+                    rearrange()
+
+            menu = wx.Menu()
+            menu.Append(0, 'Внутрь')
+            menu.Append(1, 'На его место')
+            self.Bind(wx.EVT_MENU, menu_handler)
+            self.PopupMenu(menu, event.GetPoint())
+            menu.Destroy()
+        elif self._same_level(dragged_node, target_node):
+            self.rearrange(dragged_node, target_node)
+        elif self._can_append_as_child(target_node, dragged_node):
+            self.append_as_child(dragged_node, target_node)

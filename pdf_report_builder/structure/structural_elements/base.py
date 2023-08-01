@@ -5,6 +5,7 @@ from typing import NamedTuple
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 from pdf_report_builder.structure.level import BaseLevel
 from pdf_report_builder.utils.file_watcher import FileWatcher
+from pdf_report_builder.structure.level_enum import NodeType
 
 from settings import FILE_WATCHER
 
@@ -95,3 +96,23 @@ class StructuralElement(BaseLevel):
     @property
     def code(self):
         return self.code_attr
+    
+    @property
+    def level(self):
+        return NodeType.ELEMENT
+    
+    @property
+    def is_computed(self):
+        return self.computed > 0
+    
+    def append_child(self, child):
+        if isinstance(child, PDFFile):
+            self.add_file(file=child)
+        elif hasattr(child, 'level') and child.level == NodeType.ELEMENT:
+            self.add_subelement(child)
+    
+    def remove_child(self, child):
+        if isinstance(child, PDFFile):
+            self.remove_file(child)
+        elif hasattr(child, 'level') and child.level == NodeType.ELEMENT:
+            self.remove_element(child)

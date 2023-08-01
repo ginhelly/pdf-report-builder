@@ -21,7 +21,7 @@ class TreeNode:
     children: List['TreeNode'] = field(default_factory=list)
     index: int = 0
 
-    def swap(self, i: int, j: int, node=None):
+    def _get_siblings_and_shift(self, node=None):
         shift = 0
         if isinstance(self.item, BaseReportProject):
             siblings = self.item.get_current_version().tomes
@@ -33,11 +33,25 @@ class TreeNode:
             else:
                 siblings = self.item.files
                 shift = len(self.item.subelements)
+        return (siblings, shift)
+
+    def swap(self, i: int, j: int, node=None):
+        siblings, shift = self._get_siblings_and_shift(node)
         child_nodes = self.children
         siblings[i - shift], siblings[j - shift] = siblings[j - shift], siblings[i - shift]
         child_nodes[i], child_nodes[j] = child_nodes[j], child_nodes[i]
         child_nodes[i].index = i
         child_nodes[j].index = j
+    
+    def rearrange(self, old_i: int, new_i: int, node=None):
+        siblings, shift = self._get_siblings_and_shift(node)
+        child_nodes = self.children
+        moving_sibling = siblings.pop(old_i - shift)
+        siblings.insert(new_i - shift, moving_sibling)
+        moving_node = child_nodes.pop(old_i)
+        child_nodes.insert(new_i, moving_node)
+        for i, node in enumerate(child_nodes):
+            node.index = i
     
     def __repr__(self) -> str:
         item = str(type(self.item)).split('.')[-1]

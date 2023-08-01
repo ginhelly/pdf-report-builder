@@ -7,7 +7,7 @@ from typing import List
 from pdf_report_builder.structure.structural_elements.base import \
     StructuralElement
 from pdf_report_builder.structure.level import BaseLevel
-from pdf_report_builder.project.storage_settings import SettingsStorage
+from pdf_report_builder.structure.level_enum import NodeType
 
 def _default_savepath():
     return Path(expanduser('~/Documents')) / f'Новый том {datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.pdf'
@@ -81,3 +81,15 @@ class Tome(BaseLevel):
             res += len(el.files)
             return res
         return sum(count_files_recursive(element) for element in self.structural_elements)
+    
+    @property
+    def level(self):
+        return NodeType.TOME
+    
+    def append_child(self, child):
+        if isinstance(child, StructuralElement):
+            self.add_element(child)
+    
+    def remove_child(self, child):
+        if isinstance(child, StructuralElement):
+            self.remove_element(child)

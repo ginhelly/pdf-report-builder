@@ -8,6 +8,7 @@ from pdf_report_builder.project.settings import ProjectSettings
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.project.io.serializer import write_to_file, read_from_file
 from pdf_report_builder.project.event_channel import EventChannel
+from pdf_report_builder.structure.level_enum import NodeType
 from pdf_report_builder.utils.file_watcher import FileWatcher
 from pdf_report_builder.utils.lock_file import *
 
@@ -140,3 +141,14 @@ class ReportProject(BaseReportProject):
                 self._remove_version_by_id(version_id)
         else:
             raise TypeError('Переданы объекты разных типов')
+        
+    @property
+    def level(self):
+        return NodeType.VERSION
+    
+    def append_child(self, child):
+        ver = self.get_current_version()
+        ver.append_child(child)
+    
+    def remove_child(self, child):
+        self.get_current_version().remove_child(child)

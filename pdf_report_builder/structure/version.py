@@ -1,11 +1,10 @@
 from dataclasses import dataclass, field
-from os.path import expanduser
 from pathlib import Path
 from typing import List
 
+from pdf_report_builder.structure.level_enum import NodeType
 from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.level import BaseLevel
-from pdf_report_builder.project.event_channel import EventChannel
 
 
 @dataclass
@@ -40,5 +39,15 @@ class Version(BaseLevel):
             self.tomes.remove(tome)
         elif type(tome) == int:
             self.tomes.remove(self.tomes[tome])
-
     
+    @property
+    def level(self):
+        return NodeType.VERSION
+    
+    def append_child(self, child):
+        if isinstance(child, Tome):
+            self.append_tome(child)
+    
+    def remove_child(self, child):
+        if isinstance(child, Tome):
+            self.remove_tome(child)

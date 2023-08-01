@@ -1,10 +1,10 @@
-from enum import Enum
 from pathlib import Path
 from typing import List, Optional
 from dataclasses import dataclass, field
 
 from pypdf import PdfReader
 
+from pdf_report_builder.structure.level_enum import NodeType
 from pdf_report_builder.paperformats.format import PaperFormatStorage
 from pdf_report_builder.project.base_project import BaseReportProject
 from pdf_report_builder.structure.level import BaseLevel
@@ -12,11 +12,6 @@ from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.structure.files.input_pdf import PDFFile
 
-class NodeType(Enum):
-    VERSION = 0
-    TOME = 1
-    ELEMENT = 2
-    FILE = 3
 
 @dataclass
 class ParseReportNode:

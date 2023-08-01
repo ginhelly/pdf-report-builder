@@ -1,15 +1,14 @@
 from os.path import getmtime
 from datetime import datetime
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List
 
 #from pypdf import PdfReader
 import fitz
 
 from .pages_subset import PagesSubset
 from pdf_report_builder.structure.level import BaseLevel
-from pdf_report_builder.project.storage_settings import SettingsStorage
+from pdf_report_builder.structure.level_enum import NodeType
 
 @dataclass
 class PDFFile(BaseLevel):
@@ -109,3 +108,7 @@ class PDFFile(BaseLevel):
     @property
     def code(self):
         return ''
+    
+    @property
+    def level(self):
+        return NodeType.FILE
