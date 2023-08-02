@@ -14,6 +14,7 @@ from pdf_report_builder.ui.dialogs.delete_item_dialog import DeletePrompt
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.project.io.json_serializer import serialize_level
 from pdf_report_builder.ui.dialogs.add_element_dialog import AddElementDialog
+from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
 
 from .base_context_menu import *
 
@@ -122,6 +123,6 @@ class ElementContextMenu(TreeContextMenu):
     def make_pdf(self):
         if self.is_element_raw():
             return
-        self.element.make_pdf()
-        EventChannel().publish('modified')
-        EventChannel().publish('tree_update')
+        dlg = BuildComputedDialog(None, [self.element])
+        dlg.ShowModal()
+        dlg.Destroy()

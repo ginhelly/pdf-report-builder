@@ -6,6 +6,7 @@ from pdf_report_builder.ui.form_builder.main import BaseBuildComputedDialog
 from pdf_report_builder.structure.structural_elements.computed import ComputedElement
 from pdf_report_builder.algorithms.collect_computed import collect_computed
 from pdf_report_builder.utils.logger import ProcessingLogger
+from pdf_report_builder.project.event_channel import EventChannel
 
 class BuildComputedDialog(BaseBuildComputedDialog):
     def __init__(self, parent, elements: List[ComputedElement] | None = None):
@@ -18,6 +19,7 @@ class BuildComputedDialog(BaseBuildComputedDialog):
         self.logger = ProcessingLogger(self.text_logs, self.m_gauge2)
         if len(self.computed) == 0:
             self.btn_process.Disable()
+        self.on_select_all()
     
     def populate_checklistbox(self):
         self.cl_computed.Clear()
@@ -25,7 +27,7 @@ class BuildComputedDialog(BaseBuildComputedDialog):
             el_name = f'{el.name} | Том: {el.tome.human_readable_name}'
             self.cl_computed.Append(el_name, el)
     
-    def on_select_all(self, event):
+    def on_select_all(self, event = None):
         for i in range(self.cl_computed.Count):
             self.cl_computed.Check(i, True)
 
@@ -59,6 +61,8 @@ class BuildComputedDialog(BaseBuildComputedDialog):
             self.logger.writeline('Проверьте их настройки')
         else:
             self.logger.set_progress_bar(100)
+        EventChannel().publish('modified')
+        EventChannel().publish('tree_update')
         
     def on_close(self, event):
         self.Destroy()
