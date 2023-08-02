@@ -271,7 +271,14 @@ class PDFReportBuilderFrame(MainFrame):
         if tree_node.parent.children[i] == tree_node:
             btn.Disable()
             return
-        if not type(tree_node.item) == type(tree_node.parent.children[tree_node.index + j].item):
+        
+        def types_match(item1, item2):
+            if type(item1) == type(item2): return True
+            if isinstance(item1, item2.__class__): return True
+            if isinstance(item2, item1.__class__): return True
+            return False
+        
+        if not types_match:
             btn.Disable()
             return
         btn.Enable()
