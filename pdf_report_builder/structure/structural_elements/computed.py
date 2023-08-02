@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 from pdf_report_builder.structure.files.input_pdf import PDFFile
+from pdf_report_builder.utils.logger import ProcessingLogger
 
 from .base import StructuralElement
 
@@ -19,7 +20,7 @@ class ComputedElement(StructuralElement):
     enumeration_print: bool = False
     create_bookmark: bool = True
 
-    def make_pdf(self):
+    def make_pdf(self, logger: ProcessingLogger | None = None):
         ...
 
     @property

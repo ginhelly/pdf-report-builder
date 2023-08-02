@@ -76,7 +76,12 @@ class MainFrame ( wx.Frame ):
         self.menu_utils_pagescount = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Обзор структуры", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_utils.Append( self.menu_utils_pagescount )
 
-        self.m_menubar1.Append( self.menu_utils, u"Утилиты" )
+        self.menu_utils.AppendSeparator()
+
+        self.menu_utils_make_pdfs = wx.MenuItem( self.menu_utils, wx.ID_ANY, u"Сформировать PDF для всех автособираемых", wx.EmptyString, wx.ITEM_NORMAL )
+        self.menu_utils.Append( self.menu_utils_make_pdfs )
+
+        self.m_menubar1.Append( self.menu_utils, u"Инструменты" )
 
         self.menu_about = wx.Menu()
         self.menu_about_about = wx.MenuItem( self.menu_about, wx.ID_ANY, u"О программе", wx.EmptyString, wx.ITEM_NORMAL )
@@ -197,10 +202,11 @@ class MainFrame ( wx.Frame ):
 
         bSizer13.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_bpButton5 = wx.BitmapButton( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, wx.BU_AUTODRAW|0 )
+        self.m_button15 = wx.Button( self, wx.ID_ANY, u"Обновить", wx.DefaultPosition, wx.DefaultSize, 0 )
 
-        self.m_bpButton5.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_DIR_UP, wx.ART_BUTTON ) )
-        bSizer13.Add( self.m_bpButton5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.m_button15.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_DIR_UP, wx.ART_BUTTON ) )
+        self.m_button15.SetBitmapPosition( wx.RIGHT )
+        bSizer13.Add( self.m_button15, 0, wx.ALL, 5 )
 
         self.m_staticline6 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
         self.m_staticline6.SetToolTip( u"Перезагрузить проект" )
@@ -259,6 +265,7 @@ class MainFrame ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.on_remove_versions, id = self.m_menuItem19.GetId() )
         self.Bind( wx.EVT_MENU, self.open_sheets_calc, id = self.menu_utils_sheetscalc.GetId() )
         self.Bind( wx.EVT_MENU, self.open_pagescount, id = self.menu_utils_pagescount.GetId() )
+        self.Bind( wx.EVT_MENU, self.open_buildcomputed, id = self.menu_utils_make_pdfs.GetId() )
         self.Bind( wx.EVT_MENU, self.onAbout, id = self.menu_about_about.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen101, id = self.menu_about_gost101.GetId() )
         self.Bind( wx.EVT_MENU, self.onDocsOpen301, id = self.menu_about_gost301.GetId() )
@@ -269,7 +276,7 @@ class MainFrame ( wx.Frame ):
         self.btn_merge.Bind( wx.EVT_BUTTON, self.make_reports )
         self.choice_current_version.Bind( wx.EVT_CHOICE, self.set_current_version )
         self.btn_clone_version.Bind( wx.EVT_BUTTON, self.clone_current_version )
-        self.m_bpButton5.Bind( wx.EVT_BUTTON, self.reload_project )
+        self.m_button15.Bind( wx.EVT_BUTTON, self.reload_project )
         self.btn_up.Bind( wx.EVT_BUTTON, self.on_up )
         self.btn_down.Bind( wx.EVT_BUTTON, self.on_down )
 
@@ -307,6 +314,9 @@ class MainFrame ( wx.Frame ):
         event.Skip()
 
     def open_pagescount( self, event ):
+        event.Skip()
+
+    def open_buildcomputed( self, event ):
         event.Skip()
 
     def onAbout( self, event ):
@@ -1365,6 +1375,93 @@ class BasePagesCountDialog ( wx.Dialog ):
 
 
     # Virtual event handlers, override them in your derived class
+    def on_close( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BaseBuildComputedDialog
+###########################################################################
+
+class BaseBuildComputedDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Сформировать PDF...", pos = wx.DefaultPosition, size = wx.Size( 532,586 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer46 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer48 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText41 = wx.StaticText( self, wx.ID_ANY, u"Автособираемые элементы:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText41.Wrap( -1 )
+
+        bSizer48.Add( self.m_staticText41, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer48.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button18 = wx.Button( self, wx.ID_ANY, u"Выбрать все", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer48.Add( self.m_button18, 0, wx.ALL, 5 )
+
+        self.m_button19 = wx.Button( self, wx.ID_ANY, u"Снять выбор", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer48.Add( self.m_button19, 0, wx.ALL, 5 )
+
+
+        bSizer46.Add( bSizer48, 0, wx.EXPAND, 5 )
+
+        cl_computedChoices = []
+        self.cl_computed = wx.CheckListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, cl_computedChoices, 0 )
+        bSizer46.Add( self.cl_computed, 1, wx.ALL|wx.EXPAND, 5 )
+
+        self.text_logs = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+        bSizer46.Add( self.text_logs, 2, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_gauge2 = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+        self.m_gauge2.SetValue( 0 )
+        bSizer46.Add( self.m_gauge2, 0, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer47 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer47.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.btn_process = wx.Button( self, wx.ID_ANY, u"Сформировать PDF для автособираемых элементов...", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer47.Add( self.btn_process, 0, wx.ALL, 5 )
+
+        self.btn_close = wx.Button( self, wx.ID_ANY, u"Выход", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer47.Add( self.btn_close, 0, wx.ALL, 5 )
+
+
+        bSizer46.Add( bSizer47, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer46 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.m_button18.Bind( wx.EVT_BUTTON, self.on_select_all )
+        self.m_button19.Bind( wx.EVT_BUTTON, self.on_deselect_all )
+        self.btn_process.Bind( wx.EVT_BUTTON, self.on_process )
+        self.btn_close.Bind( wx.EVT_BUTTON, self.on_close )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_select_all( self, event ):
+        event.Skip()
+
+    def on_deselect_all( self, event ):
+        event.Skip()
+
+    def on_process( self, event ):
+        event.Skip()
+
     def on_close( self, event ):
         event.Skip()
 

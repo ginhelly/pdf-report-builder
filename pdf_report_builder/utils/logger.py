@@ -7,12 +7,34 @@ class ProcessingLogger:
         self,
         text_logger: TextCtrl,
         progress_bar: Gauge,
-        size_limit: int = 100
+        size_limit: int = 100,
+        delta: int = 1,
+        fraction: int = 1
     ):
         self.text_logger = text_logger
         self.progress_bar = progress_bar
         self.size_limit = size_limit
+        self.delta = delta
+        self.fraction = fraction
+        self._times_fraction_added = 0
         self.clear()
+    
+    def set_delta(self, delta: int):
+        self.delta = delta
+        self._times_fraction_added = 0
+    
+    def set_fraction(self, fraction: int):
+        if self._times_fraction_added > 0:
+            self.delta = self.delta - self.fraction * self._times_fraction_added
+        self.fraction = fraction
+        self._times_fraction_added = 0
+    
+    def add_delta(self):
+        self.add_to_progress_bar(self.delta)
+    
+    def add_fraction(self):
+        self.add_to_progress_bar(int(self.delta / self.fraction))
+        self._times_fraction_added += 1
 
     def writeline(self, message: str):
         if self.text_logger.NumberOfLines > self.size_limit:

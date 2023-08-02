@@ -322,6 +322,8 @@ class Tree(wx.TreeCtrl):
     def on_drag_end(self, event):
         dragged_item = self._drag_item
         target_item = event.GetItem()
+        if dragged_item == target_item:
+            return
         dragged_node = self.nodes[dragged_item]
         target_node = self.nodes[target_item]
         

@@ -23,6 +23,7 @@ from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.storage_settings import SettingsStorage
 from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
+from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
 
 
 def on_exception(exception_type, text: str = ""):
@@ -307,6 +308,11 @@ class PDFReportBuilderFrame(MainFrame):
         reload_files(self.project)
         if hasattr(self, 'tree_component'):
             self.tree_component.redraw_tree(self.project)
+        
+    def open_buildcomputed(self, event):
+        dlg = BuildComputedDialog(self)
+        dlg.ShowModal()
+        dlg.Destroy()
         
     def make_reports(self, event):
         try:

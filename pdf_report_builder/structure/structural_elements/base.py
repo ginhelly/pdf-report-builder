@@ -127,6 +127,15 @@ class StructuralElement(BaseLevel):
         return NodeType.ELEMENT
     
     @property
+    def tome(self):
+        parent = self.parent
+        while parent is not None:
+            if parent.level == NodeType.TOME:
+                return parent
+            parent = parent.parent
+        return None
+    
+    @property
     def is_computed(self):
         return self.computed > 0
     
