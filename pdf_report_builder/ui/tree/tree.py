@@ -218,6 +218,24 @@ class Tree(wx.TreeCtrl):
         self.manage_expanded()
         self.Thaw()
     
+    def forward_to_other_parent(self, source_node: TreeNode, target_node: TreeNode):
+        self.Freeze()
+        # Удалить с текущего места
+        source_item = source_node.item
+        source_parent = source_node.parent.item
+        source_parent.remove_child(source_item)
+        # Вставить на новое место
+        target_parent = target_node.parent.item
+        shift = len(target_parent.subelements) \
+            if isinstance(target_parent, StructuralElement) \
+            else 0
+        target_parent.insert_child(target_node.index - shift, source_item)
+
+        self.redraw_tree(self.project)
+        EventChannel().publish('modified')
+        self.manage_expanded()
+        self.Thaw()
+    
     def update_selected_tome_name(self):
         item_id = self.GetSelection()
         tome = self.nodes[item_id].item
@@ -271,6 +289,32 @@ class Tree(wx.TreeCtrl):
             return True
         return False
     
+    def _same_level_different_parents(self, node1: TreeNode, node2: TreeNode):
+        def is_not_a_computed_element(item):
+            if item.level == NodeType.ELEMENT and item.is_computed:
+                return False
+            return True
+        return node1.item.level == node2.item.level \
+            and not node1.parent == node2.parent \
+            and is_not_a_computed_element(node1.parent.item) \
+            and is_not_a_computed_element(node2.parent.item)
+    
+    def show_drag_menu(self, on_append: callable, on_rearrange: callable, point):
+        
+        def menu_handler(event):
+            id = event.GetId()
+            if id == 1:
+                on_append()
+            elif id == 0:
+                on_rearrange()
+
+        menu = wx.Menu()
+        menu.Append(0, 'На его место')
+        menu.Append(1, 'Внутрь')
+        self.Bind(wx.EVT_MENU, menu_handler)
+        self.PopupMenu(menu, point)
+        menu.Destroy()
+    
     def on_drag_start(self, event):
         event.Allow()
         self._drag_item = event.GetItem()
@@ -283,24 +327,18 @@ class Tree(wx.TreeCtrl):
         
         same_level = self._same_level(dragged_node, target_node)
         can_append_as_child = self._can_append_as_child(target_node, dragged_node)
+        sldp = self._same_level_different_parents(dragged_node, target_node)
         rearrange = lambda: self.rearrange(dragged_node, target_node)
         append_as_child = lambda: self.append_as_child(dragged_node, target_node)
+        forward = lambda: self.forward_to_other_parent(dragged_node, target_node)
 
         if same_level and can_append_as_child:
-            def menu_handler(event):
-                id = event.GetId()
-                if id == 0:
-                    append_as_child()
-                elif id == 1:
-                    rearrange()
-
-            menu = wx.Menu()
-            menu.Append(0, 'Внутрь')
-            menu.Append(1, 'На его место')
-            self.Bind(wx.EVT_MENU, menu_handler)
-            self.PopupMenu(menu, event.GetPoint())
-            menu.Destroy()
-        elif self._same_level(dragged_node, target_node):
+            self.show_drag_menu(append_as_child, rearrange, event.GetPoint())
+        elif same_level:
             self.rearrange(dragged_node, target_node)
-        elif self._can_append_as_child(target_node, dragged_node):
+        elif sldp and can_append_as_child:
+            self.show_drag_menu(append_as_child, forward, event.GetPoint())
+        elif can_append_as_child:
             self.append_as_child(dragged_node, target_node)
+        elif sldp:
+            self.forward_to_other_parent(dragged_node, target_node)

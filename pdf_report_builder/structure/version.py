@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
+from typing import List, Callable
 
 from pdf_report_builder.structure.level_enum import NodeType
 from pdf_report_builder.structure.tome import Tome
@@ -30,9 +30,21 @@ class Version(BaseLevel):
         new_tome = Tome(basename, human_readable_name, savepath)
         self.append_tome(new_tome)
 
-    def append_tome(self, tome: Tome):
-        self.tomes.append(tome)
+    def _handle_tome_add(self, tome: Tome, callback: Callable):
+        callback(tome)
         tome.parent = self
+
+    def append_tome(self, tome: Tome):
+        self._handle_tome_add(
+            tome,
+            lambda x: self.tomes.append(x)
+        )
+    
+    def insert_tome(self, i: int, tome: Tome):
+        self._handle_tome_add(
+            tome,
+            lambda x: self.tomes.insert(i, x)
+        )
     
     def remove_tome(self, tome: Tome | int):
         if isinstance(tome, Tome) and tome in self.tomes:
@@ -47,6 +59,10 @@ class Version(BaseLevel):
     def append_child(self, child):
         if isinstance(child, Tome):
             self.append_tome(child)
+
+    def insert_child(self, i: int, child):
+        if isinstance(child, Tome):
+            self.insert_tome(i, child)
     
     def remove_child(self, child):
         if isinstance(child, Tome):

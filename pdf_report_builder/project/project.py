@@ -150,5 +150,8 @@ class ReportProject(BaseReportProject):
         ver = self.get_current_version()
         ver.append_child(child)
     
+    def insert_child(self, i: int, child):
+        self.get_current_version().insert_child(i, child)
+    
     def remove_child(self, child):
         self.get_current_version().remove_child(child)

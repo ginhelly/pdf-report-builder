@@ -50,10 +50,25 @@ class Tome(BaseLevel):
     def create_empty_element(self):
         new_element = StructuralElement()
         self.add_element(new_element)
+    
+    def _handle_element_add(self, element: StructuralElement, callback: callable):
+        callback(element)
+        element.parent = self
 
     def add_element(self, element: StructuralElement):
-        self.structural_elements.append(element)
-        element.parent = self
+        self._handle_element_add(
+            element,
+            lambda x: self.structural_elements.append(x)
+        )
+    
+    def append_element(self, element: StructuralElement):
+        self.add_element(element)
+    
+    def insert_element(self, i: int, element: StructuralElement):
+        self._handle_element_add(
+            element,
+            lambda x: self.structural_elements.insert(i, x)
+        )
     
     def remove_element(self, element: StructuralElement | int):
         if isinstance(element, StructuralElement):
@@ -89,6 +104,10 @@ class Tome(BaseLevel):
     def append_child(self, child):
         if isinstance(child, StructuralElement):
             self.add_element(child)
+
+    def insert_child(self, i: int, child):
+        if isinstance(child, StructuralElement):
+            self.insert_element(i, child)
     
     def remove_child(self, child):
         if isinstance(child, StructuralElement):

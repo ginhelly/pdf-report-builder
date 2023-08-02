@@ -39,6 +39,16 @@ class StructuralElement(BaseLevel):
 
     def __repr__(self) -> str:
         return f'StructuralElement([{self.code_attr}] {self.name}; files={len(self.files)} & subelements={len(self.subelements)})'
+    
+    def _handle_file_add(self, file: PDFFile, callback: callable):
+        if FILE_WATCHER:
+            FileWatcher().add_file(file)
+        callback(file)
+        file.parent = self
+    
+    def _handle_subel_add(self, subel, callback):
+        callback(subel)
+        subel.parent = self
 
     def add_file(
             self,
@@ -53,17 +63,32 @@ class StructuralElement(BaseLevel):
             new_file = PDFFile(*file_description)
         else:
             new_file = PDFFile(file_path, subset)
-        if FILE_WATCHER:
-            FileWatcher().add_file(new_file)
-        self.files.append(new_file)
-        new_file.parent = self
+
+        self._handle_file_add(
+            new_file,
+            lambda f: self.files.append(f)
+        )
     
     def add_subelement(
             self,
             element: BaseLevel
     ):
-        self.subelements.append(element)
-        element.parent = self
+        self._handle_subel_add(
+            element,
+            lambda x: self.subelements.append(x)
+        )
+    
+    def insert_file(self, i: int, file: PDFFile):
+        self._handle_file_add(
+            file,
+            lambda f: self.files.insert(i, f)
+        )
+    
+    def insert_subelement(self, i: int, subel):
+        self._handle_subel_add(
+            subel,
+            lambda x: self.subelements.insert(i, x)
+        )
     
     def parse_files(self, files: list[FileDescription]):
         for file in files:
@@ -110,6 +135,12 @@ class StructuralElement(BaseLevel):
             self.add_file(file=child)
         elif hasattr(child, 'level') and child.level == NodeType.ELEMENT:
             self.add_subelement(child)
+    
+    def insert_child(self, i: int, child):
+        if isinstance(child, PDFFile):
+            self.insert_file(i, child)
+        elif hasattr(child, 'level') and child.level == NodeType.ELEMENT:
+            self.insert_subelement(i, child)
     
     def remove_child(self, child):
         if isinstance(child, PDFFile):
