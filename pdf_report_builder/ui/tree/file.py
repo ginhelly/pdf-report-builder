@@ -22,16 +22,21 @@ class FileContextMenu(TreeContextMenu):
             MenuOption('Открыть', self.open_file, condition_enable=self.file_is_valid),
             MenuOption('Открыть папку с файлом', self.open_folder, condition_enable=self.file_is_valid),
             MenuOption('-', lambda: ...),
-            MenuOption('Вырезать', self.cut_to_clipboard),
-            MenuOption('Копировать', self.copy_to_clipboard),
+            MenuOption('Вырезать', self.cut_to_clipboard, condition_enable=self.parent_isnt_computed),
+            MenuOption('Копировать', self.copy_to_clipboard, condition_enable=self.parent_isnt_computed),
             MenuOption('-', lambda: ...),
-            MenuOption('Удалить файл из проекта', self.remove_file)
+            MenuOption('Удалить файл из проекта', self.remove_file, condition_enable=self.parent_isnt_computed)
         ]
     
     def file_is_valid(self):
         if self.file.path.exists() and self.file.path.is_file():
             return True
         return False
+
+    def parent_isnt_computed(self):
+        if self.file.parent.is_computed:
+            return False
+        return True
     
     def open_file(self):
         if self.file.path.exists() and self.file.path.is_file():
