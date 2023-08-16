@@ -35,7 +35,9 @@ class ComputedElement(StructuralElement):
     @property
     def files(self):
         if self.file_exists:
-            return [PDFFile(self.pdf_temp_path)]
+            file = PDFFile(self.pdf_temp_path)
+            self._handle_file_add(file, lambda x: ...)
+            return [file]
         return []
     
     @subelements.setter

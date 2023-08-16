@@ -19,6 +19,12 @@ class FilePanel(BaseFilePanel):
         self._update_fields()
     
     def _update_fields(self):
+        if self.file.parent.is_computed:
+            self.fp_file.Disable()
+            self.text_subset.Disable()
+        else:
+            self.fp_file.Enable()
+            self.text_subset.Enable()
         if not hasattr(self, 'file'):
             return
         self.text_file_name.SetValue(self.file.path.name)
