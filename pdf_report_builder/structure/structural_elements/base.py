@@ -113,6 +113,12 @@ class StructuralElement(BaseLevel):
         elif isinstance(el, int):
             self.subelements.remove(self.subelements[el])
     
+    def get_file_index(self, file: PDFFile):
+        """Here is some bug that needs to be fixed later..."""
+        for i, f in enumerate(self.files):
+            if f == file:
+                return i
+    
     @property
     def pages_number(self):
         """Возвращает число страниц внутри структурного элемента без учета вложенных элементов"""

@@ -54,6 +54,7 @@ class PagesCountDialog(BasePagesCountDialog):
         self.treelist.AppendColumn('Экв. А4')
         self.treelist.AppendColumn('Сквозная нумерация')
         self.treelist.AppendColumn('Шифр')
+        self.treelist.AppendColumn('# стр. в томе')
         self.add_node_recursive(root_node, root_item)
         self.treelist.SetColumnWidth(0, 300)
         self.treelist.Expand(root_item)
@@ -86,6 +87,8 @@ class PagesCountDialog(BasePagesCountDialog):
         
         if not node.type == NodeType.FILE:
             self.treelist.SetItemText(new_item, 4, node.code)
+        
+        self.treelist.SetItemText(new_item, 5, str(node.page_number_in_pdf_tome + 1))
 
         for child in node.children:
             self.add_node_recursive(child, new_item)

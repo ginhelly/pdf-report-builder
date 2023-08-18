@@ -1,3 +1,4 @@
+from functools import cached_property
 from os.path import getmtime
 from datetime import datetime
 from dataclasses import dataclass
@@ -104,6 +105,16 @@ class PDFFile(BaseLevel):
             return pages_number
         except AttributeError:
             return 0
+        
+    @cached_property
+    def subset_list(self) -> list:
+        return list(self.subset)
+    
+    def page_subset_index(self, i: int):
+        try:
+            return self.subset_list.index(i)
+        except ValueError:
+            return None
     
     @property
     def code(self):

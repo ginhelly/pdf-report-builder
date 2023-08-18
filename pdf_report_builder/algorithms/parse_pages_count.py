@@ -140,16 +140,26 @@ class ProjectParser:
         if node.type in (NodeType.TOME, NodeType.VERSION):
             index = 0
             for child in node.children:
-                index += self.calculate_page_number_in_tome_recursive(child, index)
+                index = self.calculate_page_number_in_tome_recursive(child, index)
         elif node.type == NodeType.ELEMENT:
             node.page_number_in_pdf_tome = index
             subelements = filter(
                 lambda child: child.type == NodeType.ELEMENT,
                 node.children
             )
+            files = filter(
+                lambda child: child.type == NodeType.FILE,
+                node.children
+            )
             for subel in subelements:
-                index += self.calculate_page_number_in_tome_recursive(subel, index)
-            index += node.level.pages_number
+                index = self.calculate_page_number_in_tome_recursive(subel, index)
+            for file in files:
+                index = self.calculate_page_number_in_tome_recursive(file, index)
+            #index += node.level.pages_number
+        elif node.type == NodeType.FILE:
+            node.page_number_in_pdf_tome = index
+            file = node.level
+            index += file.subset_pages_number
         return index
             
     def parse_project_for_pages(self, project: BaseReportProject):
