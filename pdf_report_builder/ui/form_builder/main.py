@@ -20,7 +20,7 @@ import wx.dataview
 class MainFrame ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 900,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 1497,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.Size( 500,450 ), wx.DefaultSize )
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHTTEXT ) )
@@ -243,6 +243,20 @@ class MainFrame ( wx.Frame ):
 
 
         bSizer20.Add( bSizer6, 2, wx.EXPAND, 5 )
+
+        bSizer49 = wx.BoxSizer( wx.VERTICAL )
+
+        self.viewer_panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        viewer_sizer = wx.BoxSizer( wx.VERTICAL )
+
+
+        self.viewer_panel.SetSizer( viewer_sizer )
+        self.viewer_panel.Layout()
+        viewer_sizer.Fit( self.viewer_panel )
+        bSizer49.Add( self.viewer_panel, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        bSizer20.Add( bSizer49, 3, wx.EXPAND, 5 )
 
 
         bSizer2.Add( bSizer20, 1, wx.EXPAND, 5 )

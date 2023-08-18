@@ -4,6 +4,7 @@ from pathlib import Path
 import wx
 
 from pdf_report_builder.project.project import ReportProject
+from pdf_report_builder.structure.level_enum import NodeType
 from pdf_report_builder.utils.lock_file import FileLockedError
 from pdf_report_builder.structure.factory.project_factory import ProjectFactory
 from pdf_report_builder.ui.about import PRBAboutDialog
@@ -24,6 +25,7 @@ from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.storage_settings import SettingsStorage
 from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
 from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
+from pdf_report_builder.ui.panels.viewer import PDFViewer
 
 
 def on_exception(exception_type, text: str = ""):
@@ -57,6 +59,7 @@ class PDFReportBuilderFrame(MainFrame):
         EventChannel().subscribe('version_name_update', self.populate_choice_current_version)
         EventChannel().subscribe('project_changed', self.on_project_change)
         self.populate_menu_templates()
+        self.viewer = PDFViewer(self)
         #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
     
     def populate_menu_templates(self):
@@ -259,6 +262,8 @@ class PDFReportBuilderFrame(MainFrame):
         self.toggle_up_down_buttons(event)
         item = self.tree_component.nodes[event.Item].item
         self.book.parse_item(item)
+        if item.level == NodeType.FILE:
+            EventChannel().publish('file_updated', item)
     
     def toggle_up_down_buttons(self, event):
         self._toggle_button(event, self.btn_up, 0, -1)
