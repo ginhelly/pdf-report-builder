@@ -570,48 +570,118 @@ class BaseElementPanel ( wx.Panel ):
 
         bSizer24.Add( self.m_staticText601, 0, wx.ALL, 5 )
 
-        self.m_staticline41 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-        bSizer24.Add( self.m_staticline41, 0, wx.EXPAND |wx.ALL, 5 )
+        self.m_panel4 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.m_panel4.SetBackgroundColour( wx.Colour( 243, 231, 224 ) )
 
-        self.m_staticText591 = wx.StaticText( self, wx.ID_ANY, u"Настройки закладок", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer49 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer50 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText591 = wx.StaticText( self.m_panel4, wx.ID_ANY, u"Настройки закладок", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText591.Wrap( -1 )
 
         self.m_staticText591.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
-        bSizer24.Add( self.m_staticText591, 0, wx.ALL, 5 )
+        bSizer50.Add( self.m_staticText591, 0, wx.ALL, 5 )
 
-        self.cb_create_bookmark = wx.CheckBox( self, wx.ID_ANY, u"Создавать закладку", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer24.Add( self.cb_create_bookmark, 0, wx.ALL, 5 )
 
-        self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-        bSizer24.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
+        bSizer50.Add( ( 0, 0), 1, wx.EXPAND, 5 )
 
-        self.m_staticText59 = wx.StaticText( self, wx.ID_ANY, u"Настройки нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText59.Wrap( -1 )
+        self.m_bitmap1 = wx.StaticBitmap( self.m_panel4, wx.ID_ANY, wx.ArtProvider.GetBitmap( wx.ART_ADD_BOOKMARK, wx.ART_OTHER ), wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer50.Add( self.m_bitmap1, 0, wx.ALL, 5 )
 
-        self.m_staticText59.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
 
-        bSizer24.Add( self.m_staticText59, 0, wx.ALL, 5 )
+        bSizer49.Add( bSizer50, 0, wx.EXPAND, 5 )
 
-        self.m_staticText60 = wx.StaticText( self, wx.ID_ANY, u"(не распространяются на вложенные элементы)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_create_bookmark = wx.CheckBox( self.m_panel4, wx.ID_ANY, u"Создавать закладку", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer49.Add( self.cb_create_bookmark, 0, wx.ALL, 5 )
+
+
+        self.m_panel4.SetSizer( bSizer49 )
+        self.m_panel4.Layout()
+        bSizer49.Fit( self.m_panel4 )
+        bSizer24.Add( self.m_panel4, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.m_panel41 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.m_panel41.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_INFOBK ) )
+
+        bSizer491 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer501 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText5911 = wx.StaticText( self.m_panel41, wx.ID_ANY, u"Настройки нумерации", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText5911.Wrap( -1 )
+
+        self.m_staticText5911.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer501.Add( self.m_staticText5911, 0, wx.ALL, 5 )
+
+
+        bSizer501.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_bitmap11 = wx.StaticBitmap( self.m_panel41, wx.ID_ANY, wx.ArtProvider.GetBitmap( wx.ART_LIST_VIEW, wx.ART_OTHER ), wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer501.Add( self.m_bitmap11, 0, wx.ALL, 5 )
+
+
+        bSizer491.Add( bSizer501, 0, wx.EXPAND, 5 )
+
+        self.m_staticText60 = wx.StaticText( self.m_panel41, wx.ID_ANY, u"(не распространяются на вложенные элементы)", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText60.Wrap( -1 )
 
         self.m_staticText60.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_NORMAL, False, wx.EmptyString ) )
 
-        bSizer24.Add( self.m_staticText60, 0, wx.ALL, 5 )
+        bSizer491.Add( self.m_staticText60, 0, wx.ALL, 5 )
 
-        self.cb_inner_enumeration = wx.CheckBox( self, wx.ID_ANY, u"Нумеровать листы внутри элемента", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.cb_inner_enumeration = wx.CheckBox( self.m_panel41, wx.ID_ANY, u"Нумеровать листы внутри элемента", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cb_inner_enumeration.SetValue(True)
-        bSizer24.Add( self.cb_inner_enumeration, 0, wx.ALL, 5 )
+        bSizer491.Add( self.cb_inner_enumeration, 0, wx.ALL, 5 )
 
 
-        bSizer24.Add( ( 0, 10), 0, wx.EXPAND, 5 )
+        bSizer491.Add( ( 0, 10), 0, wx.EXPAND, 5 )
 
-        self.cb_enumeration_include = wx.CheckBox( self, wx.ID_ANY, u"Включать в сквозную нумерацию", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer24.Add( self.cb_enumeration_include, 0, wx.ALL, 5 )
+        self.cb_enumeration_include = wx.CheckBox( self.m_panel41, wx.ID_ANY, u"Включать в сквозную нумерацию", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer491.Add( self.cb_enumeration_include, 0, wx.ALL, 5 )
 
-        self.cb_enumeration_print = wx.CheckBox( self, wx.ID_ANY, u"Добавить сквозную нумерацию в отчет", wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer24.Add( self.cb_enumeration_print, 0, wx.ALL, 5 )
+        self.cb_enumeration_print = wx.CheckBox( self.m_panel41, wx.ID_ANY, u"Добавить сквозную нумерацию в отчет", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer491.Add( self.cb_enumeration_print, 0, wx.ALL, 5 )
+
+
+        self.m_panel41.SetSizer( bSizer491 )
+        self.m_panel41.Layout()
+        bSizer491.Fit( self.m_panel41 )
+        bSizer24.Add( self.m_panel41, 0, wx.EXPAND |wx.ALL, 5 )
+
+        self.panel_computed = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        self.panel_computed.SetBackgroundColour( wx.Colour( 223, 241, 255 ) )
+
+        bSizer492 = wx.BoxSizer( wx.VERTICAL )
+
+        bSizer502 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText5912 = wx.StaticText( self.panel_computed, wx.ID_ANY, u"Настройки автосбора", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText5912.Wrap( -1 )
+
+        self.m_staticText5912.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
+
+        bSizer502.Add( self.m_staticText5912, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        bSizer502.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_bitmap12 = wx.StaticBitmap( self.panel_computed, wx.ID_ANY, wx.ArtProvider.GetBitmap( wx.ART_EXECUTABLE_FILE, wx.ART_OTHER ), wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer502.Add( self.m_bitmap12, 0, wx.ALL, 5 )
+
+
+        bSizer492.Add( bSizer502, 0, wx.EXPAND, 5 )
+
+        self.fp_pdf_temp_path = wx.FilePickerCtrl( self.panel_computed, wx.ID_ANY, wx.EmptyString, u"Место генерации временного PDF", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT|wx.FLP_SAVE|wx.FLP_USE_TEXTCTRL )
+        bSizer492.Add( self.fp_pdf_temp_path, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        self.panel_computed.SetSizer( bSizer492 )
+        self.panel_computed.Layout()
+        bSizer492.Fit( self.panel_computed )
+        bSizer24.Add( self.panel_computed, 0, wx.EXPAND |wx.ALL, 5 )
 
 
         self.SetSizer( bSizer24 )
@@ -626,6 +696,7 @@ class BaseElementPanel ( wx.Panel ):
         self.cb_inner_enumeration.Bind( wx.EVT_CHECKBOX, self.on_toggle_inner_enumeration )
         self.cb_enumeration_include.Bind( wx.EVT_CHECKBOX, self.on_toggle_include )
         self.cb_enumeration_print.Bind( wx.EVT_CHECKBOX, self.on_toggle_print )
+        self.fp_pdf_temp_path.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_pdf_temp_path_change )
 
     def __del__( self ):
         pass
@@ -651,6 +722,9 @@ class BaseElementPanel ( wx.Panel ):
         event.Skip()
 
     def on_toggle_print( self, event ):
+        event.Skip()
+
+    def on_pdf_temp_path_change( self, event ):
         event.Skip()
 
 
