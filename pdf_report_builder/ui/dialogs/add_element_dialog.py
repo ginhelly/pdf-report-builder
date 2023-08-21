@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import wx
 
 from pdf_report_builder.ui.form_builder.main import BaseAddElementDialog
@@ -55,7 +57,7 @@ class AddElementDialog(BaseAddElementDialog):
         if self.element_code.GetValue() != scheme.code_attr:
             scheme.code_attr = self.element_code.GetValue()
         print(scheme)
-        return scheme
+        return deepcopy(scheme)
     
     def on_close(self, event):
         sel = self.treelist_elements.GetSelection()

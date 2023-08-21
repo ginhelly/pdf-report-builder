@@ -102,7 +102,7 @@ class BookmarkManager:
             if delta > 0:
                 self.set_last_bookmark_as_parent()
             elif delta < 0:
-                self.lower_level(delta)
+                self.lower_level(-delta)
             self.create_bookmark(title, page)
             prev_lvl = lvl
     
@@ -143,7 +143,7 @@ class BookmarkManager:
                 parse_node_recursive(child, new_parent)
         parse_node_recursive(tome_node, self._root)
         print('~~~~~~~~~~~~~~~~~~~~~~~')
-        print(self._root)
+        #print(self._root)
     
     def write_bookmarks(self, library: BookmarkAddingLibrary, **kwargs):
         if library == BookmarkAddingLibrary.FITZ:
