@@ -677,6 +677,15 @@ class BaseElementPanel ( wx.Panel ):
         self.fp_pdf_temp_path = wx.FilePickerCtrl( self.panel_computed, wx.ID_ANY, wx.EmptyString, u"Место генерации временного PDF", u"*.pdf", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT|wx.FLP_SAVE|wx.FLP_USE_TEXTCTRL )
         bSizer492.Add( self.fp_pdf_temp_path, 0, wx.ALL|wx.EXPAND, 5 )
 
+        self.computed_props_container = wx.Panel( self.panel_computed, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer63 = wx.BoxSizer( wx.VERTICAL )
+
+
+        self.computed_props_container.SetSizer( bSizer63 )
+        self.computed_props_container.Layout()
+        bSizer63.Fit( self.computed_props_container )
+        bSizer492.Add( self.computed_props_container, 1, wx.EXPAND |wx.ALL, 5 )
+
 
         self.panel_computed.SetSizer( bSizer492 )
         self.panel_computed.Layout()
@@ -725,6 +734,37 @@ class BaseElementPanel ( wx.Panel ):
         event.Skip()
 
     def on_pdf_temp_path_change( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class BaseTomeContentsPropsPanel
+###########################################################################
+
+class BaseTomeContentsPropsPanel ( wx.Panel ):
+
+    def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+        wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+        bSizer64 = wx.BoxSizer( wx.VERTICAL )
+
+        self.fp_template_docx = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Шаблон для генерации", u"Word Documents (*.doc;*.docx)|*.doc;*.docx", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE )
+        bSizer64.Add( self.fp_template_docx, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        self.SetSizer( bSizer64 )
+        self.Layout()
+        bSizer64.Fit( self )
+
+        # Connect Events
+        self.fp_template_docx.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_template_docx_change )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_template_docx_change( self, event ):
         event.Skip()
 
 

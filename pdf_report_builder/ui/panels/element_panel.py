@@ -5,6 +5,7 @@ import wx
 from pdf_report_builder.ui.form_builder.main import BaseElementPanel
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.structure.structural_elements.computed import ComputedElement
+from pdf_report_builder.ui.panels.computed.panel_factory import get_computed_props_panel
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.project.event_channel import EventChannel
 
@@ -27,17 +28,34 @@ class ElementPanel(BaseElementPanel):
         else:
             self.cb_enumeration_print.Enable()
         if element.is_computed:
-            self.panel_computed.Enable()
+            if hasattr(self, '_current_panel'):
+                self._current_panel.update_element(element)
+            self.panel_computed.Show()
             self.parse_computed_element(element)
+            # вешайся нахуй
+            self.Freeze()
+            new_panel = get_computed_props_panel(element, self.computed_props_container)
+            if not new_panel is None:
+                sizer = self.computed_props_container.GetSizer()
+                if hasattr(self, '_current_panel'):
+                    sizer.Remove(0)
+                    self.Layout()
+                    self.Refresh()
+                    self.Update()
+                self.computed_props_container.GetSizer().Add(new_panel, 1, wx.EXPAND | wx.ALL)
+                self._current_panel = new_panel
+            self.Layout()
+            self.Thaw()
+            print(self._current_panel.fp_template_docx.Path)
         else:
-            self.panel_computed.Disable()
+            self.panel_computed.Hide()
             self.Update()
+            self.Layout()
     
     def parse_computed_element(self, element: ComputedElement):
         self.fp_pdf_temp_path.SetPath(str(element.pdf_temp_path))
     
     def on_pdf_temp_path_change(self, event):
-        print('Of course I fire whenever I feel like it.')
         try:
             val = Path(self.fp_pdf_temp_path.GetPath())
             if not val.parent.exists():
