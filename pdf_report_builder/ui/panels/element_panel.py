@@ -4,8 +4,8 @@ from pathlib import Path
 import wx
 from pdf_report_builder.ui.form_builder.main import BaseElementPanel
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
-from pdf_report_builder.structure.structural_elements.computed import ComputedElement
-from pdf_report_builder.ui.panels.computed.panel_factory import get_computed_props_panel
+from pdf_report_builder.structure.structural_elements.computed_types import ComputedTypes
+from pdf_report_builder.structure.structural_elements.tome_contents import TomeContentsElement
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.project.event_channel import EventChannel
 
@@ -21,39 +21,25 @@ class ElementPanel(BaseElementPanel):
         self.cb_code_add.SetValue(element.code_add)
         self.cb_inner_enumeration.SetValue(element.inner_enumeration)
         self.fp_pdf_temp_path.GetPickerCtrl().SetLabel('Врем. PDF...')
+        self.fp_template_docx.GetPickerCtrl().SetLabel('Шаблон...')
         if not element.enumeration_include:
             self.cb_enumeration_print.SetValue(False)
             self.element.enumeration_print = False
             self.cb_enumeration_print.Disable()
         else:
             self.cb_enumeration_print.Enable()
-        if element.is_computed:
-            if hasattr(self, '_current_panel'):
-                self._current_panel.update_element(element)
+        if element.computed == ComputedTypes.TOME_CONTENTS.value:
             self.panel_computed.Show()
             self.parse_computed_element(element)
-            # вешайся нахуй
-            self.Freeze()
-            new_panel = get_computed_props_panel(element, self.computed_props_container)
-            if not new_panel is None:
-                sizer = self.computed_props_container.GetSizer()
-                if hasattr(self, '_current_panel'):
-                    sizer.Remove(0)
-                    self.Layout()
-                    self.Refresh()
-                    self.Update()
-                self.computed_props_container.GetSizer().Add(new_panel, 1, wx.EXPAND | wx.ALL)
-                self._current_panel = new_panel
             self.Layout()
-            self.Thaw()
-            print(self._current_panel.fp_template_docx.Path)
         else:
             self.panel_computed.Hide()
             self.Update()
             self.Layout()
     
-    def parse_computed_element(self, element: ComputedElement):
+    def parse_computed_element(self, element: TomeContentsElement):
         self.fp_pdf_temp_path.SetPath(str(element.pdf_temp_path))
+        self.fp_template_docx.SetPath(str(element.doc_template))
     
     def on_pdf_temp_path_change(self, event):
         try:
@@ -65,6 +51,19 @@ class ElementPanel(BaseElementPanel):
                 os.remove(previous_path)
             self.element.pdf_temp_path = val
             EventChannel().publish('tree_update')
+        except Exception:
+            dlg = ErrorDialog(None, 'Не удалось установить путь', 'Неправильный путь')
+            dlg.ShowModal()
+            dlg.Close()
+    
+    def on_template_docx_change(self, event):
+        print('change', self.element)
+        try:
+            val = Path(self.fp_template_docx.GetPath())
+            if not val.parent.exists():
+                raise ValueError('Некорректный путь')
+            self.element.doc_template = val
+            print(self.element.doc_template)
         except Exception:
             dlg = ErrorDialog(None, 'Не удалось установить путь', 'Неправильный путь')
             dlg.ShowModal()

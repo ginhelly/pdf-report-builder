@@ -3636,9 +3636,9 @@
                             </object>
                             <object class="sizeritem" expanded="1">
                                 <property name="border">5</property>
-                                <property name="flag">wxEXPAND | wxALL</property>
-                                <property name="proportion">1</property>
-                                <object class="wxPanel" expanded="1">
+                                <property name="flag">wxALL|wxEXPAND</property>
+                                <property name="proportion">0</property>
+                                <object class="wxFilePickerCtrl" expanded="1">
                                     <property name="BottomDockable">1</property>
                                     <property name="LeftDockable">1</property>
                                     <property name="RightDockable">1</property>
@@ -3669,11 +3669,12 @@
                                     <property name="max_size"></property>
                                     <property name="maximize_button">0</property>
                                     <property name="maximum_size"></property>
+                                    <property name="message">Шаблон для генерации</property>
                                     <property name="min_size"></property>
                                     <property name="minimize_button">0</property>
                                     <property name="minimum_size"></property>
                                     <property name="moveable">1</property>
-                                    <property name="name">computed_props_container</property>
+                                    <property name="name">fp_template_docx</property>
                                     <property name="pane_border">1</property>
                                     <property name="pane_position"></property>
                                     <property name="pane_size"></property>
@@ -3683,18 +3684,20 @@
                                     <property name="resize">Resizable</property>
                                     <property name="show">1</property>
                                     <property name="size"></property>
+                                    <property name="style">wxFLP_DEFAULT_STYLE</property>
                                     <property name="subclass">; ; forward_declare</property>
                                     <property name="toolbar_pane">0</property>
                                     <property name="tooltip"></property>
+                                    <property name="validator_data_type"></property>
+                                    <property name="validator_style">wxFILTER_NONE</property>
+                                    <property name="validator_type">wxDefaultValidator</property>
+                                    <property name="validator_variable"></property>
+                                    <property name="value"></property>
+                                    <property name="wildcard">Word Documents (*.doc;*.docx)|*.doc;*.docx</property>
                                     <property name="window_extra_style"></property>
                                     <property name="window_name"></property>
-                                    <property name="window_style">wxTAB_TRAVERSAL</property>
-                                    <object class="wxBoxSizer" expanded="1">
-                                        <property name="minimum_size"></property>
-                                        <property name="name">bSizer63</property>
-                                        <property name="orient">wxVERTICAL</property>
-                                        <property name="permission">none</property>
-                                    </object>
+                                    <property name="window_style"></property>
+                                    <event name="OnFileChanged">on_template_docx_change</event>
                                 </object>
                             </object>
                         </object>
