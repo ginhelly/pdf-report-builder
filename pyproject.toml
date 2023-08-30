@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pdf-report-builder"
-version = "0.1.0"
-description = ""
+version = "0.3.6"
+description = "Windows app to manage reports structure"
 authors = ["karav-n <karav-n@mail.ru>"]
 readme = "README.md"
 packages = [{include = "pdf_report_builder"}]

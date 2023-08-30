@@ -12,9 +12,9 @@ from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.algorithms.parse_pages_count import ProjectParser, ParseReportNode
 from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.utils.logger import ProcessingLogger
+from pdf_report_builder.utils.app_settings import AppSettings
 
-DEFAULT_TEMPLATE = Path(os.getcwd()) / 'pdf_report_builder' \
-    / 'data' / 'computed_elements_templates' / 'tome_contents.docx'
+DEFAULT_TEMPLATE = AppSettings.get('DATA_PATH') / 'computed_elements_templates' / 'tome_contents.docx'
 
 @dataclass
 class TomeContentsElement(ComputedElement):

@@ -1,7 +1,15 @@
+import os
 from pathlib import Path
 import sys
 
 import wx
+from pdf_report_builder.utils.app_settings import AppSettings
+
+_parent = Path(os.path.abspath(__file__)).parent
+AppSettings.set(
+    'DATA_PATH',
+    Path(_parent / 'pdf_report_builder' / 'data')
+)
 
 from pdf_report_builder.ui.main import PDFReportBuilderFrame
 

@@ -96,6 +96,22 @@
   {
    "optionDest": "hiddenimports",
    "value": "reportlab"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "pymupdf"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "watchdog"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "python-docx"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "docx2pdf"
   }
  ],
  "nonPyinstallerOptions": {

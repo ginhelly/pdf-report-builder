@@ -4,9 +4,9 @@ from bisect import bisect_right
 from pathlib import Path
 from typing import NamedTuple
 from pdf_report_builder.utils.singleton import Singleton
+from pdf_report_builder.utils.app_settings import AppSettings
 
-PAPER_FORMATS_PATH = Path(os.getcwd()) / 'pdf_report_builder' \
-    / 'data' / 'paper_formats.json'
+PAPER_FORMATS_PATH = AppSettings.get('DATA_PATH') / 'paper_formats.json'
 THRESHOLD = 20
 
 def find_gt(a, x):

@@ -14,6 +14,7 @@ from pdf_report_builder.structure.tome import Tome
 from pdf_report_builder.structure.structural_elements.base import StructuralElement
 from pdf_report_builder.utils.logger import ProcessingLogger
 from pdf_report_builder.algorithms.bookmarks import add_bookmarks
+from pdf_report_builder.utils.app_settings import AppSettings
 
 class StructuralChunk(NamedTuple):
     pages_number: int
@@ -162,7 +163,7 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
     logger.writeline(' Добавляю текстовые элементы...')
     delta = int(100 / len(doc.pages))
 
-    gost = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'GOST2304_TypeA.ttf'
+    gost = Path(AppSettings.get('DATA_PATH') / 'GOST2304_TypeA.ttf')
     pdfmetrics.registerFont(TTFont('GOST2304A', gost))
 
     for page_params in enumerator:

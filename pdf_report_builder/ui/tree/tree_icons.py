@@ -1,9 +1,9 @@
 import wx
 import os
 from pathlib import Path
+from pdf_report_builder.utils.app_settings import AppSettings
 
-ICONS_FOLDER = Path(os.getcwd()) / 'pdf_report_builder' \
-    / 'data' / 'icons_tree'
+ICONS_FOLDER = AppSettings.get('DATA_PATH') / 'icons_tree'
 
 def get_tree_images():
     image_list = wx.ImageList(width=24, height=24)

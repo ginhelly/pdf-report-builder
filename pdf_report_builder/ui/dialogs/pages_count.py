@@ -7,18 +7,18 @@ from pdf_report_builder.ui.form_builder.main import BasePagesCountDialog
 from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.algorithms.parse_pages_count import ProjectParser, ParseReportNode, NodeType
+from pdf_report_builder.utils.app_settings import AppSettings
 
 
 def get_pagescount_imagelist():
     imagelist = wx.ImageList(width=16, height=16)
     bitmap = wx.Bitmap(width=16, height=16, depth=32)
     bitmap.LoadFile(str(
-        Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'error.png'
+        AppSettings.get('DATA_PATH') / 'error.png'
     ))
     imagelist.Add(bitmap)
 
-    ICONS_FOLDER = Path(os.getcwd()) / 'pdf_report_builder' \
-    / 'data' / 'icons_tree_16'
+    ICONS_FOLDER = AppSettings.get('DATA_PATH') / 'icons_tree_16'
     for file in ICONS_FOLDER.iterdir():
         new_bitmap = wx.Bitmap(width=24, height=24, depth=32)
         new_bitmap.LoadFile(

@@ -24,6 +24,7 @@ from pdf_report_builder.project.storage import ProjectStorage
 from pdf_report_builder.project.storage_settings import SettingsStorage
 from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
 from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
+from pdf_report_builder.utils.app_settings import AppSettings
 
 
 def on_exception(exception_type, text: str = ""):
@@ -63,7 +64,7 @@ class PDFReportBuilderFrame(MainFrame):
         #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
     
     def populate_menu_templates(self):
-        templates_path = Path(os.getcwd()) / 'pdf_report_builder' / 'data' / 'templates'
+        templates_path = AppSettings.get('DATA_PATH') / 'templates'
         for file in os.listdir(templates_path):
             new_item = wx.MenuItem(self.menu_open_template, wx.ID_ANY, file)
             self.menu_open_template.Append(new_item)
