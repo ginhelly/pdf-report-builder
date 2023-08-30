@@ -38,10 +38,13 @@ def on_exception(exception_type, text: str = ""):
     dlg.Destroy()
 
 class PDFReportBuilderFrame(MainFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, default_path = None):
         super().__init__(parent)
         SettingsStorage()
-        self.create_new_project()
+        if default_path is None:
+            self.create_new_project()
+        else:
+            self.open_project(12345, default_path=default_path)
         ProjectStorage().set_project(self.project)
         self.tree_component = Tree(self.tree_container, self.project)
         self.tree_container.GetSizer().Add(self.tree_component, 1, wx.ALL|wx.EXPAND)

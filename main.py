@@ -1,11 +1,24 @@
-from pdf_report_builder.ui.main import PDFReportBuilderFrame
+from pathlib import Path
+import sys
+
 import wx
+
+from pdf_report_builder.ui.main import PDFReportBuilderFrame
+
+
+if len(sys.argv) > 1:
+    try:
+        path = Path(sys.argv[1])
+    except Exception:
+        path = None
+else:
+    path = None
 
 # Next, create an application object.
 app = wx.App()
 
 # Then a frame.
-frm = PDFReportBuilderFrame(None)
+frm = PDFReportBuilderFrame(None, default_path=path)
 
 # Show it.
 frm.Show()
