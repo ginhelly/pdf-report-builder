@@ -11,6 +11,8 @@ AppSettings.set(
     Path(_parent / 'pdf_report_builder' / 'data')
 )
 
+os.environ["TQDM_DISABLE"] = "1"
+
 from pdf_report_builder.ui.main import PDFReportBuilderFrame
 
 

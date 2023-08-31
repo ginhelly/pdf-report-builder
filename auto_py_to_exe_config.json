@@ -112,6 +112,10 @@
   {
    "optionDest": "hiddenimports",
    "value": "docx2pdf"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/projects/pdf/pdf-report-builder/settings.py;."
   }
  ],
  "nonPyinstallerOptions": {
