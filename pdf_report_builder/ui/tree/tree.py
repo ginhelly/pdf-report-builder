@@ -11,10 +11,10 @@ from pdf_report_builder.project.event_channel import EventChannel
 from pdf_report_builder.structure.level_enum import NodeType
 
 def get_tome_name(tome: Tome):
-    return f'[{tome.basename}] {tome.human_readable_name}'
+    return f'[{tome.full_code}] {tome.human_readable_name}'
 
 def get_element_name(el: StructuralElement):
-    return f'[{el.code_attr}] {el.name}'
+    return f'[{el.full_code}] {el.name}'
 
 def get_file_name(file: PDFFile):
     if not (file.path.exists() and file.path.is_file()):

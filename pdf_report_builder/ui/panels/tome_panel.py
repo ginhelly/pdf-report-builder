@@ -46,7 +46,7 @@ class TomePanel(BaseTomePanel):
     def on_tome_code_change(self, event):
         new_value = self.text_tome_code.GetValue()
         self.tome.basename = new_value
-        EventChannel().publish('tome_name_update')
+        EventChannel().publish('tree_update')
     
     def on_tome_name_change(self, event):
         new_value = self.text_tome_name.GetValue()

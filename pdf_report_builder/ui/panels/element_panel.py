@@ -72,7 +72,7 @@ class ElementPanel(BaseElementPanel):
     def on_text_element_code_change(self, event):
         new_value = self.text_element_code.GetValue()
         self.element.code_attr = new_value
-        EventChannel().publish('element_name_update')
+        EventChannel().publish('tree_update')
     
     def on_text_element_name_change(self, event):
         new_value = self.text_element_name.GetValue()
