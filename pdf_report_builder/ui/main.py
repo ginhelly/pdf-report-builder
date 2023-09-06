@@ -25,6 +25,7 @@ from pdf_report_builder.project.storage_settings import SettingsStorage
 from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
 from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
 from pdf_report_builder.utils.app_settings import AppSettings
+from pdf_report_builder.structure.default_project_structure import make_default_project_structure
 
 
 def on_exception(exception_type, text: str = ""):
@@ -134,7 +135,16 @@ class PDFReportBuilderFrame(MainFrame):
             if not self.previous_project_willing_to_close():
                 return
             self.project.close()
+            del self.project
         self.project = ReportProject()
+        # Потом сделать нормально, с выбором шаблона и т.д.
+        ver = self.project.get_current_version()
+        print(ver)
+        for tome in ver.tomes:
+            ver.remove_tome(tome)
+        for tome in make_default_project_structure():
+            ver.append_tome(tome)
+        self.project.modified = False
         EventChannel().publish('project_changed', self.project)
     
     def open_project(self, event, default_path=None):

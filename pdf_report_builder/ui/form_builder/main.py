@@ -20,7 +20,7 @@ import wx.dataview
 class MainFrame ( wx.Frame ):
 
     def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 900,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
+        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"PDF Report Builder", pos = wx.DefaultPosition, size = wx.Size( 1125,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
         self.SetSizeHints( wx.Size( 500,450 ), wx.DefaultSize )
         self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHTTEXT ) )
@@ -138,7 +138,7 @@ class MainFrame ( wx.Frame ):
 
         bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-        bSizer3.SetMinSize( wx.Size( 250,-1 ) )
+        bSizer3.SetMinSize( wx.Size( 320,-1 ) )
         bSizer21 = wx.BoxSizer( wx.HORIZONTAL )
 
         bSizer21.SetMinSize( wx.Size( -1,33 ) )
@@ -168,7 +168,7 @@ class MainFrame ( wx.Frame ):
         bSizer3.Add( self.btn_merge, 0, wx.ALL|wx.EXPAND, 5 )
 
 
-        bSizer20.Add( bSizer3, 1, wx.EXPAND, 5 )
+        bSizer20.Add( bSizer3, 0, wx.EXPAND, 5 )
 
         bSizer6 = wx.BoxSizer( wx.VERTICAL )
 
@@ -1576,5 +1576,99 @@ class BaseBuildComputedDialog ( wx.Dialog ):
 
     def on_close( self, event ):
         event.Skip()
+
+
+###########################################################################
+## Class BaseParseFileDialog
+###########################################################################
+
+class BaseParseFileDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 955,614 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        bSizer56 = wx.BoxSizer( wx.HORIZONTAL )
+
+        bSizer57 = wx.BoxSizer( wx.VERTICAL )
+
+        lb_pagesChoices = []
+        self.lb_pages = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, lb_pagesChoices, wx.LB_EXTENDED|wx.LB_HSCROLL )
+        bSizer57.Add( self.lb_pages, 3, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer58 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer58.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button20 = wx.Button( self, wx.ID_ANY, u"В новый элемент", wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.m_button20.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_PLUS, wx.ART_BUTTON ) )
+        bSizer58.Add( self.m_button20, 0, wx.ALL, 5 )
+
+
+        bSizer58.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+
+        bSizer57.Add( bSizer58, 0, wx.EXPAND, 5 )
+
+        bSizer60 = wx.BoxSizer( wx.HORIZONTAL )
+
+        lb_elementsChoices = []
+        self.lb_elements = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, lb_elementsChoices, 0 )
+        bSizer60.Add( self.lb_elements, 1, wx.ALL|wx.EXPAND, 5 )
+
+        bSizer61 = wx.BoxSizer( wx.VERTICAL )
+
+        self.m_button23 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.m_button23.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_UP, wx.ART_BUTTON ) )
+        bSizer61.Add( self.m_button23, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button24 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.m_button24.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_DOWN, wx.ART_BUTTON ) )
+        bSizer61.Add( self.m_button24, 0, wx.ALL|wx.EXPAND, 5 )
+
+        self.m_button25 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+
+        self.m_button25.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_MINUS, wx.ART_BUTTON ) )
+        bSizer61.Add( self.m_button25, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+        bSizer60.Add( bSizer61, 0, wx.EXPAND, 5 )
+
+
+        bSizer57.Add( bSizer60, 2, wx.EXPAND, 5 )
+
+        bSizer59 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer59.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button21 = wx.Button( self, wx.ID_ANY, u"Добавить", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer59.Add( self.m_button21, 0, wx.ALL, 5 )
+
+        self.m_button22 = wx.Button( self, wx.ID_ANY, u"Отмена", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer59.Add( self.m_button22, 0, wx.ALL, 5 )
+
+
+        bSizer57.Add( bSizer59, 0, wx.EXPAND, 5 )
+
+
+        bSizer56.Add( bSizer57, 1, wx.EXPAND, 5 )
+
+        self.m_panel7 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+        bSizer56.Add( self.m_panel7, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+        self.SetSizer( bSizer56 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+    def __del__( self ):
+        pass
 
 

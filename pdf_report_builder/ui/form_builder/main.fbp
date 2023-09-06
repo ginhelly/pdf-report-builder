@@ -47,7 +47,7 @@
             <property name="minimum_size">500,450</property>
             <property name="name">MainFrame</property>
             <property name="pos"></property>
-            <property name="size">900,700</property>
+            <property name="size">1125,700</property>
             <property name="style">wxDEFAULT_FRAME_STYLE|wxSYSTEM_MENU</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title">PDF Report Builder</property>
@@ -270,7 +270,7 @@
                         <event name="OnMenuSelection">open_buildcomputed</event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">&amp;Справка</property>
                     <property name="name">menu_about</property>
                     <property name="permission">protected</property>
@@ -537,9 +537,9 @@
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
-                            <property name="proportion">1</property>
+                            <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="0">
-                                <property name="minimum_size">250,-1</property>
+                                <property name="minimum_size">320,-1</property>
                                 <property name="name">bSizer3</property>
                                 <property name="orient">wxVERTICAL</property>
                                 <property name="permission">none</property>

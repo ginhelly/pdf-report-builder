@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import NamedTuple
 from enum import Enum
 from .base import StructuralElement
@@ -7,7 +8,7 @@ from .computed_types import ComputedTypes
 class ElementCategory(Enum):
     OTHER = 'Другое'
     UTIL = 'Служебные'
-    TEXT = 'Текстовая часть'
+    UMBRELLA = 'Элементы-контейнеры'
     GRAPHICS = 'Графическая часть'
     COMPUTED = 'Автособираемые'
 
@@ -53,7 +54,7 @@ element_schemes = [
         ElementCategory.UTIL,
         StructuralElement(
             name='Содержание тома',
-            code_attr='.С',
+            code_attr='-С',
             enumeration_include=True,
             enumeration_print=False,
             create_bookmark=True
@@ -65,7 +66,7 @@ element_schemes = [
         ElementCategory.UTIL,
         StructuralElement(
             name='Состав отчетной технической документации',
-            code_attr='.СД',
+            code_attr='-СД',
             enumeration_include=True,
             enumeration_print=False,
             create_bookmark=True
@@ -74,10 +75,22 @@ element_schemes = [
 
     ElementScheme(
         'Текстовая часть',
-        ElementCategory.TEXT,
+        ElementCategory.UMBRELLA,
         StructuralElement(
-            name='Текстовая часть',
-            code_attr='.Т',
+            name='Технический отчёт по результатам инженерно-геодезических изысканий. Часть 1. Текстовая часть',
+            code_attr='-Т',
+            enumeration_include=True,
+            enumeration_print=False,
+            create_bookmark=True
+        )
+    ),
+
+    ElementScheme(
+        'Графическая часть',
+        ElementCategory.UMBRELLA,
+        StructuralElement(
+            name='Технический отчёт по результатам инженерно-геодезических изысканий. Часть 2. Графическая часть',
+            code_attr='-Г',
             enumeration_include=True,
             enumeration_print=False,
             create_bookmark=True
@@ -204,9 +217,18 @@ element_schemes = [
             enumeration_include=True,
             enumeration_print=False,
             create_bookmark=True,
-            code_attr='.С',
+            code_attr='-С',
             code_add=False,
             inner_enumeration=False
         )
     )
 ]
+
+element_schemes_dict = {
+    scheme.dialog_name: scheme for scheme in element_schemes
+}
+
+def get_element_by_name(name: str):
+    if not name in element_schemes_dict:
+        return None
+    return deepcopy(element_schemes_dict[name].element)
