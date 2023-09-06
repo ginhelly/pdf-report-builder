@@ -87,8 +87,7 @@ class ReportProject(BaseReportProject):
     
     def create_new_version(self, name: str):
         ver = Version(
-            name,
-            self.settings.savepath.parent
+            name
         )
         self.versions.append(ver)
         self.set_current_version_id(len(self.versions) - 1)

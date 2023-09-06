@@ -139,12 +139,10 @@ class PDFReportBuilderFrame(MainFrame):
         self.project = ReportProject()
         # Потом сделать нормально, с выбором шаблона и т.д.
         ver = self.project.get_current_version()
-        print(ver)
         for tome in ver.tomes:
             ver.remove_tome(tome)
         for tome in make_default_project_structure():
             ver.append_tome(tome)
-        self.project.modified = False
         EventChannel().publish('project_changed', self.project)
     
     def open_project(self, event, default_path=None):
