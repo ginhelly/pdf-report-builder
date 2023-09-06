@@ -1,12 +1,12 @@
 import os
 from pathlib import Path
+import webbrowser
 
 import wx
 
 from pdf_report_builder.project.project import ReportProject
 from pdf_report_builder.utils.lock_file import FileLockedError
 from pdf_report_builder.structure.factory.project_factory import ProjectFactory
-from pdf_report_builder.ui.about import PRBAboutDialog
 from pdf_report_builder.ui.dialogs.error_message import ErrorDialog
 from pdf_report_builder.ui.dialogs.info_message import InfoDialog
 from pdf_report_builder.ui.dialogs.process_dialog import ProcessingDialog
@@ -90,9 +90,9 @@ class PDFReportBuilderFrame(MainFrame):
         self.Destroy()
     
     def onAbout(self, event):
-        about = PRBAboutDialog(self)
-        about.ShowModal()
-        about.Destroy()
+        url = AppSettings.get('DATA_PATH') / 'docs' / 'mkdocs' / 'index.html'
+        file_url = f'file:///{str(url)}'
+        webbrowser.open(file_url, 2)
     
     def onDocsOpen101(self, event):
         open_docs('GOST101')

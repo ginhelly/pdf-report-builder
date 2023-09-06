@@ -1,0 +1,13 @@
+site_name: Документация PDF Report Builder
+theme: readthedocs
+site_url: ""
+use_directory_urls: false
+plugins: []
+nav:
+  - 'index.md'
+  - 'Структура проекта':
+    - 'Проект и версии.md'
+    - 'Тома.md'
+    - 'Структурные элементы.md'
+    - 'Файлы.md'
+site_dir: "..\\pdf_report_builder\\data\\docs\\mkdocs"
