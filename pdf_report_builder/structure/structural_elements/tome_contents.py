@@ -37,6 +37,8 @@ class TomeContentsElement(ComputedElement):
         table = doc.tables[0]
         if not logger is None:
             logger.writeline('  Заполняю таблицу внутри шаблона')
+        prev = -9999
+        prev_node = None
         for i, node in enumerate(self.get_nodes_with_bookmark(node)):
             if i > 0:
                 table.add_row()
@@ -44,8 +46,10 @@ class TomeContentsElement(ComputedElement):
             row.cells[0].text = node.code
             row.cells[1].text = node.name
             if node.current_page_number and node.current_page_number > 0:
-                row.cells[2].text = f'с.{node.current_page_number}'
-        
+                if not (node.current_page_number == prev and prev_node and node.parent == prev_node.parent):
+                    row.cells[2].text = f'с.{node.current_page_number}'
+                prev = node.current_page_number
+                prev_node = node
         if not logger is None:
             logger.writeline('  Сохраняю документ')
         doc_temp_path = self.get_doc_temp_path()

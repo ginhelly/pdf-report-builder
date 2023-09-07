@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 
+import fitz
 import pyperclip
 import wx
 
@@ -45,13 +46,20 @@ class ElementContextMenu(TreeContextMenu):
             if open_dialog.ShowModal() == wx.ID_CANCEL:
                 return
             path = Path(open_dialog.GetPath())
-        with wx.TextEntryDialog(
-            None,
-            "Какие страницы использовать? (пустая строка - все)"
-        ) as dlg:
-            if dlg.ShowModal() == wx.ID_CANCEL:
-                return
-            subset = dlg.GetValue()
+        doc = fitz.open(path)
+        pages_count = len(doc)
+        doc.close()
+        del doc
+        if pages_count <= 1:
+            subset = ''
+        else:
+            with wx.TextEntryDialog(
+                None,
+                "Какие страницы использовать? (пустая строка - все)"
+            ) as dlg:
+                if dlg.ShowModal() == wx.ID_CANCEL:
+                    return
+                subset = dlg.GetValue()
         try:
             self.element.add_file(
                 file_path=path,
