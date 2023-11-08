@@ -168,7 +168,7 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
 
     for page_params in enumerator:
         to_return = page_params.index
-        print(page_params)
+        #print(page_params)
         page_in_document += 1
         page = doc.pages[page_in_document - 1] # doc[0]
         all_texts = []
@@ -192,6 +192,7 @@ def enumerate_tome(node: ParseReportNode, start: int, logger: ProcessingLogger, 
                 str(page_params.pages_number),
                 lambda true_width, true_height: (true_width - 44, 67)
             ))
+        print(all_texts)
         add_text_to_page_pypdf(page, all_texts)
         output.add_page(page)
         logger.add_to_progress_bar(delta)

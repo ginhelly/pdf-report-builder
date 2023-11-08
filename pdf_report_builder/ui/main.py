@@ -25,7 +25,7 @@ from pdf_report_builder.project.storage_settings import SettingsStorage
 from pdf_report_builder.ui.dialogs.close_unsaved_dialog import CloseUnsavedDialog
 from pdf_report_builder.ui.dialogs.build_computed import BuildComputedDialog
 from pdf_report_builder.utils.app_settings import AppSettings
-from pdf_report_builder.structure.default_project_structure import make_default_project_structure
+from pdf_report_builder.structure.project_templates.factory import *
 
 
 def on_exception(exception_type, text: str = ""):
@@ -65,13 +65,12 @@ class PDFReportBuilderFrame(MainFrame):
         #self.tree_component.Bind(wx.EVT_TREE_BEGIN_DRAG, self.)
     
     def populate_menu_templates(self):
-        templates_path = AppSettings.get('DATA_PATH') / 'templates'
-        for file in os.listdir(templates_path):
-            new_item = wx.MenuItem(self.menu_open_template, wx.ID_ANY, file)
+        for template_name in PROJECT_TEMPLATES:
+            new_item = wx.MenuItem(self.menu_open_template, wx.ID_ANY, template_name)
             self.menu_open_template.Append(new_item)
             self.Bind(
                 wx.EVT_MENU,
-                lambda event: self.open_project(None, default_path=templates_path / file),
+                lambda event: self.make_project_by_template(PROJECT_TEMPLATES[template_name]),
                 id = new_item.GetId()
             )
     
@@ -130,19 +129,28 @@ class PDFReportBuilderFrame(MainFrame):
                 return False
         return True
     
-    def create_new_project(self, event = None):
+    def handle_previous_project(self):
         if hasattr(self, 'project'):
             if not self.previous_project_willing_to_close():
-                return
+                return 1
             self.project.close()
             del self.project
+        return 0
+    
+    def create_new_project(self, event = None):
+        previous_closed = self.handle_previous_project()
+        if previous_closed > 0: return
         self.project = ReportProject()
-        # Потом сделать нормально, с выбором шаблона и т.д.
-        ver = self.project.get_current_version()
-        for tome in ver.tomes:
-            ver.remove_tome(tome)
-        for tome in make_default_project_structure():
-            ver.append_tome(tome)
+        EventChannel().publish('project_changed', self.project)
+    
+    def make_project_by_template(self, template: BaseProjectTemplate):
+        try:
+            new_project = make_project(template)
+        except ValueError:
+            return
+        previous_closed = self.handle_previous_project()
+        if previous_closed > 0: return
+        self.project = new_project
         EventChannel().publish('project_changed', self.project)
     
     def open_project(self, event, default_path=None):

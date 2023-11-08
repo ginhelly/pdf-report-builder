@@ -8,7 +8,7 @@ packages = [{include = "pdf_report_builder"}]
 
 [tool.poetry.dependencies]
 python = "^3.10,<3.12"
-pypdf = "^3.5.2"
+pypdf = "3.15.3"
 wxpython = "^4.2.0"
 auto-py-to-exe = "^2.33.0"
 pyperclip = "^1.8.2"

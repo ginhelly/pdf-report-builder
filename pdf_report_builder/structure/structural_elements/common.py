@@ -32,9 +32,9 @@ element_schemes = [
         ElementCategory.UTIL,
         StructuralElement(
             name='Титульный лист',
-            enumeration_include=False,
+            enumeration_include=True,
             enumeration_print=False,
-            create_bookmark=True
+            create_bookmark=False
         )
     ),
 
@@ -104,7 +104,7 @@ element_schemes = [
             name='Картограмма топографо-геодезической изученности, \
 совмещенная со схемой выполненных работ и схемой созданной \
 планово-высотной геодезической сети',
-            code_attr='.1',
+            code_attr='.1(МП.0.MAX_KM.КТГИ.0000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -118,7 +118,7 @@ element_schemes = [
         StructuralElement(
             name='Схема созданной планово-высотной опорной сети \
 с указанием привязок к исходным пунктам',
-            code_attr='.2',
+            code_attr='.2(МП.0.MAX_KM.СПВО.0000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -132,7 +132,7 @@ element_schemes = [
         StructuralElement(
             name='Схема съемочной геодезической сети \
 с указанием привязок к исходным пунктам',
-            code_attr='.3',
+            code_attr='.3(МП.0.MAX_KM.СХМ.0000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -145,7 +145,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         StructuralElement(
             name='Обзорная схема расположения объекта',
-            code_attr='.4',
+            code_attr='.4(МП.0.MAX_KM.ОС.0000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -158,7 +158,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         StructuralElement(
             name='Топографический план М 1:1000',
-            code_attr='.5',
+            code_attr='.5(МП.0.MAX_KM.ТП.1000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -171,7 +171,7 @@ element_schemes = [
         ElementCategory.GRAPHICS,
         StructuralElement(
             name='Топографический план М 1:500',
-            code_attr='.6',
+            code_attr='.6(МП.0.MAX_KM.ТП.0500)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -185,7 +185,7 @@ element_schemes = [
         StructuralElement(
             name='Продольный профиль трассы газопровода (основная ось) \
 масштаб гор. 1:1000, верт. 1:100',
-            code_attr='.6',
+            code_attr='.6(МП.0.MAX_KM.ПР.1000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,
@@ -200,7 +200,7 @@ element_schemes = [
         StructuralElement(
             name='Продольный профиль трассы газопровода (отвод ) \
 масштаб гор. 1:1000, верт. 1:100',
-            code_attr='.7',
+            code_attr='.7(МП.0.MAX_KM.ПР.1000)',
             enumeration_include=True,
             enumeration_print=True,
             create_bookmark=True,

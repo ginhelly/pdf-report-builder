@@ -31,7 +31,7 @@ class MainFrame ( wx.Frame ):
         self.menu_project.Append( self.menu_project_new )
 
         self.menu_open_template = wx.Menu()
-        self.menu_project.AppendSubMenu( self.menu_open_template, u"Открыть из шаблона" )
+        self.menu_project.AppendSubMenu( self.menu_open_template, u"Создать из шаблона" )
 
         self.menu_project_open = wx.MenuItem( self.menu_project, wx.ID_ANY, u"Открыть проект...\tCtrl+O", wx.EmptyString, wx.ITEM_NORMAL )
         self.menu_project_open.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FILE_OPEN, wx.ART_MENU ) )
@@ -1670,5 +1670,136 @@ class BaseParseFileDialog ( wx.Dialog ):
 
     def __del__( self ):
         pass
+
+
+###########################################################################
+## Class BaseIGDIMultipartDialog
+###########################################################################
+
+class BaseIGDIMultipartDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"ИГДИ - несколько частей", pos = wx.DefaultPosition, size = wx.Size( 551,229 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        fgSizer1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+        fgSizer1.AddGrowableCol( 1 )
+        fgSizer1.SetFlexibleDirection( wx.BOTH )
+        fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+        self.m_staticText43 = wx.StaticText( self, wx.ID_ANY, u"Где создать проект:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText43.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText43, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.fp_save_location = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Место сохранения проекта", u"*.reportprj", wx.DefaultPosition, wx.DefaultSize, wx.FLP_OVERWRITE_PROMPT|wx.FLP_SAVE|wx.FLP_USE_TEXTCTRL )
+        fgSizer1.Add( self.fp_save_location, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+
+        self.m_staticText431 = wx.StaticText( self, wx.ID_ANY, u"Общий шаблон\nдля содержания тома:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText431.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText431, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.fp_tome_contents_template = wx.FilePickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Шаблон по умолчанию для содержания тома:", u"Word Documents (*.doc;*.docx)|*.doc;*.docx", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE )
+        fgSizer1.Add( self.fp_tome_contents_template, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+
+        self.m_staticText50 = wx.StaticText( self, wx.ID_ANY, u"Названия отводов\n(через запятую)", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText50.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText50, 0, wx.ALL, 5 )
+
+        self.text_taps = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+        fgSizer1.Add( self.text_taps, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        bSizer69 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText44 = wx.StaticText( self, wx.ID_ANY, u"Кол-во томов ГЧ:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText44.Wrap( -1 )
+
+        bSizer69.Add( self.m_staticText44, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.spin_n_tomes = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 1, 10, 1 )
+        self.spin_n_tomes.SetMinSize( wx.Size( 50,-1 ) )
+
+        bSizer69.Add( self.spin_n_tomes, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        fgSizer1.Add( bSizer69, 1, wx.EXPAND, 5 )
+
+        bSizer70 = wx.BoxSizer( wx.HORIZONTAL )
+
+        self.m_staticText441 = wx.StaticText( self, wx.ID_ANY, u"Макс. километраж\nдля шифра:", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText441.Wrap( -1 )
+
+        bSizer70.Add( self.m_staticText441, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.spin_max_km = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 5000, 0 )
+        self.spin_max_km.SetMinSize( wx.Size( 80,-1 ) )
+
+        bSizer70.Add( self.spin_max_km, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+        fgSizer1.Add( bSizer70, 1, wx.EXPAND, 5 )
+
+
+        fgSizer1.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        bSizer63 = wx.BoxSizer( wx.HORIZONTAL )
+
+
+        bSizer63.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.m_button26 = wx.Button( self, wx.ID_CANCEL, u"Отмена", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer63.Add( self.m_button26, 0, wx.ALL, 5 )
+
+        self.m_button27 = wx.Button( self, wx.ID_OK, u"ОК", wx.DefaultPosition, wx.DefaultSize, 0 )
+        bSizer63.Add( self.m_button27, 0, wx.ALL, 5 )
+
+
+        fgSizer1.Add( bSizer63, 0, wx.EXPAND, 5 )
+
+
+        self.SetSizer( fgSizer1 )
+        self.Layout()
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.fp_save_location.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_save_location_change )
+        self.fp_tome_contents_template.Bind( wx.EVT_FILEPICKER_CHANGED, self.on_contents_template_change )
+        self.text_taps.Bind( wx.EVT_TEXT, self.on_taps_enter )
+        self.text_taps.Bind( wx.EVT_TEXT_ENTER, self.on_taps_enter )
+        self.spin_n_tomes.Bind( wx.EVT_SPINCTRL, self.on_n_tomes_change )
+        self.spin_n_tomes.Bind( wx.EVT_TEXT, self.on_n_tomes_change )
+        self.spin_n_tomes.Bind( wx.EVT_TEXT_ENTER, self.on_n_tomes_change )
+        self.spin_max_km.Bind( wx.EVT_SPINCTRL, self.on_max_km_change )
+        self.spin_max_km.Bind( wx.EVT_TEXT, self.on_max_km_change )
+        self.spin_max_km.Bind( wx.EVT_TEXT_ENTER, self.on_max_km_change )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def on_save_location_change( self, event ):
+        event.Skip()
+
+    def on_contents_template_change( self, event ):
+        event.Skip()
+
+    def on_taps_enter( self, event ):
+        event.Skip()
+
+
+    def on_n_tomes_change( self, event ):
+        event.Skip()
+
+
+
+    def on_max_km_change( self, event ):
+        event.Skip()
+
+
 
 
