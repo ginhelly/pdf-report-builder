@@ -28,7 +28,7 @@ class IGDIMultipartDialog(BaseIGDIMultipartDialog):
         folder = new_loc.parent / 'Сборка'
         print(folder, folder.exists())
         if folder.exists():
-            dlg = ErrorDialog(None, 'Существующая папка "Сборка" будет переписана!', 'Примите меры по защите своих файлов')
+            dlg = ErrorDialog(None, 'Файлы в существующей папке "Сборка" будут переписаны!', 'Примите меры по защите своих файлов')
             dlg.ShowModal()
             dlg.Close()
         self.save_location = new_loc
@@ -49,9 +49,8 @@ class IGDIMultipartDialog(BaseIGDIMultipartDialog):
     
     def on_taps_enter(self, event):
         try:
-            self.taps = self.text_taps.GetValue().split(',')
-            for tap in self.taps:
-                tap = tap.strip()
+            taps = self.text_taps.GetValue().split(',')
+            self.taps = [tap.strip() for tap in taps]
         except Exception:
             dlg = ErrorDialog(None, 'Не получилось распарсить названия отводов', 'Некорректный ввод')
             dlg.ShowModal()

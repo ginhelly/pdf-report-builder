@@ -50,9 +50,10 @@ class IGDIMultipartTemplate(BaseProjectTemplate):
         try:
             shutil.copy2(tome_contents_template_path, linkage_folder)
         except Exception as e:
-            dlg = ErrorDialog(None, e, 'Не удалось скопировать шаблон содержания тома')
-            dlg.ShowModal()
-            dlg.Close()
+            if not isinstance(e, shutil.SameFileError):
+                dlg = ErrorDialog(None, 'Не удалось скопировать шаблон содержания тома', 'Поправьте его сами')
+                dlg.ShowModal()
+                dlg.Close()
 
         self.linkage_folder = linkage_folder
         self.tome_contents_template_path = linkage_folder / (tome_contents_template_path.name)
@@ -130,10 +131,19 @@ class IGDIMultipartTemplate(BaseProjectTemplate):
         if only:
             elevation_profile = get_element_by_name('Продольный профиль (основная ось)')
             graphics_part.add_subelement(elevation_profile)
+            self._make_tap_elements(graphics_part)
         
         tome2_1.add_element(titles_umbrella_graphics)
         tome2_1.add_element(graphics_part)
         return tome2_1
+    
+
+    def _make_tap_elements(self, parent_element):
+        for tap in self.taps:
+            tap_profile = get_element_by_name('Продольный профиль (отвод)')
+            tap_profile.name = f'Продольный профиль трассы газопровода (отвод {tap}) \
+масштаб гор. 1:1000, верт. 1:100'
+            parent_element.add_subelement(tap_profile)
 
     
     def _make_graphics_tome(self, i: int, n: int):
@@ -153,11 +163,7 @@ class IGDIMultipartTemplate(BaseProjectTemplate):
         graphics_part.add_subelement(elevation_profile)
 
         if i == n:
-            for tap in self.taps:
-                tap_profile = get_element_by_name('Продольный профиль (отвод)')
-                tap_profile.name = f'Продольный профиль трассы газопровода (отвод {tap}) \
-масштаб гор. 1:1000, верт. 1:100'
-                graphics_part.add_subelement(tap_profile)
+            self._make_tap_elements(graphics_part)
         
         tome2_i.add_element(titles_umbrella_graphics)
         tome2_i.add_element(graphics_part)
